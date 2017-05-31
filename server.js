@@ -3,7 +3,7 @@ const http = require('http');
 const url = require('url');
 const qstring = require('querystring');
 const express = require('express');
-const jade = require('jade');
+const jade = require('pug');
 
 
 
@@ -20,23 +20,34 @@ app.locals.username = usernameDict.username;
 app.locals.role = usernameDict.role;
 
 
-var admin = require("firebase-admin");
-
-var serviceAccount = require("path/to/serviceAccountKey.json");
+var firebase = require("firebase");
+/*
+var serviceAccount = require("serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://learnlive-f6376.firebaseio.com"
 });
+*/
+
+  var config = {
+    apiKey: "AIzaSyCTMUtfwd3jr4BCPQLeajXCpqfdd-lX7Eo",
+    authDomain: "learnlive-f6376.firebaseapp.com",
+    databaseURL: "https://learnlive-f6376.firebaseio.com",
+    projectId: "learnlive-f6376",
+    storageBucket: "learnlive-f6376.appspot.com",
+    messagingSenderId: "749566368306"
+  };
+  firebase.initializeApp(config);
 
 
 
 app.get('/', function (req, res) {
 
 		//var fileNames = readNewsDirSync();
-		app.locals.fileNames = fileNames;
-		res.render("landing",{fileNames : fileNames});	
-
+		//app.locals.fileNames = fileNames;
+		//res.render("landing",{fileNames : fileNames});	
+			res.render('login');
 });
 
 app.post('/login', function (req,res) {
