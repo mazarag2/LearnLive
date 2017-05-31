@@ -81,15 +81,17 @@ app.post('/Create',function (req,res){
 		var postData = qstring.parse(bodyData);
 		console.log(postData);
 		var email = postData['email'];
+		console.log(email);
 		var password = postData['password'];
+		console.log(password);
 		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;
 			var errorMessage = error.message;
-			res.send(errorMessage);
+			res.send(errorCode + errorMessage);
 		});
+		console.log('we in boi');
 		
-		res.send('We in boi');
 
 	});
 	
