@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
     <!-- link href="css/bootstrap.min.css" rel="stylesheet" -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
 	<style>
 		.jumbotron{
 			background-color:#32CD32;
@@ -39,21 +40,24 @@
     
 	
 	<div class = "pageheader">
-	<h1>Welcome To LearnLive!</h1>
+	<h1>Create a new User</h1>
 	</div>
 	
 	<div class = "jumbotron" >
 	
-		<form class = "form-inline"role = "form" method = "post">
-		<p>Creating a new form of education and learning through collaboaration</p>
+		<form role = "form">
+		<p>Enter Information Below</p>
 		
 		<div class="form-group">
 			<label for="exampleInputEmail1">Email address</label>
-			<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+			
+			<input type="email" class="form-control" id="focusedInput" placeholder="Enter email">
 		</div>
 		<div class="form-group">
 			<label for="exampleInputPassword1">Password</label>
-			<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+			<input type="password" class="form-control" id="focusedInput" placeholder="Password">
+			<label for = "reenterInputPassword">Re-Enter Password</label>
+			<input type="password" class="form-control" id="focusedInput" placeholder="Re-Enter Password">
 		</div>
 		<button type = "submit" class = "btn-primary btn-lg">Login</button>
 		<button type = "submit" class = "btn-primary btn-lg">Create New User</button>
