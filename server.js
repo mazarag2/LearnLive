@@ -10,7 +10,7 @@ const CREATE = 'Create';
 var app = express();
 var session = require('express-session');
 //var cookieParser = require('cookie-parser');
-app.set('news', './news');
+
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
 app.listen(8080);
@@ -34,7 +34,7 @@ app.get('/', function (req, res) {
 	res.render('login');
 });
 
-app.post('/login', function (req,res) {
+app.post('/index', function (req,res) {
 	
 	var bodyData = '';
 	req.on('data', function (chunk) {
@@ -62,15 +62,21 @@ app.post('/login', function (req,res) {
 		else{
 			//we want to create a new user 
 			console.log('ok');
-			res.render('Create');
+			
 		}
 		
 	});
 	
 });
 
-app.post('/Create',function (req,res){
+app.get('/CreateUser',function (req,res){
 	
+	
+	res.render('Create');
+	
+		
+});
+app.post('/CreateUser',function (req,res){
 	
 	var bodyData = '';
 	req.on('data', function (chunk) {
@@ -90,10 +96,10 @@ app.post('/Create',function (req,res){
 			var errorMessage = error.message;
 			res.send(errorCode + errorMessage);
 		});
-		console.log('we in boi');
 		
-
+		//store first and last name in FIrebase DB 
+		
+		
+		res.redirect('/');
 	});
-	
-		
 });

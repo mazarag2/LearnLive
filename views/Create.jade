@@ -41,7 +41,7 @@ body
       | &#x9;
       | &#x9;
       .jumbotron
-        form(role='form',action="/Create/",method='POST')
+        form(role='form')
           p Enter Information Below
           | &#x9;&#x9;
           | &#x9;&#x9;
@@ -49,18 +49,30 @@ body
             label(for='exampleInputEmail1') Email address
             | &#x9;&#x9;&#x9;
             | &#x9;&#x9;&#x9;
-            input#focusedInput.form-control(type='email', placeholder='Enter email' name = 'email' value = 'Email' required)
+            input#focusedInput.form-control(type='email', placeholder='Enter email')
+          | &#x9;&#x9;
+          .form-group
+            label(for='exampleInputEmail1') First Name
+            | &#x9;&#x9;&#x9;
+            | &#x9;&#x9;&#x9;
+            input#focusedInput.form-control(type='text', placeholder='Enter First Name')
+            | &#x9;&#x9;&#x9;
+            label(for='exampleInputEmail1') Last Name
+            | &#x9;&#x9;&#x9;
+            | &#x9;&#x9;&#x9;
+            input#focusedInput.form-control(type='text', placeholder='Enter Last Name')
           | &#x9;&#x9;
           .form-group
             label(for='exampleInputPassword1') Password
             | &#x9;&#x9;&#x9;
-            input#focusedInput.form-control(type='password', placeholder='Password' name = 'password' value = 'Password' required)
+            input#focusedInput.form-control(type='password', placeholder='Password')
             | &#x9;&#x9;&#x9;
             label(for='reenterInputPassword') Re-Enter Password
             | &#x9;&#x9;&#x9;
-            input#focusedInput.form-control(type='password', placeholder='Password' name = 'passwordRE' value = 'Password' required)
+            input#focusedInput.form-control(type='password', placeholder='Re-Enter Password')
           | &#x9;&#x9;
-          button.btn-primary.btn-lg(type='submit') Create User
+          | &#x9;&#x9;
+          button.btn-primary.btn-lg(type='submit') Create New User
       // jQuery (necessary for Bootstrap's JavaScript plugins)
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
       // Include all compiled plugins (below), or include individual files as needed
