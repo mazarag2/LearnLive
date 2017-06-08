@@ -48,32 +48,27 @@ app.post('/index', function (req,res) {
 		var password = postData['password'];
 		var action = postData['submit'];
 		
-		
 		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 			// Handle Errors here.
-
-			res.send(errorMessage);
-			// ...
+			console.log(error.code);
 		});
 		
-		//need to get User name
-		var user = firebase.auth().currentUser;
+		//We need to wait until this is done before any other event is added 
+		setTimeout(function(){
+			
+			var ref = database.ref("Users/");
 
-		if (user != null) {
-			user.providerData.forEach(function (profile) {
-				console.log("Sign-in provider: "+profile.providerId);
-				console.log("  Provider-specific UID: "+profile.uid);
-				console.log("  Email: "+profile.email);
-			});
-		}
-		
-		
-		var name = "Test";
-		res.render('index',{name : name});
-		
-		
+			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
+				console.log(data.val().firstname);
+				var name = data.val().firstname;
+				res.render('index',{name : name});
+			})
+			
+			
+		},1000);
+
 	});
-	
+
 });
 
 app.get('/CreateUser',function (req,res){
