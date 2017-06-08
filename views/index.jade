@@ -1,0 +1,116 @@
+doctype html(lang='en')
+script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+  // Include all compiled plugins (below), or include individual files as needed
+  script(src='js/bootstrap.min.js')
+  |   
+  head
+    meta(charset='utf-8')
+    |     
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    title Home
+    // Bootstrap
+    // link href="css/bootstrap.min.css" rel="stylesheet"
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    | &#x9;
+    style.
+      .jumbotron{
+      background-color:#32CD32;
+      color:white;
+      }
+      /* Adds borders for tabs */
+      .tab-content {
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      }
+      .nav-tabs {
+      margin-bottom: 0;
+      }
+      .btn-default{
+      color: #228B22;
+      background-color: #	#0000CD;
+      border-color: #285e8e;
+      }
+      .panel-default{
+      color: #228B22;
+      background-color: #	#0000CD;
+      border-color: #285e8e;
+      padding: 10px 20px;
+      font-size: 20px;
+      border-radius: 10px;
+      width:40%;    //Specify your width here
+      }
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
+      |       
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+|   
+body
+    .pageheader
+      h1 Welcome To LearnLive, #{name}!
+    | &#x9;
+    nav.navbar.navbar-default.navbar-light.bg-faded(role='naviagtion', style='background-color: #32CD32;')
+      a.navbar-brand(href='#') LearnLive
+      |     
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.nav.navbar-nav.mr-auto
+          li.nav-item.active
+            a.nav-link(href='#')
+              | Home
+              span.sr-only (current)
+          |        
+          li.nav-item
+            a.nav-link(href='#') Courses
+          |        
+          li.nav-item
+            a.nav-link(href='#') My Docs
+        | &#x9;&#x9;
+        form.navbar-form.navbar-left(role='search')
+          .form-group
+            input.form-control(type='text', placeholder='Search')
+          | &#x9;&#x9;&#x9;
+          button.btn.btn-default(type='submit') Search
+        | &#x9;&#x9;
+        form.navbar-form.navbar-right(role='search')
+          button.btn.btn-default(type='submit') Logout
+    |  
+    .panel.panel-default.pull-right.clearfix
+      // Default panel contents
+      .panel-heading Courses
+      |   
+      .panel-body
+        p Courses Enrolled will show up here!
+      // List group -- Will need to use Angular here in luee of DOM manipulation
+      ul#courses.list-group
+        li.list-group-item Cras justo odio
+        |     
+        li.list-group-item Dapibus ac facilisis in
+        |     
+        li.list-group-item Morbi leo risus
+        |     
+        li.list-group-item Porta ac consectetur ac
+        |     
+        li.list-group-item Vestibulum at eros
+    //
+      div class = "jumbotron" >
+      <form class = "form-inline"role = "form" method = "post">
+      <p>Creating a new form of education and learning through collaboaration</p>
+      <div class="form-group">
+      <label for="exampleInputEmail1">Email address</label>
+      <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+      <label for="exampleInputPassword1">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <button type = "submit" class = "btn-primary btn-lg">Login</button>
+      <button type = "submit" class = "btn-primary btn-lg">Create New User</button>
+      </form>
+      </div--!>
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins)

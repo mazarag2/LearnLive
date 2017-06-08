@@ -27,7 +27,7 @@ var config = {
   };
 firebase.initializeApp(config);
 
-
+var database = firebase.database();
 
 app.get('/', function (req, res) {
 	
@@ -48,22 +48,29 @@ app.post('/index', function (req,res) {
 		var password = postData['password'];
 		var action = postData['submit'];
 		
-		if(action == LOGIN){
 		
-			firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-				// Handle Errors here.
+		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+			// Handle Errors here.
 
-				res.send(errorMessage);
-				// ...
+			res.send(errorMessage);
+			// ...
+		});
+		
+		//need to get User name
+		var user = firebase.auth().currentUser;
+
+		if (user != null) {
+			user.providerData.forEach(function (profile) {
+				console.log("Sign-in provider: "+profile.providerId);
+				console.log("  Provider-specific UID: "+profile.uid);
+				console.log("  Email: "+profile.email);
 			});
-			//respind with lading page 
-			res.send('We done');
 		}
-		else{
-			//we want to create a new user 
-			console.log('ok');
-			
-		}
+		
+		
+		var name = "Test";
+		res.render('index',{name : name});
+		
 		
 	});
 	
@@ -89,17 +96,38 @@ app.post('/CreateUser',function (req,res){
 		var email = postData['email'];
 		console.log(email);
 		var password = postData['password'];
+		var firstName = postData['firstname'];
+		var lastName = postData['lastname'];
 		console.log(password);
 		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-			// Handle Errors here.
+			
 			var errorCode = error.code;
 			var errorMessage = error.message;
-			res.send(errorCode + errorMessage);
+			console.log(errorMessage + errorCode);
+
 		});
-		
+		firebase.auth().onAuthStateChanged(function(user) {
+		  if (user) {
+			
+			var ref = database.ref('Users');
+			var id = ref.push();
+			id.set({
+				firstname: firstName ,
+				lastname : lastName ,
+				email : email
+			})
+			
+		  } else {
+			// User is signed out.
+			// ...
+		  }
+		});
+
+
+
 		//store first and last name in FIrebase DB 
-		
-		
+
+				
 		res.redirect('/');
 	});
 });
