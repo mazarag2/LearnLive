@@ -47,25 +47,30 @@ app.post('/index', function (req,res) {
 		var email = postData['email'];
 		var password = postData['password'];
 		var action = postData['submit'];
+		var errorFlag = false;
 		
 		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 			// Handle Errors here.
+			errorFlag = true;
 			console.log(error.code);
+			var errorMsg = "Email and Password Incorrect please try again";
+			res.render('login',{errorMsg : errorMsg});
 		});
-		
+		if(!errorFlag){
 		//We need to wait until this is done before any other event is added 
-		setTimeout(function(){
-			
-			var ref = database.ref("Users/");
+			setTimeout(function(){
+				
+				var ref = database.ref("Users/");
 
-			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
-				console.log(data.val().firstname);
-				var name = data.val().firstname;
-				res.render('index',{name : name});
-			})
-			
-			
-		},1000);
+				ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
+					console.log(data.val().firstname);
+					var name = data.val().firstname;
+					res.render('index',{name : name});
+				})
+				
+				
+			},1000);
+		}
 
 	});
 
