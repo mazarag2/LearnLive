@@ -34,6 +34,18 @@ app.get('/', function (req, res) {
 	res.render('login');
 });
 
+app.post('/', function (req,res){
+	
+	firebase.auth().signOut().then(function() {
+		// Sign-out successful.
+		res.render('login');
+		}).catch(function(error) {
+		// An error happened.
+		console.log(error.code);
+		console.log(error.message);
+	});
+	
+});
 app.post('/index', function (req,res) {
 	
 	var bodyData = '';
@@ -46,8 +58,10 @@ app.post('/index', function (req,res) {
 		console.log(postData);
 		var email = postData['email'];
 		var password = postData['password'];
-		var action = postData['submit'];
+		var role = postData['type'];
 		var errorFlag = false;
+		
+		//need to check for dofferent roles
 		
 		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 			// Handle Errors here.

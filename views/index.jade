@@ -70,6 +70,9 @@ body
           |        
           li.nav-item
             a.nav-link(href='#') My Docs
+          |
+          li.nav-item
+            a.nav-link(href='#') Discussion		  
         | &#x9;&#x9;
         form.navbar-form.navbar-left(role='search')
           .form-group
@@ -77,7 +80,7 @@ body
           | &#x9;&#x9;&#x9;
           button.btn.btn-default(type='submit') Search
         | &#x9;&#x9;
-        form.navbar-form.navbar-right(role='search')
+        form.navbar-form.navbar-right(action = '/', method = 'POST')
           button.btn.btn-default(type='submit') Logout
     |  
     .panel.panel-default.pull-right.clearfix
@@ -88,13 +91,13 @@ body
         p Courses Enrolled will show up here!
       // List group -- Will need to use Angular here in luee of DOM manipulation
       ul#courses.list-group
-        li.list-group-item Cras justo odio
+        li.list-group-item Course 1
         |     
-        li.list-group-item Dapibus ac facilisis in
+        li.list-group-item Course 2
         |     
-        li.list-group-item Morbi leo risus
+        li.list-group-item Course 3
         |     
-        li.list-group-item Porta ac consectetur ac
+        li.list-group-item Course 4
         |     
         li.list-group-item Vestibulum at eros
     //
