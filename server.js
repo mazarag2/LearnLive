@@ -144,4 +144,13 @@ app.post('/CreateUser',function (req,res){
 				
 		res.redirect('/');
 	});
+	
+	
+	
+});
+
+app.get('/CreateCourse',function(req,res){
+	
+	res.render('/CreateCourse');
+	
 });

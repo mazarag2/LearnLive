@@ -1,7 +1,9 @@
 doctype html(lang='en')
 script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+  | &#x9;
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
   // Include all compiled plugins (below), or include individual files as needed
-  script(src='js/bootstrap.min.js')
+  title Home
   |   
   head
     meta(charset='utf-8')
@@ -10,11 +12,9 @@ script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     |     
     meta(name='viewport', content='width=device-width, initial-scale=1')
     // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
-    title Home
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     // Bootstrap
     // link href="css/bootstrap.min.css" rel="stylesheet"
-    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-    | &#x9;
     style.
       .jumbotron{
       background-color:#32CD32;
@@ -50,29 +50,32 @@ script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
       script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
       |       
       script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
-|   
-body
+  |   
+  body
     .pageheader
-      h1 Welcome To LearnLive, #{name} !
+      h1 Welcome To LearnLive!
     | &#x9;
     nav.navbar.navbar-default.navbar-light.bg-faded(role='naviagtion', style='background-color: #32CD32;')
       a.navbar-brand(href='#') LearnLive
       |     
       #navbarSupportedContent.collapse.navbar-collapse
-        ul.nav.navbar-nav.mr-auto
+        ul.nav.navbar-nav
           li.nav-item.active
             a.nav-link(href='#')
               | Home
               span.sr-only (current)
-          |        
-          li.nav-item
-            a.nav-link(href='#') Courses
+          |         
+          li.dropdown(role='menu')
+            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+              | Course
+              span.caret
+            |             
+            ul.dropdown-menu
+              li
+                a(href='/CreateCourse') Create a Course
           |        
           li.nav-item
             a.nav-link(href='#') My Docs
-          |
-          li.nav-item
-            a.nav-link(href='#') Discussion		  
         | &#x9;&#x9;
         form.navbar-form.navbar-left(role='search')
           .form-group
@@ -80,7 +83,7 @@ body
           | &#x9;&#x9;&#x9;
           button.btn.btn-default(type='submit') Search
         | &#x9;&#x9;
-        form.navbar-form.navbar-right(action = '/', method = 'POST')
+        form.navbar-form.navbar-right(action='/', method='POST')
           button.btn.btn-default(type='submit') Logout
     |  
     .panel.panel-default.pull-right.clearfix
@@ -91,13 +94,31 @@ body
         p Courses Enrolled will show up here!
       // List group -- Will need to use Angular here in luee of DOM manipulation
       ul#courses.list-group
-        li.list-group-item Course 1
+        li.list-group-item Cras justo odio
         |     
-        li.list-group-item Course 2
+        li.list-group-item Dapibus ac facilisis in
         |     
-        li.list-group-item Course 3
+        li.list-group-item Morbi leo risus
         |     
-        li.list-group-item Course 4
+        li.list-group-item Porta ac consectetur ac
+        |     
+        li.list-group-item Vestibulum at eros
+    |  
+    .panel.panel-default.pull-left.clearfix
+      // Default panel contents
+      .panel-heading Courses
+      |   
+      .panel-body
+        p New Courses Added To LearnLive will show up here!
+      // List group -- Will need to use Angular here in luee of DOM manipulation
+      ul#courses.list-group
+        li.list-group-item Cras justo odio
+        |     
+        li.list-group-item Dapibus ac facilisis in
+        |     
+        li.list-group-item Morbi leo risus
+        |     
+        li.list-group-item Porta ac consectetur ac
         |     
         li.list-group-item Vestibulum at eros
     //
