@@ -50,10 +50,10 @@ script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
       script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
       |       
       script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
-  |   
-  body
+|   
+body
     .pageheader
-      h1 Welcome To LearnLive!
+      h1 Welcome To LearnLive #{name} !
     | &#x9;
     nav.navbar.navbar-default.navbar-light.bg-faded(role='naviagtion', style='background-color: #32CD32;')
       a.navbar-brand(href='#') LearnLive
@@ -65,14 +65,8 @@ script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
               | Home
               span.sr-only (current)
           |         
-          li.dropdown(role='menu')
-            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-              | Course
-              span.caret
-            |             
-            ul.dropdown-menu
-              li
-                a(href='/CreateCourse') Create a Course
+          li.nav-item
+            a.nav-link(href='/CreateCourse') Create Course
           |        
           li.nav-item
             a.nav-link(href='#') My Docs

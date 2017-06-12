@@ -1,0 +1,78 @@
+doctype html(lang='en')
+head
+    meta(charset='utf-8')
+    |     
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    title Login
+    // Bootstrap
+    // link href="css/bootstrap.min.css" rel="stylesheet"
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    | &#x9;
+    | &#x9;
+    style.
+      .jumbotron{
+      background-color:#32CD32;
+      color:white;
+      }
+      /* Adds borders for tabs */
+      .tab-content {
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      }
+      .nav-tabs {
+      margin-bottom: 0;
+      }
+      input.flat, textarea.flat {
+      -webkit-transform-style: flat !important;
+      }
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
+      |       
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+|   
+body
+    .container
+      .pageheader
+        h1 Create a Course
+      | &#x9;
+      | &#x9;
+      .jumbotron
+        form(action='/CreateCourse', method='post')
+          p Enter Information Below
+          | &#x9;&#x9;
+          .form-group
+            label(for='exampleInputEmail1') Name of the Course
+            | &#x9;&#x9;&#x9;
+            input#focusedInput.form-control(type='text', name='CourseName', value='CourseName', maxlength='10')
+          | &#x9;&#x9;
+          .form-group
+            label(for='exampleInputEmail1') Subject
+            | &#x9;&#x9;&#x9;
+            input#focusedInput.form-control(type='text', value='Subject ', maxlength='8')
+          | &#x9;&#x9;
+          .form-group
+            label(for='exampleInputEmail1') Enter Max Members
+            | &#x9;&#x9;&#x9;
+            input.form-control(type='number', name='members', placeholder='1', min='1', max='500', style='width:100px;')
+          | &#x9;&#x9;
+          .form-group
+            label(for='exampleInputEmail1') Pick a Start Date for the Course
+            | &#x9;&#x9;&#x9;
+            input.form-control(type='Date', name='startDate', style='width:200px;')
+            | &#x9;&#x9;&#x9;
+            label(for='exampleInputEmail1') Pick an End Date for the Course
+            | &#x9;&#x9;&#x9;
+            input.form-control(type='Date', name='endDate', style='width:200px;')
+          | &#x9;&#x9;
+          button.btn-primary.btn-lg(type='submit') Create Course
+      // jQuery (necessary for Bootstrap's JavaScript plugins)
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+      // Include all compiled plugins (below), or include individual files as needed
+      script(src='js/bootstrap.min.js')

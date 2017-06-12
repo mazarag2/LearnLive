@@ -29,6 +29,28 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
+
+/*
+
+	ref - the reference within the Firebase DB Tree  
+	email - the email which we want the fristname for
+
+*/
+
+function getFirstNamebyEmail(ref,email){
+
+	return new Promise(function(resolve) {
+		
+		setTimeout(function() { 
+			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
+				name = data.val().firstname;
+				resolve(name);
+		});
+		},2000);
+	});
+}
+
+
 app.get('/', function (req, res) {
 	
 	res.render('login');
@@ -71,19 +93,13 @@ app.post('/index', function (req,res) {
 			res.render('login',{errorMsg : errorMsg});
 		});
 		if(!errorFlag){
-		//We need to wait until this is done before any other event is added 
-			setTimeout(function(){
 				
-				var ref = database.ref("Users/");
-
-				ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
-					console.log(data.val().firstname);
-					var name = data.val().firstname;
-					res.render('index',{name : name});
-				})
+			var ref = database.ref("Users/");
+			getFirstNamebyEmail(ref,email).then(function(name){
+				console.log(name);
+				res.render('index',{name : name});
+			});
 				
-				
-			},1000);
 		}
 
 	});
@@ -151,6 +167,31 @@ app.post('/CreateUser',function (req,res){
 
 app.get('/CreateCourse',function(req,res){
 	
-	res.render('/CreateCourse');
+	res.render('CreateCourse');
 	
 });
+
+
+app.post('/CreateCourse',function(req,res){
+	
+	var bodyData = '';
+	req.on('data', function (chunk) {
+		bodyData += chunk.toString();
+	});
+	
+	req.on('end',function (){
+		
+		
+		//need to create course here 
+		var postData = qstring.parse(bodyData);
+		
+		var courseName = postData['course'];
+		
+		
+		
+		
+	});
+	
+	
+});
+
