@@ -50,7 +50,7 @@ function getFirstNamebyEmail(email){
 				app.locals.firstName = name;
 				resolve(name);
 			});
-		},2000);
+		},1000);
 	});
 }
 
@@ -118,6 +118,52 @@ function getCourses(){
 	});
 }
 
+function signInUser(email,password,res){
+	
+	
+	return new Promise(function (resolve,reject){
+		
+		setTimeout(function(){
+			console.log("inside");
+			firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+				resolve(false);
+				console.log(error.code);
+				var errorMsg = "Email and Password Incorrect please try again";
+				res.render('login',{errorMsg : errorMsg});
+			});
+			resolve(true);
+			
+		},1000);
+		
+	});
+	
+	
+}
+
+function renderIndex(){
+	
+	var user = firebase.auth().currentUser;
+	var email = user.email;
+	
+	return new Promise(function (resolve){
+		console.log('were in promise');
+		Promise.all([
+			
+			getFirstNamebyEmail(email),
+			getCourses()
+		
+		]).then(function (results){
+			console.log(results[0]+ ' in redner indx ' + results[1]);
+			resolve(results);
+			//return results;
+			
+		}).catch(function(error){
+			
+			console.log(error);
+		})
+	});
+}
+
 app.get('/', function (req, res) {
 	
 	res.render('login');
@@ -153,43 +199,31 @@ app.post('/index', function (req,res) {
 		
 		//need to check for dofferent roles
 		
-		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-			// Handle Errors here.
-			errorFlag = true;
-			console.log(error.code);
-			var errorMsg = "Email and Password Incorrect please try again";
-			res.render('login',{errorMsg : errorMsg});
-		});
-		if(!errorFlag){
-			Promise.all([
+		//NEED TO DO PROMISE HERE FO SIGNING USER 
 			
-				getFirstNamebyEmail(email),
-				getCourses()
+		signInUser(email,password,res).then(function(resolve){
+			console.log("mh");
+			if(resolve){
 				
-			]).then(function (results){
-				console.log(results[0]+ '' + results[1]);
-			    res.render('index',{name : results[0],courses : results[1]});
-				
-			}).catch(function(error){
-				
-				console.log(error);
-			})
+				Promise.all([
 			
-			/*
-			getFirstNamebyEmail(email).then(function(name){
-				console.log(name);
-				getCourses().then(function(courses){
-					console.log(courses);
-					res.render('index',{name : name},{courses : courses});
+					getFirstNamebyEmail(email),
+					getCourses()
+				
+				]).then(function (results){
+					console.log(results[0]+ '' + results[1]);
+					
+					res.render('index',{name : results[0],courses : results[1]});
+					
 				}).catch(function(error){
-					console.log("Promise Rejected " + error);
-				});
-				//res.render('index',{name : name});
-				//return ;
-			});
-			*/
-
-		}
+					
+					console.log(error);
+				})
+			
+			}
+			
+			
+		});
 
 	});
 
@@ -275,24 +309,25 @@ app.post('/CreateCourse',function(req,res){
 		//need to create course here and send it to Forebase DB 
 		var postData = qstring.parse(bodyData);
 		createCourse(postData);
-		res.redirect('/index');
-		/*
+		var user = firebase.auth().currentUser;
+		var email = user.email;
+		console.log(email);
 		Promise.all([
-			
-				getFirstNamebyEmail(email),
-				getCourses()
-				
-			]).then(function (results){
-				console.log(results[0]+ '' + results[1]);
-			    res.render('index',{name : results[0],courses : results[1]});
-				
-			}).catch(function(error){
-				
-				console.log(error);
-			})
-			
-			*/
+	
+			getFirstNamebyEmail(email),
+			getCourses()
 		
+		]).then(function (results){
+			console.log(results[0]+ '' + results[1]);
+			
+			res.render('index',{name : results[0],courses : results[1]});
+			
+		}).catch(function(error){
+			
+			console.log(error);
+		})
+		
+	
 	});
 	
 	
