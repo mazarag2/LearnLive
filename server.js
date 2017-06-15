@@ -95,14 +95,17 @@ function getCourses(){
 	
 	//OrderBy 
 	var ref = firebase.database().ref("Courses");
+	var courses = [];
+	var index = 0;
 	return new Promise(function(resolve) {
 		setTimeout( function() {
 			
 			//order by Child ('CourseName')
 			ref.orderByKey().on("child_added", function(snapshot) {
-			console.log(snapshot.val().CourseName);
-			var Courses = snapshot.val().CourseName;
-			resolve(Courses);
+				//console.log(snapshot.val().CourseName);
+				courses[index] = snapshot.val().CourseName;
+				++index;
+				resolve(courses);
 			/*
 			snapshot.forEach(function(childSnapshot) {
 				var childKey = childSnapshot.key;
@@ -158,14 +161,34 @@ app.post('/index', function (req,res) {
 			res.render('login',{errorMsg : errorMsg});
 		});
 		if(!errorFlag){
-				
+			Promise.all([
 			
+				getFirstNamebyEmail(email),
+				getCourses()
+				
+			]).then(function (results){
+				console.log(results[0]+ '' + results[1]);
+			    res.render('index',{name : results[0],courses : results[1]});
+				
+			}).catch(function(error){
+				
+				console.log(error);
+			})
+			
+			/*
 			getFirstNamebyEmail(email).then(function(name){
 				console.log(name);
-				res.render('index',{name : name});
+				getCourses().then(function(courses){
+					console.log(courses);
+					res.render('index',{name : name},{courses : courses});
+				}).catch(function(error){
+					console.log("Promise Rejected " + error);
+				});
+				//res.render('index',{name : name});
+				//return ;
 			});
-			getCourses();
-				
+			*/
+
 		}
 
 	});
@@ -252,8 +275,23 @@ app.post('/CreateCourse',function(req,res){
 		//need to create course here and send it to Forebase DB 
 		var postData = qstring.parse(bodyData);
 		createCourse(postData);
-		
-		res.render('index',{});
+		res.redirect('/index');
+		/*
+		Promise.all([
+			
+				getFirstNamebyEmail(email),
+				getCourses()
+				
+			]).then(function (results){
+				console.log(results[0]+ '' + results[1]);
+			    res.render('index',{name : results[0],courses : results[1]});
+				
+			}).catch(function(error){
+				
+				console.log(error);
+			})
+			
+			*/
 		
 	});
 	

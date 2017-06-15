@@ -106,15 +106,10 @@ body
         p New Courses Added To LearnLive will show up here!
       // List group -- Will need to use Angular here in luee of DOM manipulation
       ul#courses.list-group
-        li.list-group-item Cras justo odio
-        |     
-        li.list-group-item Dapibus ac facilisis in
-        |     
-        li.list-group-item Morbi leo risus
-        |     
-        li.list-group-item Porta ac consectetur ac
-        |     
-        li.list-group-item Vestibulum at eros
+        for course in courses
+          li.list-group-item 
+          a(href = "http://localhost:8080/index.html?name=#{course}") #{course}
+          |
     //
       div class = "jumbotron" >
       <form class = "form-inline"role = "form" method = "post">
