@@ -42,11 +42,12 @@ var database = firebase.database();
 function getFirstNamebyEmail(email){
 
 	return new Promise(function(resolve) {
-		
+		console.log(email + ' getting the userName');
 		setTimeout(function() { 
 			var ref = database.ref("Users/");
 			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
 				name = data.val().firstname;
+				console.log(name);
 				app.locals.firstName = name;
 				resolve(name);
 			});
@@ -132,7 +133,7 @@ function signInUser(email,password,res){
 				res.render('login',{errorMsg : errorMsg});
 			});
 			resolve(true);
-			
+			console.log('resolved');
 		},1000);
 		
 	});
@@ -173,8 +174,8 @@ app.post('/', function (req,res){
 	
 	firebase.auth().signOut().then(function() {
 		// Sign-out successful.
-		res.render('login');
-		}).catch(function(error) {
+			res.render('login');
+	}).catch(function(error) {
 		// An error happened.
 		console.log(error.code);
 		console.log(error.message);
@@ -314,13 +315,13 @@ app.post('/CreateCourse',function(req,res){
 		console.log(email);
 		Promise.all([
 	
-			getFirstNamebyEmail(email),
+			//getFirstNamebyEmail(email),
 			getCourses()
 		
 		]).then(function (results){
-			console.log(results[0]+ '' + results[1]);
 			
-			res.render('index',{name : results[0],courses : results[1]});
+			
+			res.render('index',{name : app.locals.firstName,courses : results[0]});
 			
 		}).catch(function(error){
 			
