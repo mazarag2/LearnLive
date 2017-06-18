@@ -85,7 +85,15 @@ function createCourse(postData){
 	})
 }
 
-function getUsersEnrollled(){
+function createCourseView(name){
+	
+	
+	/*	
+		One idea : we can create a new page and and build it as were are "building it" ()
+		Another Idea : we simply just use a template ask them what color the page is (lesser customizable/but less dev time)
+	*/
+	
+	
 	
 	
 }
@@ -175,6 +183,7 @@ app.post('/', function (req,res){
 	firebase.auth().signOut().then(function() {
 		// Sign-out successful.
 			res.render('login');
+			
 	}).catch(function(error) {
 		// An error happened.
 		console.log(error.code);
@@ -182,6 +191,18 @@ app.post('/', function (req,res){
 	});
 	
 });
+
+app.get('/index',function (req,res){
+	
+	var header = url.parse(req.url, true);
+	//var path 
+	console.log(header);
+	var CourseName = header.query.name;
+	
+	
+	
+});
+
 app.post('/index', function (req,res) {
 	
 	var bodyData = '';
@@ -197,10 +218,6 @@ app.post('/index', function (req,res) {
 		var role = postData['type'];
 		var errorFlag = false;
 		
-		
-		//need to check for dofferent roles
-		
-		//NEED TO DO PROMISE HERE FO SIGNING USER 
 			
 		signInUser(email,password,res).then(function(resolve){
 			console.log("mh");
@@ -229,6 +246,7 @@ app.post('/index', function (req,res) {
 	});
 
 });
+
 
 app.get('/CreateUser',function (req,res){
 	
@@ -315,11 +333,9 @@ app.post('/CreateCourse',function(req,res){
 		console.log(email);
 		Promise.all([
 	
-			//getFirstNamebyEmail(email),
 			getCourses()
 		
 		]).then(function (results){
-			
 			
 			res.render('index',{name : app.locals.firstName,courses : results[0]});
 			
@@ -333,4 +349,5 @@ app.post('/CreateCourse',function(req,res){
 	
 	
 });
+
 

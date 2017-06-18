@@ -43,38 +43,26 @@
     
 	
 	<div class = "pageheader">
-	<h1>Create a Course</h1>
+	<h1>Welcome to The Course</h1>
 	</div>
 	
 	<div class = "jumbotron" >
-		<form  action = '/CreateCourse' method = "post">
-		<p>Enter Information Below</p>
-		<div class="form-group">
-			<label for="exampleInputEmail1">Name of the Course</label>
-			<input type="text" class="form-control" id="focusedInput" name = 'CourseName' value = 'CourseName' maxlength = 10>
-		</div>
-		<div class="form-group">
-			<label for="exampleInputEmail1">Subject</label>
-			<input type="text" class="form-control" id="focusedInput" value = 'Subject' maxlength = 8>
-		</div>
-		<div class = "form-group">
-			<label for="exampleInputEmail1">Enter Max Members</label>
-			<input class = 'form-control' type = "number" name = "members" placeholder = "1" min = "1" max = "500" style="width:100px;">
-		</div>
-		<div class = "form-group">
-			<label for="exampleInputEmail1">Pick a Start Date for the Course</label>
-			<input class = 'form-control' type = "Date" name = "startDate" style="width:200px;">
-			<label for="exampleInputEmail1">Pick an End Date for the Course</label>
-			<input class = 'form-control' type = "Date" name = 'endDate' style="width:200px;">
-		</div>
-		<div class = "form-group">
-			<label for = "color">Pick a color for the course template</label>
-			<input class = 'form-control' type="color" name="favcolor">
-		</div>
-		<button type = "submit" class = "btn-primary btn-lg">Create Course</button>
-		</form>
+		<form  action = '/CreateCourse' method = "get">
+		<p>Content</p>
 		
 	</div>
+		<div class = "jumbotron" >
+		<form  action = '/CreateCourse' method = "get">
+		<p>Modules</p>
+		
+	</div>
+		<div class = "jumbotron" >
+		<form  action = '/CreateCourse' method = "get">
+		<p>Enter Information Below</p>
+		
+	</div>
+	
+	
 	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

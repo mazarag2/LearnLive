@@ -108,7 +108,7 @@ body
       ul#courses.list-group
         for course in courses
           li.list-group-item 
-          a(href = "http://localhost:8080/index.html?name=\"#{course}\"") #{course}
+          a(href = "http://localhost:8080/index.html?name=" + course) #{course}
           |
     //
       div class = "jumbotron" >
