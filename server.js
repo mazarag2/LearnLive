@@ -9,6 +9,7 @@ const CREATE = 'Create';
 
 var app = express();
 var session = require('express-session');
+var router = express.Router();
 //var cookieParser = require('cookie-parser');
 
 app.set('view engine', 'jade');
@@ -149,28 +150,27 @@ function signInUser(email,password,res){
 	
 }
 
-function renderIndex(){
+
+function removeWhiteSpaces(courseName){
 	
-	var user = firebase.auth().currentUser;
-	var email = user.email;
+	return courseName.replace(/\s+/g, '');
+}
+
+function removeWhiteSpacesCourses(courses){
 	
-	return new Promise(function (resolve){
-		console.log('were in promise');
-		Promise.all([
+	var newcourses = [];
+	
+	if(Array.isArray(courses)){
+	
+		for(int = 0; x <= courses.length ; x++){
 			
-			getFirstNamebyEmail(email),
-			getCourses()
-		
-		]).then(function (results){
-			console.log(results[0]+ ' in redner indx ' + results[1]);
-			resolve(results);
-			//return results;
+			newcourses[x] = removeWhiteSpaces(courses[x]);
 			
-		}).catch(function(error){
-			
-			console.log(error);
-		})
-	});
+		}
+	}
+	
+	return newcourses;
+	
 }
 
 app.get('/', function (req, res) {
@@ -192,13 +192,12 @@ app.post('/', function (req,res){
 	
 });
 
-app.get('/index',function (req,res){
+app.get('/index,html/*',function (req,res){
 	
 	var header = url.parse(req.url, true);
-	//var path 
 	console.log(header);
 	var CourseName = header.query.name;
-	
+	res.send(header);
 	
 	
 });
@@ -325,7 +324,7 @@ app.post('/CreateCourse',function(req,res){
 	
 	req.on('end',function (){
 		
-		//need to create course here and send it to Forebase DB 
+		//need to create course here and send it to Firebase DB 
 		var postData = qstring.parse(bodyData);
 		createCourse(postData);
 		var user = firebase.auth().currentUser;
@@ -337,6 +336,7 @@ app.post('/CreateCourse',function(req,res){
 		
 		]).then(function (results){
 			
+			//we need to redner courses without whit spaces for links and courses as is for label 
 			res.render('index',{name : app.locals.firstName,courses : results[0]});
 			
 		}).catch(function(error){
@@ -349,5 +349,14 @@ app.post('/CreateCourse',function(req,res){
 	
 	
 });
+
+app.get('/Confirmation',function(req,res){
+	
+	
+	
+	
+	
+	
+})
 
 
