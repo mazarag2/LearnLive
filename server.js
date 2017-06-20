@@ -9,7 +9,7 @@ const CREATE = 'Create';
 
 var app = express();
 var session = require('express-session');
-var router = express.Router();
+
 //var cookieParser = require('cookie-parser');
 
 app.set('view engine', 'jade');
@@ -48,11 +48,11 @@ function getFirstNamebyEmail(email){
 			var ref = database.ref("Users/");
 			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
 				name = data.val().firstname;
-				console.log(name);
 				app.locals.firstName = name;
 				resolve(name);
 			});
-		},1000);
+			//resolve(false);
+		},2000);
 	});
 }
 
@@ -124,8 +124,39 @@ function getCourses(){
 			});
 			*/
 		})
-		},1000);
+		},2000);
 	});
+}
+
+function getCourseKeys(){
+	
+	//Select * FROM COURSES WHERE name = CourseName
+	
+	//OrderBy 
+	var ref = firebase.database().ref("Courses");
+	var courses = [];
+	var index = 0;
+	return new Promise(function(resolve) {
+		setTimeout( function() {
+			
+			//order by Child ('CourseName')
+			ref.orderByKey().on("child_added", function(snapshot) {
+				//console.log(snapshot.val().CourseName);
+				courses[index] = snapshot.key;
+				++index;
+				resolve(courses);
+		})
+		},2000);
+	});
+}
+
+
+/*
+	retrieve view for given course
+*/
+function getCourse(CourseName){
+	
+	var ref = firebase.database().ref("Courses");	
 }
 
 function signInUser(email,password,res){
@@ -146,8 +177,6 @@ function signInUser(email,password,res){
 		},1000);
 		
 	});
-	
-	
 }
 
 
@@ -192,12 +221,23 @@ app.post('/', function (req,res){
 	
 });
 
-app.get('/index,html/*',function (req,res){
+app.get('/index',function (req,res){
 	
 	var header = url.parse(req.url, true);
 	console.log(header);
-	var CourseName = header.query.name;
-	res.send(header);
+	var CourseName = header.query.course;
+	console.log(CourseName);
+	
+	if(CourseName != null){
+		
+		
+		//res.render(Key)
+		
+		
+		
+	}
+	
+	//res.send(header);
 	
 	
 });
@@ -228,6 +268,9 @@ app.post('/index', function (req,res) {
 					getCourses()
 				
 				]).then(function (results){
+					
+					//console.log(results[0]);
+					
 					console.log(results[0]+ '' + results[1]);
 					
 					res.render('index',{name : results[0],courses : results[1]});
@@ -236,9 +279,7 @@ app.post('/index', function (req,res) {
 					
 					console.log(error);
 				})
-			
 			}
-			
 			
 		});
 
