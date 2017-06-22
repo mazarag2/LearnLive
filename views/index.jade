@@ -106,9 +106,9 @@ body
         p New Courses Added To LearnLive will show up here!
       // List group -- Will need to use Angular here in luee of DOM manipulation
       ul#courses.list-group
-        for course in courses
+        each val,index in courseInfo
           li.list-group-item 
-          a(href = "http://localhost:8080/index?course=" + course) #{course}
+          a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]}
           |
     //
       div class = "jumbotron" >

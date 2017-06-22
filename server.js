@@ -84,19 +84,40 @@ function createCourse(postData){
 		CreatedBy : user.email
 		
 	})
+	
+	return id;
 }
 
 function createCourseView(name){
-	
 	
 	/*	
 		One idea : we can create a new page and and build it as were are "building it" ()
 		Another Idea : we simply just use a template ask them what color the page is (lesser customizable/but less dev time)
 	*/
 	
+	var readFile = new Promise(function(resolve,reject) {
+		fs.readFile('courseTemplate.jade', function (err, data) {
+			if (err) {
+				reject(true);
+		   }
+		   resolve(data.toString());
+		   //console.log("Asynchronous read: " + data.toString());
+		});
+	});
 	
-	
-	
+	readFile.then(function(resolve,reject){
+		
+		if(resolve){
+			
+			fs.writeFile("views/" + name + ".jade", resolve , function(err) {
+				   if (err) {
+					  return console.error(err);
+				   }
+				   
+				   console.log("Data written successfully!");
+			});
+		}
+	});
 }
 
 function getCourses(){
@@ -202,6 +223,28 @@ function removeWhiteSpacesCourses(courses){
 	
 }
 
+function toArrayObject(arr1,arr2){
+	
+	var newArr = Array();
+	
+	if(arr1.length == arr2.length){
+		
+		
+		for(var x = 0; x <= arr1.length - 1 ; x++){
+			
+			var nestArr = new Array();
+			nestArr.push(arr1[x]);
+			nestArr.push(arr2[x]);
+			newArr.push(nestArr);
+			
+		}
+		
+	}
+	console.log(newArr);
+	return newArr;
+	
+}
+
 app.get('/', function (req, res) {
 	
 	res.render('login');
@@ -242,6 +285,35 @@ app.get('/index',function (req,res){
 	
 });
 
+function renderIndex(resolve,email,res){
+	
+	if(resolve){
+	
+		Promise.all([
+
+			getFirstNamebyEmail(email),
+			getCourseKeys(),
+			getCourses()
+		
+		]).then(function (results){
+			
+			//console.log(results[0]);
+			
+			console.log(results[0]+ ' ' + results[1] + ' ' + results[2]);
+			
+			//res.render('index',{name : results[0],courses : results[1]});
+			
+			var courseInfo = toArrayObject(results[1],results[2]);
+			res.render('index',{name : results[0],courseInfo: courseInfo});
+		}).catch(function(error){
+			
+			console.log(error);
+		})
+	}
+
+	
+}
+
 app.post('/index', function (req,res) {
 	
 	var bodyData = '';
@@ -260,26 +332,7 @@ app.post('/index', function (req,res) {
 			
 		signInUser(email,password,res).then(function(resolve){
 			console.log("mh");
-			if(resolve){
-				
-				Promise.all([
-			
-					getFirstNamebyEmail(email),
-					getCourses()
-				
-				]).then(function (results){
-					
-					//console.log(results[0]);
-					
-					console.log(results[0]+ '' + results[1]);
-					
-					res.render('index',{name : results[0],courses : results[1]});
-					
-				}).catch(function(error){
-					
-					console.log(error);
-				})
-			}
+			renderIndex(resolve,email,res);
 			
 		});
 
@@ -367,10 +420,14 @@ app.post('/CreateCourse',function(req,res){
 		
 		//need to create course here and send it to Firebase DB 
 		var postData = qstring.parse(bodyData);
-		createCourse(postData);
+		var key = createCourse(postData);
 		var user = firebase.auth().currentUser;
 		var email = user.email;
 		console.log(email);
+		createCourseView(key);
+		renderIndex(key);
+		/*
+		
 		Promise.all([
 	
 			getCourses()
@@ -378,12 +435,18 @@ app.post('/CreateCourse',function(req,res){
 		]).then(function (results){
 			
 			//we need to redner courses without whit spaces for links and courses as is for label 
+			//before we test this 
+			
+			
+			
 			res.render('index',{name : app.locals.firstName,courses : results[0]});
 			
 		}).catch(function(error){
 			
 			console.log(error);
 		})
+		
+		*/
 		
 	
 	});

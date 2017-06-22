@@ -13,7 +13,7 @@
 	
 	<style>
 		.jumbotron{
-			background-color:#32CD32;
+			background-color:#32CD32; 
 			color:white;
 		}
 		/* Adds borders for tabs */
@@ -41,28 +41,32 @@
   
 	<div class = "container"> 
     
-	
-	<div class = "pageheader">
-	<h1>Welcome to The Course</h1>
-	</div>
-	
-	<div class = "jumbotron" >
-		<a href = "http://localhost:8080/index.html?name=" + #{course} + "&amp;">
-		<p>Content</p>
 		
-	</div>
+		<div class = "pageheader">
+		<h1>Welcome to</h1>
+		</div>
+		
 		<div class = "jumbotron" >
-		<form  action = '/CreateCourse' method = "get">
-		<p>Modules</p>
-		
-	</div>
+			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "Content=">
+			<p>Content</p>
+			
+		</div>
+			<div class = "jumbotron" >
+			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "Modules=">
+			<p>Modules</p>
+			
+		</div>
+			<div class = "jumbotron" >
+			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "Schedule=">
+			<p>Schedule</p>
+		</div>
 		<div class = "jumbotron" >
-		<form  action = '/CreateCourse' method = "get">
-		<p></p>
-		
+			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "About=">
+			<p>About me</p>
+		</div>
+	
 	</div>
-	
-	
+
 	
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
