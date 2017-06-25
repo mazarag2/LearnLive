@@ -52,7 +52,7 @@ function getFirstNamebyEmail(email){
 				resolve(name);
 			});
 			//resolve(false);
-		},2000);
+		},3000);
 	});
 }
 
@@ -81,6 +81,7 @@ function createCourse(postData){
 		StartDate : postData['startDate'],
 		EndDate : postData['endDate'],
 		Rating : 0.0,
+		Color : postData['favcolor'],
 		CreatedBy : user.email
 		
 	})
@@ -96,7 +97,7 @@ function createCourseView(name){
 	*/
 	
 	var readFile = new Promise(function(resolve,reject) {
-		fs.readFile('courseTemplate.jade', function (err, data) {
+		fs.readFile('views/CourseTemplate.jade', function (err, data) {
 			if (err) {
 				reject(true);
 		   }
@@ -223,6 +224,7 @@ function removeWhiteSpacesCourses(courses){
 	
 }
 
+
 function toArrayObject(arr1,arr2){
 	
 	var newArr = Array();
@@ -274,41 +276,57 @@ app.get('/index',function (req,res){
 	if(CourseName != null){
 		
 		
-		//res.render(Key)
-		
-		
+		res.render(key + ".jade");
 		
 	}
-	
-	//res.send(header);
-	
 	
 });
 
 function renderIndex(resolve,email,res){
 	
 	if(resolve){
-	
-		Promise.all([
-
-			getFirstNamebyEmail(email),
-			getCourseKeys(),
-			getCourses()
 		
-		]).then(function (results){
+		if(app.locals.firstName != null){
 			
-			//console.log(results[0]);
+			getCourseKeys().then(function(resolve){
+				
+				getCourses().then(function(resolve2){
+					
+					var courseInfo = toArrayObject(resolve,resolve2);
+					
+					res.render('index',{name : app.locals.firstName,courseInfo: courseInfo});
+					
+				});
+				
+			});
 			
-			console.log(results[0]+ ' ' + results[1] + ' ' + results[2]);
+		}
+		else{
 			
-			//res.render('index',{name : results[0],courses : results[1]});
+			Promise.all([
+
+				getFirstNamebyEmail(email),
+				getCourseKeys(),
+				getCourses()
+		
+			]).then(function (results){
+				
+				//console.log(results[0]);
+				
+				console.log(results[0]+ ' ' + results[1] + ' ' + results[2]);
+				
+				//res.render('index',{name : results[0],courses : results[1]});
+				
+				var courseInfo = toArrayObject(results[1],results[2]);
+				res.render('index',{name : results[0],courseInfo: courseInfo});
+			}).catch(function(error){
+				
+				console.log(error);
+			})
 			
-			var courseInfo = toArrayObject(results[1],results[2]);
-			res.render('index',{name : results[0],courseInfo: courseInfo});
-		}).catch(function(error){
-			
-			console.log(error);
-		})
+		}
+		
+		
 	}
 
 	
@@ -420,12 +438,17 @@ app.post('/CreateCourse',function(req,res){
 		
 		//need to create course here and send it to Firebase DB 
 		var postData = qstring.parse(bodyData);
-		var key = createCourse(postData);
+		var key = new String(createCourse(postData));
 		var user = firebase.auth().currentUser;
 		var email = user.email;
 		console.log(email);
+		console.log("Key " + key);
+		var indx = key.lastIndexOf("/");
+		console.log(indx);
+		key = key.substring(indx);
+		console.log("new key " + key);
 		createCourseView(key);
-		renderIndex(key);
+		renderIndex(key,email,res);
 		/*
 		
 		Promise.all([
