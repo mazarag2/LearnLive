@@ -27,6 +27,9 @@ head
       .nav-tabs {
       margin-bottom: 0;
       }
+      .errorMsg {
+      color: #FF0000;
+      }
     // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file://
     //if lt IE 9
@@ -45,6 +48,8 @@ body
           p Enter Information Below
           | &#x9;&#x9;
           | &#x9;&#x9;
+          p.errorMsg #{errorMsg}
+          p
           .form-group
             label(for='exampleInputEmail1') Email address
             | &#x9;&#x9;&#x9;

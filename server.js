@@ -195,6 +195,7 @@ function signInUser(email,password,res){
 				res.render('login',{errorMsg : errorMsg});
 			});
 			resolve(true);
+			app.locals.LoggedIn = true;
 			console.log('resolved');
 		},1000);
 		
@@ -268,15 +269,29 @@ app.post('/', function (req,res){
 
 app.get('/index',function (req,res){
 	
-	var header = url.parse(req.url, true);
-	console.log(header);
-	var CourseName = header.query.course;
-	console.log(CourseName);
+	if(app.locals.LoggedIn){
 	
-	if(CourseName != null){
+		var header = url.parse(req.url, true);
+		console.log(header);
+		var CourseName = header.query.course;
+		console.log(CourseName);
+		var user = firebase.auth().currentUser;
+		if(CourseName != null){
+			
+			
+			res.render(key);
+			
+		}
+		else{
+			
+			
+			renderIndex(true,user.email,res);
+			
+		}
+	}
+	else{
 		
-		
-		res.render(key + ".jade");
+		res.redirect('/');
 		
 	}
 	
@@ -379,39 +394,47 @@ app.post('/CreateUser',function (req,res){
 		var email = postData['email'];
 		console.log(email);
 		var password = postData['password'];
+		var password2 = postData['password2'];
 		var firstName = postData['firstname'];
 		var lastName = postData['lastname'];
 		console.log(password);
-		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		if(password != password2){
 			
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			console.log(errorMessage + errorCode);
-
-		});
-		firebase.auth().onAuthStateChanged(function(user) {
-		  if (user) {
-			console.log(user);
-			var ref = database.ref('Users');
-			var id = ref.push();
-			id.set({
-				firstname: firstName ,
-				lastname : lastName ,
-				email : email
-			})
+			var errorMsg = "Passwords do not match please try again";
+			res.render('Create',{errorMsg : errorMsg});
 			
-		  } else {
-			// User is signed out.
-			// ...
-		  }
-		});
-
-
-
-		//store first and last name in FIrebase DB 
-
+		}
+		else{
+		
+			firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
 				
-		res.redirect('/');
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				console.log(errorMessage + errorCode);
+
+			});
+			firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+				console.log(user);
+				var ref = database.ref('Users');
+				var id = ref.push();
+				id.set({
+					firstname: firstName ,
+					lastname : lastName ,
+					email : email
+				})
+				
+			  } else {
+				// User is signed out.
+				// ...
+			  }
+			});
+
+			//store first and last name in FIrebase DB 		
+			res.redirect('/');
+		
+		
+		}
 	});
 	
 	
@@ -420,14 +443,23 @@ app.post('/CreateUser',function (req,res){
 
 app.get('/CreateCourse',function(req,res){
 	
-	//need a flag for bounded conversation 
-	//User should not access tyhis withoiut first loggin in 
-	res.render('CreateCourse');
+	if(app.locals.LoggedIn){
+	
+		res.render('CreateCourse');
+	
+	}
+	else{
+		
+		res.redirect('/');
+		
+		
+	}
 	
 });
 
 
 app.post('/CreateCourse',function(req,res){
+	
 	
 	var bodyData = '';
 	req.on('data', function (chunk) {
@@ -449,41 +481,10 @@ app.post('/CreateCourse',function(req,res){
 		console.log("new key " + key);
 		createCourseView(key);
 		renderIndex(key,email,res);
-		/*
 		
-		Promise.all([
-	
-			getCourses()
-		
-		]).then(function (results){
-			
-			//we need to redner courses without whit spaces for links and courses as is for label 
-			//before we test this 
-			
-			
-			
-			res.render('index',{name : app.locals.firstName,courses : results[0]});
-			
-		}).catch(function(error){
-			
-			console.log(error);
-		})
-		
-		*/
-		
-	
 	});
 	
-	
 });
-
-app.get('/Confirmation',function(req,res){
 	
-	
-	
-	
-	
-	
-})
 
 
