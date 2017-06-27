@@ -14,8 +14,9 @@ head
     | &#x9;
     style.
       .jumbotron{
-      background-color:#{color};
+      background-color:#32CD32;
       color:white;
+      font-size: 150%;
       }
       /* Adds borders for tabs */
       .tab-content {
@@ -40,13 +41,20 @@ head
 body
     .container
       .pageheader
-        h1 Welcome to #{CourseName}
-      | &#x9;&#x9;
-      | &#x9;&#x9;
+        h1 Course Created !
+      | &#x9;
+      | &#x9;
       .jumbotron
-        a(href='http://localhost:8080/index.html/Courses?coursename=', +='')
-          a(href='http://localhost:8080/index.html/Courses?coursename=', +='')
-            a(href='http://localhost:8080/index.html/Courses?coursename=', +='')
-              a(href='http://localhost:8080/index.html/Courses?coursename=', +='', https:='', ajax.googleapis.com='', ajax='', libs='', jquery='', 1.12.4='')
-                // Include all compiled plugins (below), or include individual files as needed
-                script(src='js/bootstrap.min.js')
+        span.glyphicon.glyphicon-ok
+        | &#x9;&#x9;Course Succesfully Created ! 
+        br
+        | &#x9;&#x9;
+        a(href='/index')  Click here to go back home
+        | &#x9;&#x9;
+        label Or...
+        | &#x9;&#x9;
+        a(href='/EditCourse') click here to view the course and begin editing
+      // jQuery (necessary for Bootstrap's JavaScript plugins)
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+      // Include all compiled plugins (below), or include individual files as needed
+      script(src='js/bootstrap.min.js')

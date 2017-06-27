@@ -52,7 +52,7 @@ function getFirstNamebyEmail(email){
 				resolve(name);
 			});
 			//resolve(false);
-		},3000);
+		},1000);//3000
 	});
 }
 
@@ -167,7 +167,7 @@ function getCourseKeys(){
 				courses[index] = snapshot.key;
 				++index;
 				resolve(courses);
-		})
+			})
 		},2000);
 	});
 }
@@ -248,6 +248,24 @@ function toArrayObject(arr1,arr2){
 	
 }
 
+function getCourseColorbyKey(key){
+	
+	return new Promise(function (resolve,reject){
+	
+	setTimeout(function(){
+		console.log("inside");
+		ref.orderByKey().equals(key)on("child_added", function(snapshot) {
+			//console.log(snapshot.val().CourseName);
+			var Color = snapshot.val().Color;
+			++index;
+			resolve(Color);
+		})
+	},1000);
+	
+});
+	
+}
+
 app.get('/', function (req, res) {
 	
 	res.render('login');
@@ -258,6 +276,7 @@ app.post('/', function (req,res){
 	firebase.auth().signOut().then(function() {
 		// Sign-out successful.
 			res.render('login');
+			app.locals.LoggedIn = false;
 			
 	}).catch(function(error) {
 		// An error happened.
@@ -273,13 +292,15 @@ app.get('/index',function (req,res){
 	
 		var header = url.parse(req.url, true);
 		console.log(header);
-		var CourseName = header.query.course;
-		console.log(CourseName);
+		var CourseKey = header.query.course;
+		console.log(CourseKey);
 		var user = firebase.auth().currentUser;
-		if(CourseName != null){
+		if(CourseKey != null){
+			
+			//need to get Color for Course 
 			
 			
-			res.render(key);
+			res.render(CourseKey);
 			
 		}
 		else{
@@ -426,7 +447,7 @@ app.post('/CreateUser',function (req,res){
 				
 			  } else {
 				// User is signed out.
-				// ...
+				app.locals.LoggedIn = false;
 			  }
 			});
 
@@ -480,7 +501,8 @@ app.post('/CreateCourse',function(req,res){
 		key = key.substring(indx);
 		console.log("new key " + key);
 		createCourseView(key);
-		renderIndex(key,email,res);
+		res.render('Confirmation');
+		//renderIndex(key,email,res);
 		
 	});
 	
