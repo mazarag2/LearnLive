@@ -32,7 +32,7 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-
+var ref = firebase.database().ref("Courses");
 /*
 
 	ref - the reference within the Firebase DB Tree  
@@ -110,7 +110,7 @@ function createCourseView(name){
 		
 		if(resolve){
 			
-			fs.writeFile("views/" + name + ".jade", resolve , function(err) {
+			fs.writeFile("views/Courses/" + name + ".jade", resolve , function(err) {
 				   if (err) {
 					  return console.error(err);
 				   }
@@ -254,11 +254,13 @@ function getCourseColorbyKey(key){
 	
 	setTimeout(function(){
 		console.log("inside");
-		ref.orderByKey().equals(key)on("child_added", function(snapshot) {
+		ref.child(key).on("child_added", function(snapshot) {
 			//console.log(snapshot.val().CourseName);
-			var Color = snapshot.val().Color;
-			++index;
-			resolve(Color);
+			var val = snapshot.val();
+			//console.log(snapshot.val()["Color"]);
+			console.log(val);
+			//var Color = val["Color"];
+			resolve(val);
 		})
 	},1000);
 	
@@ -299,8 +301,11 @@ app.get('/index',function (req,res){
 			
 			//need to get Color for Course 
 			
-			
-			res.render(CourseKey);
+			getCourseColorbyKey(CourseKey).then(function(resolve){
+				
+				res.render("Courses/" + CourseKey,{Color : resolve});
+				
+			});
 			
 		}
 		else{

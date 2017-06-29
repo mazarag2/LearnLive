@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Login</title>
+    <title>CourseName</title>
 
     <!-- Bootstrap -->
     <!-- link href="css/bootstrap.min.css" rel="stylesheet" -->
@@ -40,30 +40,54 @@
   <body>
   
 	<div class = "container"> 
-    
-		
-		<div class = "pageheader">
-		<h1>Welcome to</h1>
+		<div class = "jumbotron">
+			<div class = "pageheader">
+			<h1>Welcome to Course</h1>
+			</div>
 		</div>
 		
-		<div class = "jumbotron" >
-			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "Content=">
-			<p>Content</p>
+		
+			<ul class="nav nav-tabs">
+			  <li role="presentation" class="active"><a href="#">Content</a></li>
+			  <li role="presentation"><a href="#">Module</a></li>
+			  <li role="presentation"><a href="#">Schedule</a></li>
+			  <li role="presentation"><a href="#">About Me</a></li>
+			</ul>
 			
-		</div>
-			<div class = "jumbotron" >
-			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "Modules=">
-			<p>Modules</p>
 			
-		</div>
-			<div class = "jumbotron" >
-			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "Schedule=">
-			<p>Schedule</p>
-		</div>
-		<div class = "jumbotron" >
-			<a href = "http://localhost:8080/index.html/Courses?coursename=" + "About=">
-			<p>About me</p>
-		</div>
+			
+			<!--ul>
+			    Video Title
+				<video width="320" height="240" controls>
+				<source src="movie.mp4" type="video/mp4">
+				<source src="movie.ogg" type="video/ogg">
+				Your browser does not support the video tag.
+				</video>
+			
+			</ul>
+			
+			<!-- Display alist of videos
+			
+			<form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+				<button type="button" class="btn btn-primary btn-lg btn-block">Content</button>
+			</form>
+			<br>
+			<form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+				<button type="button" class="btn btn-primary btn-lg btn-block">Module</button>
+			</form>
+			<br>
+			<form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+				<button type="button" class="btn btn-primary btn-lg btn-block">Schedule</button>
+			</form>
+			<br>
+			<form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+				<button type="button" class="btn btn-primary btn-lg btn-block">About Me</button>
+			</form>
+			-->
+			
+			
+			
+			
 	
 	</div>
 
