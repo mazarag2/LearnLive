@@ -44,6 +44,10 @@ script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
       border-radius: 10px;
       width:40%;    //Specify your width here
       }
+      .li {
+       display: inline-block;
+      }
+
     // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file://
     //if lt IE 9
@@ -108,7 +112,10 @@ body
       ul#courses.list-group
         each val,index in courseInfo
           li.list-group-item 
-          a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]}
+          span.sr-only (current)
+          a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
+          .pull-right   
+          a.btn.btn-default.btn-sm.pull-right(href = "http://localhost:8080/index/Enroll?course=" + val[0]) Enroll
           |
     //
       div class = "jumbotron" >

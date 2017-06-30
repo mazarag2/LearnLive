@@ -6,6 +6,7 @@ const express = require('express');
 const jade = require('pug');
 const LOGIN = 'Login';
 const CREATE = 'Create';
+const router = express.Router()
 
 var app = express();
 var session = require('express-session');
@@ -52,7 +53,7 @@ function getFirstNamebyEmail(email){
 				resolve(name);
 			});
 			//resolve(false);
-		},1000);//3000
+		},3000);//3000
 	});
 }
 
@@ -512,6 +513,39 @@ app.post('/CreateCourse',function(req,res){
 	});
 	
 });
+
+function getCoursesEnrolled(email){
+	
+	
+	
+	
+}
+
+var index = require('./index');
+
+app.use('/index', index);
+
+router.get('/Enroll',function(req,res){
+	
+	var bodyData = '';
+	req.on('data', function (chunk) {
+		bodyData += chunk.toString();
+	});
+	req.on('end', function () {
+		
+		var postData = qstring.parse(bodyData);
+		var CourseKey = header.query.course;
+		var id = ref.push();
+		id.set({
+			email : firstName ,
+			Course : CourseKey ,
+		})
+
+	});
+	
+	//renderIndex()
+	
+})
 	
 
 
