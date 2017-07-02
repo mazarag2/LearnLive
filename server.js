@@ -4,6 +4,8 @@ const url = require('url');
 const qstring = require('querystring');
 const express = require('express');
 const jade = require('pug');
+const query = require("./query");
+
 const LOGIN = 'Login';
 const CREATE = 'Create';
 const router = express.Router()
@@ -16,7 +18,7 @@ var session = require('express-session');
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
 app.listen(8080);
-
+/*
 var firebase = require("firebase");
 
 
@@ -34,12 +36,19 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 var ref = firebase.database().ref("Courses");
+
 /*
 
 	ref - the reference within the Firebase DB Tree  
 	email - the email which we want the fristname for
 
 */
+function getEmail(){
+
+	
+	return firebase.auth().currentUser.email;
+	
+}
 
 function getFirstNamebyEmail(email){
 
@@ -173,15 +182,6 @@ function getCourseKeys(){
 	});
 }
 
-
-/*
-	retrieve view for given course
-*/
-function getCourse(CourseName){
-	
-	var ref = firebase.database().ref("Courses");	
-}
-
 function signInUser(email,password,res){
 	
 	
@@ -253,19 +253,26 @@ function getCourseColorbyKey(key){
 	
 	return new Promise(function (resolve,reject){
 	
-	setTimeout(function(){
-		console.log("inside");
-		ref.child(key).on("child_added", function(snapshot) {
-			//console.log(snapshot.val().CourseName);
-			var val = snapshot.val();
-			//console.log(snapshot.val()["Color"]);
-			console.log(val);
-			//var Color = val["Color"];
-			resolve(val);
-		})
-	},1000);
+		setTimeout(function(){
+			console.log("inside");
+			ref.child(key).on("child_added", function(snapshot) {
+				//console.log(snapshot.val().CourseName);
+				var val = snapshot.val();
+				//console.log(snapshot.val()["Color"]);
+				console.log(val);
+				//var Color = val["Color"];
+				resolve(val);
+			})
+		},1000);
+		
+	});
 	
-});
+}
+
+function getCoursesEnrolled(email){
+	
+	
+	
 	
 }
 
@@ -389,16 +396,21 @@ app.post('/index', function (req,res) {
 		var role = postData['type'];
 		var errorFlag = false;
 		
+		var newQuery = new query();
 			
-		signInUser(email,password,res).then(function(resolve){
+		newQuery.signInUser(email,password,res).then(function(resolve){
 			console.log("mh");
-			renderIndex(resolve,email,res);
+			
+			newQuery.renderIndex(resolve,email,res);
 			
 		});
 
 	});
 
 });
+
+const index = require("./index");
+app.use('/index',index,renderIndex);
 
 
 app.get('/CreateUser',function (req,res){
@@ -514,38 +526,8 @@ app.post('/CreateCourse',function(req,res){
 	
 });
 
-function getCoursesEnrolled(email){
-	
-	
-	
-	
-}
 
-var index = require('./index');
 
-app.use('/index', index);
-
-router.get('/Enroll',function(req,res){
-	
-	var bodyData = '';
-	req.on('data', function (chunk) {
-		bodyData += chunk.toString();
-	});
-	req.on('end', function () {
-		
-		var postData = qstring.parse(bodyData);
-		var CourseKey = header.query.course;
-		var id = ref.push();
-		id.set({
-			email : firstName ,
-			Course : CourseKey ,
-		})
-
-	});
-	
-	//renderIndex()
-	
-})
 	
 
 

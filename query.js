@@ -1,7 +1,7 @@
-module.exports = function() {
-	
-	var firebase = require("firebase");
-	var config = {
+module.exports = function (){
+			
+	this.firebase = require("firebase");
+	this.config = {
 		apiKey: "AIzaSyCTMUtfwd3jr4BCPQLeajXCpqfdd-lX7Eo",
 		authDomain: "learnlive-f6376.firebaseapp.com",
 		databaseURL: "https://learnlive-f6376.firebaseio.com",
@@ -9,11 +9,14 @@ module.exports = function() {
 		storageBucket: "learnlive-f6376.appspot.com",
 		messagingSenderId: "749566368306"
 	};
-	firebase.initializeApp(config);
-	var database = firebase.database();
-	var ref = firebase.database().ref("Courses");
-
-	this.toArrayObject = function(arr1,arr2){
+	this.firebase.initializeApp(this.config);
+	this.database = this.firebase.database();
+	this.courseRef = this.firebase.database().ref("Courses");
+	this.enrollRef = this.firebase.database().ref("Enrollment");
+	this.userRef = this.firebase.database().ref("Users");
+	
+	
+	this.toArrayObject = function (arr1,arr2){
 		var newArr = Array();
 	
 		if(arr1.length == arr2.length){
@@ -32,11 +35,9 @@ module.exports = function() {
 		console.log(newArr);
 		return newArr;
 			
-		
-		
-	}
+	};
 	
-    this.getCourseKeys = function() {
+    this.getCourseKeys = function () {
 	//Select * FROM COURSES WHERE name = CourseName
 	//OrderBy 
 		var courses = [];
@@ -45,7 +46,7 @@ module.exports = function() {
 			setTimeout( function() {
 				
 				//order by Child ('CourseName')
-				ref.orderByKey().on("child_added", function(snapshot) {
+				this.courseRef.orderByKey().on("child_added", function(snapshot) {
 					//console.log(snapshot.val().CourseName);
 					courses[index] = snapshot.key;
 					++index;
@@ -53,14 +54,14 @@ module.exports = function() {
 				})
 			},2000);
 		});
-	}
+	};
     this.getFirstNameByEmail = function (email){
 
 	return new Promise(function(resolve) {
 		console.log(email + ' getting the userName');
 		setTimeout(function() { 
-			var ref = database.ref("Users/");
-			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
+			
+			this.userRef.orderByChild("email").equalTo(email).on("child_added", function(data) {
 				name = data.val().firstname;
 				app.locals.firstName = name;
 				resolve(name);
@@ -68,8 +69,8 @@ module.exports = function() {
 			//resolve(false);
 			},3000);//3000
 		});
-	}
-	this.getCourses = function(){
+	};
+	this.getCourses = function (){
 
 		var courses = [];
 		var index = 0;
@@ -77,7 +78,7 @@ module.exports = function() {
 			setTimeout( function() {
 				
 				//order by Child ('CourseName')
-				ref.orderByKey().on("child_added", function(snapshot) {
+				this.courseRef.orderByKey().on("child_added", function(snapshot) {
 					//console.log(snapshot.val().CourseName);
 					courses[index] = snapshot.key;
 					++index;
@@ -85,7 +86,7 @@ module.exports = function() {
 				})
 			},2000);
 		});
-		}
+	}
 	this.renderIndex = function(resolve,email,res){
 		
 		if(resolve){
@@ -131,6 +132,40 @@ module.exports = function() {
 			}
 		}
 
+	};
+	this.getCoursesEnrolled = function (userEmail){
+		var courses = [];
+		return new Promise(function(resolve) {
+		setTimeout( function() {
+			
+			enrollRef.orderByChild("email").equalTo(userEmail).on("child_added", function(snapshot) {
+				//console.log(snapshot.val().CourseName);
+				courses[index] = snapshot.key;
+				++index;
+				resolve(courses);
+			})
+		},2000);
+		});
 	}
-
+	this.signInUser = function(email,password,res){
+	
+	
+	return new Promise(function (resolve,reject){
+		
+		setTimeout(function(){
+			console.log("inside");
+			this.firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+				resolve(false);
+				console.log(error.code);
+				var errorMsg = "Email and Password Incorrect please try again";
+				res.render('login',{errorMsg : errorMsg});
+			});
+			resolve(true);
+			app.locals.LoggedIn = true;
+			console.log('resolved');
+		},1000);
+		
+	});
 }
+
+};
