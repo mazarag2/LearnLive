@@ -18,7 +18,7 @@ var session = require('express-session');
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
 app.listen(8080);
-/*
+
 var firebase = require("firebase");
 
 
@@ -35,7 +35,9 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var ref = firebase.database().ref("Courses");
+var courseRef = firebase.database().ref("Courses");
+var userRef = firebase.database().ref("Users");
+var enrollmentRef = firebase.database().ref("Enrollment");
 
 /*
 
@@ -398,10 +400,17 @@ app.post('/index', function (req,res) {
 		
 		var newQuery = new query();
 			
-		newQuery.signInUser(email,password,res).then(function(resolve){
+		var ref = {
+			
+			courseRef : courseRef,
+			userRef : userRef,
+			enrollRef : enrollmentRef
+		}
+	
+		newQuery.signInUser(email,password,res,firebase).then(function(resolve){
 			console.log("mh");
 			
-			newQuery.renderIndex(resolve,email,res);
+			newQuery.renderIndex(resolve,email,res,ref);
 			
 		});
 
