@@ -138,11 +138,7 @@ var query = function() {
 			
 				]).then(function (results){
 					
-					//console.log(results[0]);
-					
 					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]);
-					
-					//res.render('index',{name : results[0],courses : results[1]});
 					
 					var courseInfo = self.toArrayObject(results[1],results[2]);
 					res.render('index',{name : results[0],courseInfo: courseInfo});
@@ -150,10 +146,8 @@ var query = function() {
 				
 					console.log(error + "in query");
 				})
-	
 				
 			}
-			
 			
 		}
 
@@ -164,17 +158,15 @@ var query = function() {
 			setTimeout( function() {
 				
 				//order by Child ('CourseName')
-				ref.orderByKey().on("child_added", function(snapshot) {
+				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
 					//console.log(snapshot.val().CourseName);
-					courses[index] = snapshot.key;
+					courses[index] = snapshot.val().Course;
 					++index;
 					resolve(courses);
 				})
 			},2000);
-	});
-	
-	
-	
+		});
+
 	}
 	
 	
