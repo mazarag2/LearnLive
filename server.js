@@ -38,6 +38,8 @@ var database = firebase.database();
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
 var enrollmentRef = firebase.database().ref("Enrollment");
+var user = firebase.auth().currentUser;
+//var index = require('./index');
 
 /*
 
@@ -271,12 +273,6 @@ function getCourseColorbyKey(key){
 	
 }
 
-function getCoursesEnrolled(email){
-	
-	
-	
-	
-}
 
 app.get('/', function (req, res) {
 	
@@ -407,19 +403,24 @@ app.post('/index', function (req,res) {
 			enrollRef : enrollmentRef
 		}
 	
-		newQuery.signInUser(email,password,res,firebase).then(function(resolve){
+		newQuery.signInUser(email,password,res,firebase,app).then(function(resolve){
 			console.log("mh");
-			
+			app.set("userEmail",email);
 			newQuery.renderIndex(resolve,email,res,ref);
 			
-		});
+		}).catch(function(error){
+				
+			console.log(error + " in server");
+		})
 
 	});
 
 });
 
+
+app.set("enrollRef",enrollmentRef);
 const index = require("./index");
-app.use('/index',index,renderIndex);
+app.use('/index',index);
 
 
 app.get('/CreateUser',function (req,res){

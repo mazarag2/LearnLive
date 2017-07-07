@@ -88,7 +88,7 @@ var query = function() {
 		},2000);
 		});
 	}
-	this.signInUser = function(email,password,res,firebase){
+	this.signInUser = function(email,password,res,firebase,app){
 	
 	
 		return new Promise(function (resolve,reject){
@@ -105,6 +105,7 @@ var query = function() {
 				this.LoggedIn = true;
 				console.log('resolved');
 			},1000);
+
 			
 		});
 	}
@@ -128,27 +129,6 @@ var query = function() {
 				
 			}
 			else{
-				
-				/*
-				self.getFirstNamebyEmail(email,ref.userRef).then(function(resolve){
-					
-					self.getCourseKeys(ref.courseRef).then(function(resolve2){
-						
-						self.getCourses(ref.courseRef).then(function(resolve3){
-							
-							var courseInfo = self.toArrayObject(resolve2,resolve3);
-							res.render('index',{name : resolve,courseInfo: courseInfo});
-							
-						})
-						
-					
-					})
-					
-					
-				})
-				*/
-				
-				
 				
 				Promise.all([
 
@@ -177,6 +157,23 @@ var query = function() {
 			
 		}
 
+	}
+	this.getCoursesEnrolled = function(email,ref){
+	
+		return new Promise(function(resolve) {
+			setTimeout( function() {
+				
+				//order by Child ('CourseName')
+				ref.orderByKey().on("child_added", function(snapshot) {
+					//console.log(snapshot.val().CourseName);
+					courses[index] = snapshot.key;
+					++index;
+					resolve(courses);
+				})
+			},2000);
+	});
+	
+	
 	
 	}
 	
