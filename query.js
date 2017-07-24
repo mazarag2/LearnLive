@@ -134,7 +134,8 @@ var query = function() {
 
 					self.getFirstNamebyEmail(email,ref.userRef),
 					self.getCourseKeys(ref.courseRef),
-					self.getCourses(ref.courseRef)
+					self.getCourses(ref.courseRef),
+					//self.getCoursesEnrolled
 			
 				]).then(function (results){
 					
@@ -155,8 +156,7 @@ var query = function() {
 	this.getCoursesEnrolled = function(email,ref){
 	
 		return new Promise(function(resolve) {
-			setTimeout( function() {
-				
+			setTimeout( function() {	
 				//order by Child ('CourseName')
 				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
 					//console.log(snapshot.val().CourseName);
@@ -166,10 +166,6 @@ var query = function() {
 				})
 			},2000);
 		});
-
 	}
-	
-	
-	
 };
 module.exports = query;
