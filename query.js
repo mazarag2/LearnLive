@@ -134,7 +134,8 @@ var query = function() {
 
 					self.getFirstNamebyEmail(email,ref.userRef),
 					self.getCourseKeys(ref.courseRef),
-					self.getCourses(ref.courseRef),
+					self.getCourses(ref.courseRef)
+					//self.getCoursesEnrolled(ref.enrollmentRef,email)
 					//self.getCoursesEnrolled
 			
 				]).then(function (results){

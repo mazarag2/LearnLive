@@ -18,6 +18,7 @@ var session = require('express-session');
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
 app.listen(8080);
+app.use('/static', express.static('/public'));
 
 var firebase = require("firebase");
 
@@ -407,6 +408,7 @@ app.post('/index', function (req,res) {
 			console.log("mh");
 			app.set("userEmail",email);
 			newQuery.renderIndex(resolve,email,res,ref);
+			app.locals.LoggedIn = true;
 			
 		}).catch(function(error){
 				
