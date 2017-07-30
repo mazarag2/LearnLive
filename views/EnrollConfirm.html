@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Login</title>
+
+    <!-- Bootstrap -->
+    <!-- link href="css/bootstrap.min.css" rel="stylesheet" -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<style>
+		.jumbotron{
+			background-color:#32CD32;
+			color:white;
+			font-size: 150%;
+		}
+		/* Adds borders for tabs */
+		.tab-content {
+			border-left: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+			padding: 10px;
+		}
+		.nav-tabs {
+			margin-bottom: 0;
+		}
+		input.flat, textarea.flat {
+			-webkit-transform-style: flat !important;
+		}
+	</style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  
+	<div class = "container"> 
+    
+	
+	<div class = "pageheader">
+	<h1>Enrolled</h1>
+	</div>
+	
+	<div class = "jumbotron" >
+		<span class = "glyphicon glyphicon-ok"></span>
+		You are succesfully enrolled in ! <br>
+		<a href = "/index"> Click here to go back home</a>
+		<label>Or...</label>
+		<a href = "/ViewCourse">Click here to view the course and jump in!</a> 
+		<label>If you accidently enrolled click here to withdrawal</label>
+		<a href = "/Withdrawl">Withdraw</a>
+	</div>
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+	
+  </body>
+</html>

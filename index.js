@@ -23,7 +23,7 @@ router.get('/Enroll', function (req,res) {
 			email : email,
 			Course : CourseKey
 		})
-		res.send("Enrolled Succesfully");
+		res.render('EnrollConfirm');
 
 	});
 })

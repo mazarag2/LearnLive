@@ -29,7 +29,6 @@ var query = function() {
 		return new Promise(function(resolve) {
 			console.log(email + ' getting the userName');
 			setTimeout(function() { 
-				
 				ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
 					name = data.val().firstname;
 					this.firstName = name;
@@ -40,10 +39,6 @@ var query = function() {
 		});
 	};
 	this.getCourses = function(ref){
-	
-	//Select * FROM COURSES WHERE name = CourseName
-	
-	//OrderBy 
 		
 		var courses = [];
 		var index = 0;
@@ -68,24 +63,19 @@ var query = function() {
 			});
 	}
 	this.getCourseKeys = function(ref){
-	
-	//Select * FROM COURSES WHERE name = CourseName
-	
-	//OrderBy 
-	//var ref = firebase.database().ref("Courses");
-	var courses = [];
-	var index = 0;
-	return new Promise(function(resolve) {
-		setTimeout( function() {
-			
-			//order by Child ('CourseName')
-			ref.orderByKey().on("child_added", function(snapshot) {
-				//console.log(snapshot.val().CourseName);
-				courses[index] = snapshot.key;
-				++index;
-				resolve(courses);
-			})
-		},2000);
+		var courses = [];
+		var index = 0;
+		return new Promise(function(resolve) {
+			setTimeout( function() {
+				
+				//order by Child ('CourseName')
+				ref.orderByKey().on("child_added", function(snapshot) {
+					//console.log(snapshot.val().CourseName);
+					courses[index] = snapshot.key;
+					++index;
+					resolve(courses);
+				})
+			},2000);
 		});
 	}
 	this.signInUser = function(email,password,res,firebase,app){
@@ -107,6 +97,26 @@ var query = function() {
 			},1000);
 
 			
+		});
+	}
+	this.getCoursesEnrolled = function(email,ref){
+		var courses = [];
+		var index = 0;
+		return new Promise(function(resolve) {
+			setTimeout( function() {	
+				//order by Child ('CourseName')
+				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
+					//console.log(snapshot.val().CourseName);
+					if(snapshot.exists()) {					
+						courses[index] = snapshot.val().Course;
+						++index;
+						resolve(courses);
+					}
+					else{
+						resolve(0);
+					}
+				})
+			},2000);
 		});
 	}
 	this.renderIndex = function(resolve,email,res,ref){
@@ -134,13 +144,12 @@ var query = function() {
 
 					self.getFirstNamebyEmail(email,ref.userRef),
 					self.getCourseKeys(ref.courseRef),
-					self.getCourses(ref.courseRef)
-					//self.getCoursesEnrolled(ref.enrollmentRef,email)
-					//self.getCoursesEnrolled
+					self.getCourses(ref.courseRef),
+					self.getCoursesEnrolled(email,ref.enrollRef)
 			
 				]).then(function (results){
 					
-					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]);
+					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled' + results[3]);
 					
 					var courseInfo = self.toArrayObject(results[1],results[2]);
 					res.render('index',{name : results[0],courseInfo: courseInfo});
@@ -153,20 +162,6 @@ var query = function() {
 			
 		}
 
-	}
-	this.getCoursesEnrolled = function(email,ref){
-	
-		return new Promise(function(resolve) {
-			setTimeout( function() {	
-				//order by Child ('CourseName')
-				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
-					//console.log(snapshot.val().CourseName);
-					courses[index] = snapshot.val().Course;
-					++index;
-					resolve(courses);
-				})
-			},2000);
-		});
 	}
 };
 module.exports = query;
