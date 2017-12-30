@@ -89,18 +89,9 @@ body
       .panel-heading Courses
       |   
       .panel-body
-        p Courses Enrolled will show up here!
-      // List group -- Will need to use Angular here in luee of DOM manipulation
-      ul#courses.list-group
-        li.list-group-item Cras justo odio
-        |     
-        li.list-group-item Dapibus ac facilisis in
-        |     
-        li.list-group-item Morbi leo risus
-        |     
-        li.list-group-item Porta ac consectetur ac
-        |     
-        li.list-group-item Vestibulum at eros
+       
+
+      		  
     |  
     .panel.panel-default.pull-left.clearfix
       // Default panel contents
@@ -115,7 +106,7 @@ body
           span.sr-only (current)
           a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
           .pull-right   
-          a.btn.btn-default.btn-sm.pull-right(href = "http://localhost:8080/index/Enroll?course=" + val[0]) Enroll
+          a.btn.btn-default.btn-sm.pull-right(href = "http://localhost:8080/index/Enroll?course=" + val[0] + "&name=" + val[1]) Enroll
           |
     //
       div class = "jumbotron" >

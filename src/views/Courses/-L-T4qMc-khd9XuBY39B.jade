@@ -1,0 +1,88 @@
+doctype html(lang='en')
+head
+    meta(charset='utf-8')
+    |     
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    title CourseName
+    // Bootstrap
+    // link href="css/bootstrap.min.css" rel="stylesheet"
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    | &#x9;
+    | &#x9;
+    style.
+      .jumbotron{
+      background-color:#{Color};
+      color:white;
+      }
+      /* Adds borders for tabs */
+      .tab-content {
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+      }
+      .nav-tabs {
+      margin-bottom: 0;
+      }
+      input.flat, textarea.flat {
+      -webkit-transform-style: flat !important;
+      }
+    // HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
+      |       
+      script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+    |   
+    body
+    .container
+      .jumbotron
+        .pageheader
+          h1 Welcome to Course
+      | &#x9;&#x9;
+      | &#x9;&#x9;
+      | &#x9;&#x9;&#x9;
+      ul.nav.nav-tabs
+        li.active(role='presentation')
+          a(href='#') Content
+        | &#x9;&#x9;&#x9;  
+        li(role='presentation')
+          a(href='#') Module
+        | &#x9;&#x9;&#x9;  
+        li(role='presentation')
+          a(href='#') Schedule
+        | &#x9;&#x9;&#x9;  
+        li(role='presentation')
+          a(href='#') About Me
+      //
+        ul>
+        Video Title
+        <video width="320" height="240" controls>
+        <source src="movie.mp4" type="video/mp4">
+        <source src="movie.ogg" type="video/ogg">
+        Your browser does not support the video tag.
+        </video>
+        </ul>
+        <!-- Display alist of videos
+        <form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+        <button type="button" class="btn btn-primary btn-lg btn-block">Content</button>
+        </form>
+        <br>
+        <form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+        <button type="button" class="btn btn-primary btn-lg btn-block">Module</button>
+        </form>
+        <br>
+        <form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+        <button type="button" class="btn btn-primary btn-lg btn-block">Schedule</button>
+        </form>
+        <br>
+        <form action = "http://localhost:8080/index.html/Courses?coursename=Content=" method = "GET">
+        <button type="button" class="btn btn-primary btn-lg btn-block">About Me</button>
+        </form>
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    // Include all compiled plugins (below), or include individual files as needed
+    script(src='js/bootstrap.min.js')

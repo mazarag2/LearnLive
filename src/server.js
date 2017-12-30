@@ -48,13 +48,8 @@ var user = firebase.auth().currentUser;
 	email - the email which we want the fristname for
 
 */
-function getEmail(){
 
-	
-	return firebase.auth().currentUser.email;
-	
-}
-
+/*
 function getFirstNamebyEmail(email){
 
 	return new Promise(function(resolve) {
@@ -70,7 +65,7 @@ function getFirstNamebyEmail(email){
 		},3000);//3000
 	});
 }
-
+*/
 /*
 	postData - A dictionary carrying data to create a course 
 	usually in the form of a parsed
@@ -106,18 +101,12 @@ function createCourse(postData){
 
 function createCourseView(name){
 	
-	/*	
-		One idea : we can create a new page and and build it as were are "building it" ()
-		Another Idea : we simply just use a template ask them what color the page is (lesser customizable/but less dev time)
-	*/
-	
 	var readFile = new Promise(function(resolve,reject) {
 		fs.readFile('views/CourseTemplate.jade', function (err, data) {
 			if (err) {
 				reject(true);
 		   }
 		   resolve(data.toString());
-		   //console.log("Asynchronous read: " + data.toString());
 		});
 	});
 	
@@ -135,7 +124,7 @@ function createCourseView(name){
 		}
 	});
 }
-
+/*
 function getCourses(){
 	
 	//Select * FROM COURSES WHERE name = CourseName
@@ -153,18 +142,12 @@ function getCourses(){
 				courses[index] = snapshot.val().CourseName;
 				++index;
 				resolve(courses);
-			/*
-			snapshot.forEach(function(childSnapshot) {
-				var childKey = childSnapshot.key;
-				var childData = childSnapshot.val();
-				console.log(childKey +  ' ' + childData);
-			});
-			*/
 		})
 		},2000);
 	});
 }
-
+*/
+/*
 function getCourseKeys(){
 	
 	//Select * FROM COURSES WHERE name = CourseName
@@ -186,7 +169,8 @@ function getCourseKeys(){
 		},2000);
 	});
 }
-
+*/
+/*
 function signInUser(email,password,res){
 	
 	
@@ -207,6 +191,7 @@ function signInUser(email,password,res){
 		
 	});
 }
+*/
 
 
 function removeWhiteSpaces(courseName){
@@ -254,7 +239,7 @@ function toArrayObject(arr1,arr2){
 	
 }
 
-function getCourseColorbyKey(key){
+function getCourseColorbyKey(key,ref){
 	
 	return new Promise(function (resolve,reject){
 	
@@ -303,12 +288,19 @@ app.get('/index',function (req,res){
 		console.log(header);
 		var CourseKey = header.query.course;
 		console.log(CourseKey);
-		var user = firebase.auth().currentUser;
+		var email = firebase.auth().currentUser.email;
+		var newQuery = new query();
+		var ref = {
+			
+			courseRef : courseRef,
+			userRef : userRef,
+			enrollRef : enrollmentRef
+		}
 		if(CourseKey != null){
 			
 			//need to get Color for Course 
 			
-			getCourseColorbyKey(CourseKey).then(function(resolve){
+			getCourseColorbyKey(CourseKey,courseRef).then(function(resolve){
 				
 				res.render("Courses/" + CourseKey,{Color : resolve});
 				
@@ -318,7 +310,7 @@ app.get('/index',function (req,res){
 		else{
 			
 			
-			renderIndex(true,user.email,res);
+			newQuery.renderIndex(true,email,res,ref);
 			
 		}
 	}
@@ -329,7 +321,7 @@ app.get('/index',function (req,res){
 	}
 	
 });
-
+/*
 function renderIndex(resolve,email,res){
 	
 	if(resolve){
@@ -379,6 +371,7 @@ function renderIndex(resolve,email,res){
 
 	
 }
+*/
 
 app.post('/index', function (req,res) {
 	
