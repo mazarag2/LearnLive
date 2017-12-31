@@ -3,6 +3,8 @@ var query = function() {
 	var self = this;
 	var LoggedIn = false;
 	var firstName = "";
+	const NodeCache = require("node-cache");
+    const userCache = new NodeCache();
 	this.toArrayObject = function(arr1,arr2){
 	
 		var newArr = Array();
@@ -32,10 +34,11 @@ var query = function() {
 				ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
 					var name = data.val().firstname;
 					console.log("im in" + name);
+					var data = {"name" : name};
 					self.firstName = name;
 					resolve(name);
 				});
-			},2000);//3000
+			},3000);//3000
 		});
 	};
 	this.getCourses = function(ref){
@@ -163,8 +166,15 @@ var query = function() {
 	this.renderIndex = function(resolve,email,res,ref){
 	
 		if(resolve){
-			//User is LOgged In
-			if(self.firstName != undefined){
+			//User is LOgged In usrName
+			
+			var Usrname = ref.cacheRef.get( "usrName" );
+
+			if ( Usrname == undefined ){
+			  console.log("Boi wtf name misssing");
+			}
+			
+			if(Usrname != undefined){
 				
 				
 				Promise.all([
@@ -176,7 +186,7 @@ var query = function() {
 				]).then(function (results){
 					
 					var courseInfo = self.toArrayObject(results[0],results[1]);
-					res.render('index',{name : results[0],courseInfo: courseInfo});
+					res.render('index',{name : Usrname.name,courseInfo: courseInfo});
 
 				})
 				/*
@@ -206,6 +216,12 @@ var query = function() {
 					
 					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled' + results[3]);
 					
+					var data = {name : results[0]};
+					var success = ref.cacheRef.set( "usrName", data,0);
+					var value = ref.cacheRef.get( "usrName" );
+					console.log("name " + value.name);
+					
+					self.firstName = results[0];
 					var courseInfo = self.toArrayObject(results[1],results[2]);
 					res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
 				}).catch(function(error){

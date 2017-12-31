@@ -5,6 +5,8 @@ const qstring = require('querystring');
 const express = require('express');
 const jade = require('pug');
 const query = require("./query");
+const NodeCache = require("node-cache");
+const userCache = new NodeCache();
 
 const LOGIN = 'Login';
 const CREATE = 'Create';
@@ -294,7 +296,8 @@ app.get('/index',function (req,res){
 			
 			courseRef : courseRef,
 			userRef : userRef,
-			enrollRef : enrollmentRef
+			enrollRef : enrollmentRef,
+			cacheRef : userCache
 		}
 		if(CourseKey != null){
 			
@@ -308,7 +311,6 @@ app.get('/index',function (req,res){
 			
 		}
 		else{
-			
 			
 			newQuery.renderIndex(true,email,res,ref);
 			
@@ -394,7 +396,8 @@ app.post('/index', function (req,res) {
 			
 			courseRef : courseRef,
 			userRef : userRef,
-			enrollRef : enrollmentRef
+			enrollRef : enrollmentRef,
+			cacheRef : userCache
 		}
 	
 		newQuery.signInUser(email,password,res,firebase,app).then(function(resolve){
