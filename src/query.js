@@ -34,11 +34,15 @@ var query = function() {
 				ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
 					var name = data.val().firstname;
 					console.log("im in" + name);
-					var data = {"name" : name};
-					self.firstName = name;
-					resolve(name);
+					if(name != undefined){
+						resolve(name);
+					}
+					else{
+						reject(false);
+					}
+					
 				});
-			},3000);//3000
+			},1000);//3000
 		});
 	};
 	this.getCourses = function(ref){
@@ -98,7 +102,6 @@ var query = function() {
 		
 		return new Promise(function(resolve){
 			setTimeout( function() {	
-				//order by Child ('CourseName')
 				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
 					console.log("Inside CourseEnrolled " + snapshot.val());
 					if(snapshot.exists()) {					
@@ -118,32 +121,90 @@ var query = function() {
 	}
 	this.getCoursesEnrolled = function(email,ref){
 		var courses = [];
-		
-		console.log("CoursesEnrolled");
+		var courseName = [];
+		var courseInfo = {};
 		var index = 0;
-		return new Promise(function(resolve) {
-			setTimeout( function() {	
-				//order by Child ('CourseName')
-				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
-					console.log("Inside CourseEnrolled " + snapshot.val());
-					if(snapshot.exists()) {					
-						courses[index] = snapshot.val().Course;
-						++index;
-						resolve(courses);
-						
-					}
-					else{
-						resolve(0);
-					}
-				})
-			},2000);
+		
+
+		
+		console.log("email and ref" + email + " " + ref);
+		
+		
+		if (!email) return false
+			// Replace '.' (not allowed in a Firebase key) with ',' (not allowed in an email address)
+		email = email.toLowerCase();
+		email = email.replace(/\./g, ',');
+		
+		console.log("email and ref" + email + " " + ref);
+
+		console.log("Query By Itself " + ref.orderByChild("email"));
+		
+		ref.orderByKey().equalTo(email).on("child_added",function(snapshot){
+			
+			console.log("Brand new Query by On " + JSON.stringify(snapshot));
+			snapshot.forEach(function(snapshot) {
+				var childKey = console.log("key " + snapshot.val().CourseName);
+				courseName[index] =  snapshot.val().CourseName;
+				var childData = console.log("Data " + snapshot.val().Course);
+				courses[index] = snapshot.val().Course;
+				++index;
+				
+			});
+			courseInfo = self.toArrayObject(courses,courseName);
+				//console.log("Boi our obj " + courseInfo);
+			return courseInfo;
+			
 			
 			
 		});
+		ref.orderByKey().equalTo(email).once("value").then(function(snapshot){
+			
+			console.log("Brand new Query by Once then " + JSON.stringify(snapshot));
+			//snapshot.val();
+		});
+		/*
+		return ref.orderByKey().equalTo(email).once("value").then(function(snapshot){
+			
+			console.log("Brand new Query by Once then " + JSON.stringify(snapshot));
+			return snapshot.val();
+		});
+		*/
 		
+		ref.once('value').then(function(dataSnapshot) {
+			console.log("raw " + JSON.stringify(dataSnapshot));
+		});
+		ref.equalTo(email).once('value').then(function(dataSnapshot) {
+			console.log("ay " + JSON.stringify(dataSnapshot));
+		});
+		return ref.orderByChild("email").equalTo(email).once('value').then(function(snapshot) {
+			var tempInfo = JSON.parse(JSON.stringify(snapshot));
+				console.log("tempInfo parse " + tempInfo);
+				
+				snapshot.forEach(function(snapshot) {
+					var childKey = console.log("key " + snapshot.key);
+					var childData = console.log("Data " + snapshot.val());
+				});
+			
+			
+			for (var key in tempInfo) {
+				if (tempInfo.hasOwnProperty(key)) {
+					
+					courses[index] = tempInfo[key].Course;
+					courseName[index] = tempInfo[key].CourseName;
+					++index;
+				}
+			}
 		
-		
-		
+				courseInfo = self.toArrayObject(courses,courseName);
+				//console.log("Boi our obj " + courseInfo);
+				return courseInfo;
+			
+		},function(error){
+			
+			console.log("Error " + error);
+			
+		});
+				
 	}
 	this.getCourseColorbyKey = function (key){
 	
@@ -171,37 +232,25 @@ var query = function() {
 			var Usrname = ref.cacheRef.get( "usrName" );
 
 			if ( Usrname == undefined ){
-			  console.log("Boi wtf name misssing");
+			  console.log("Sorry Name is missing");
 			}
 			
 			if(Usrname != undefined){
 				
-				
+				//Display back to login once in
 				Promise.all([
 					
 					self.getCourseKeys(ref.courseRef),
 					self.getCourses(ref.courseRef),
-					//self.getCoursesEnrolled(email,ref.enrollRef)
+					self.getCoursesEnrolled(email,ref.enrollRef)
 				
 				]).then(function (results){
 					
 					var courseInfo = self.toArrayObject(results[0],results[1]);
-					res.render('index',{name : Usrname.name,courseInfo: courseInfo});
+					console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
+					res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
 
 				})
-				/*
-				self.getCourseKeys(ref.courseRef).then(function(resolve){
-					
-					self.getCourses(ref.courseRef).then(function(resolve2){
-						
-						var courseInfo = self.toArrayObject(resolve,resolve2);
-						
-						res.render('index',{name : this.firstName,courseInfo: courseInfo});
-						
-					});
-					
-				});
-				*/
 			}
 			else{
 				//Displaying Login Page
@@ -210,11 +259,12 @@ var query = function() {
 					self.getFirstNamebyEmail(email,ref.userRef),
 					self.getCourseKeys(ref.courseRef),
 					self.getCourses(ref.courseRef),
-					//self.getCoursesEnrolled(email,ref.enrollRef)
+					self.getCoursesEnrolled(email,ref.enrollRef)
 			
 				]).then(function (results){
 					
-					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled' + results[3]);
+					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
+					
 					
 					var data = {name : results[0]};
 					var success = ref.cacheRef.set( "usrName", data,0);

@@ -36,8 +36,6 @@ var config = {
   };
 firebase.initializeApp(config);
 
-var database = firebase.database();
-
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
 var enrollmentRef = firebase.database().ref("Enrollment");
@@ -107,7 +105,7 @@ function createCourseView(name){
 		fs.readFile('views/CourseTemplate.jade', function (err, data) {
 			if (err) {
 				reject(true);
-		   }
+			}
 		   resolve(data.toString());
 		});
 	});

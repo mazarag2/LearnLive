@@ -4,6 +4,15 @@ const qstring = require('querystring');
 const url = require('url');
 
 
+function escapeEmailAddress(email){
+		
+	if (!email) return false
+	// Replace '.' (not allowed in a Firebase key) with ',' (not allowed in an email address)
+	email = email.toLowerCase();
+	email = email.replace(/\./g, ',');
+	return email;
+}
+
 // define the enroll route
 router.get('/Enroll', function (req,res) {
 	
@@ -23,10 +32,12 @@ router.get('/Enroll', function (req,res) {
 		console.log("CourseName " + coursename);
 		const server = require('./server');
 		var email = req.app.get("userEmail");
+		console.log("Email " + email)
 		var ref = req.app.get("enrollRef");
-		var id = ref.push();
-		id.set({
-			email : email,
+		var id = ref.child(escapeEmailAddress(email));
+		var newRef = id.push();
+		newRef.set({
+			//email : email,
 			Course : CourseKey,
 			CourseName : coursename
 		})
