@@ -15,7 +15,6 @@ const router = express.Router()
 var app = express();
 var session = require('express-session');
 
-//var cookieParser = require('cookie-parser');
 
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
@@ -40,39 +39,6 @@ var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
 var enrollmentRef = firebase.database().ref("Enrollment");
 var user = firebase.auth().currentUser;
-//var index = require('./index');
-
-/*
-
-	ref - the reference within the Firebase DB Tree  
-	email - the email which we want the fristname for
-
-*/
-
-/*
-function getFirstNamebyEmail(email){
-
-	return new Promise(function(resolve) {
-		console.log(email + ' getting the userName');
-		setTimeout(function() { 
-			var ref = database.ref("Users/");
-			ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
-				name = data.val().firstname;
-				app.locals.firstName = name;
-				resolve(name);
-			});
-			//resolve(false);
-		},3000);//3000
-	});
-}
-*/
-/*
-	postData - A dictionary carrying data to create a course 
-	usually in the form of a parsed
-	request
-	
-	
-*/
 
 function createCourse(postData){
 	
@@ -124,75 +90,6 @@ function createCourseView(name){
 		}
 	});
 }
-/*
-function getCourses(){
-	
-	//Select * FROM COURSES WHERE name = CourseName
-	
-	//OrderBy 
-	var ref = firebase.database().ref("Courses");
-	var courses = [];
-	var index = 0;
-	return new Promise(function(resolve) {
-		setTimeout( function() {
-			
-			//order by Child ('CourseName')
-			ref.orderByKey().on("child_added", function(snapshot) {
-				//console.log(snapshot.val().CourseName);
-				courses[index] = snapshot.val().CourseName;
-				++index;
-				resolve(courses);
-		})
-		},2000);
-	});
-}
-*/
-/*
-function getCourseKeys(){
-	
-	//Select * FROM COURSES WHERE name = CourseName
-	
-	//OrderBy 
-	var ref = firebase.database().ref("Courses");
-	var courses = [];
-	var index = 0;
-	return new Promise(function(resolve) {
-		setTimeout( function() {
-			
-			//order by Child ('CourseName')
-			ref.orderByKey().on("child_added", function(snapshot) {
-				//console.log(snapshot.val().CourseName);
-				courses[index] = snapshot.key;
-				++index;
-				resolve(courses);
-			})
-		},2000);
-	});
-}
-*/
-/*
-function signInUser(email,password,res){
-	
-	
-	return new Promise(function (resolve,reject){
-		
-		setTimeout(function(){
-			console.log("inside");
-			firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-				resolve(false);
-				console.log(error.code);
-				var errorMsg = "Email and Password Incorrect please try again";
-				res.render('login',{errorMsg : errorMsg});
-			});
-			resolve(true);
-			app.locals.LoggedIn = true;
-			console.log('resolved');
-		},1000);
-		
-	});
-}
-*/
-
 
 function removeWhiteSpaces(courseName){
 	
@@ -321,57 +218,7 @@ app.get('/index',function (req,res){
 	}
 	
 });
-/*
-function renderIndex(resolve,email,res){
-	
-	if(resolve){
-		
-		if(app.locals.firstName != null){
-			
-			getCourseKeys().then(function(resolve){
-				
-				getCourses().then(function(resolve2){
-					
-					var courseInfo = toArrayObject(resolve,resolve2);
-					
-					res.render('index',{name : app.locals.firstName,courseInfo: courseInfo});
-					
-				});
-				
-			});
-			
-		}
-		else{
-			
-			Promise.all([
 
-				getFirstNamebyEmail(email),
-				getCourseKeys(),
-				getCourses()
-		
-			]).then(function (results){
-				
-				//console.log(results[0]);
-				
-				console.log(results[0]+ ' ' + results[1] + ' ' + results[2]);
-				
-				//res.render('index',{name : results[0],courses : results[1]});
-				
-				var courseInfo = toArrayObject(results[1],results[2]);
-				res.render('index',{name : results[0],courseInfo: courseInfo});
-			}).catch(function(error){
-				
-				console.log(error);
-			})
-			
-		}
-		
-		
-	}
-
-	
-}
-*/
 
 app.post('/index', function (req,res) {
 	
@@ -398,6 +245,8 @@ app.post('/index', function (req,res) {
 			cacheRef : userCache
 		}
 	
+		//email = email.toLowerCase();
+		//email = email.replace(/\./g, ',');
 		newQuery.signInUser(email,password,res,firebase,app).then(function(resolve){
 			console.log("mh");
 			app.set("userEmail",email);
@@ -436,7 +285,7 @@ app.post('/CreateUser',function (req,res){
 		
 		var postData = qstring.parse(bodyData);
 		console.log(postData);
-		var email = postData['email'];
+		var origEmail = postData['email'];
 		console.log(email);
 		var password = postData['password'];
 		var password2 = postData['password2'];
@@ -451,34 +300,55 @@ app.post('/CreateUser',function (req,res){
 		}
 		else{
 		
-			firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+			var email = origEmail.toLowerCase();
+			email = email.replace(/\./g, ',');
+			//console.log(userRef.child(email));
+			
+			
+			var newQuery = new query();
+			
+			if(newQuery.doesUserExist(email,userRef)){
 				
-				var errorCode = error.code;
-				var errorMessage = error.message;
-				console.log(errorMessage + errorCode);
-
-			});
-			firebase.auth().onAuthStateChanged(function(user) {
-			  if (user) {
-				console.log(user);
-				var ref = database.ref('Users');
-				var id = ref.push();
-				id.set({
-					firstname: firstName ,
-					lastname : lastName ,
-					email : email
-				})
+				//User with that email is already in the DB
+				var errorMsg = "A User with that email is already in use If you forgot your password click here ";
+				res.render('Create',{errorMsg : errorMsg});
 				
-			  } else {
-				// User is signed out.
-				app.locals.LoggedIn = false;
-			  }
-			});
+				
+			}
+			else{
+				
+				// New User lets sign them up 
+				firebase.auth().createUserWithEmailAndPassword(origEmail, password).catch(function(error) {
+					
+					var errorCode = error.code;
+					var errorMessage = error.message;
+					console.log(errorMessage + errorCode);
 
-			//store first and last name in FIrebase DB 		
-			res.redirect('/');
-		
-		
+				});
+				firebase.auth().onAuthStateChanged(function(user) {
+				  if (user) {
+					console.log(user);
+					//var ref = database.ref('Users');
+					
+					var id = userRef.child(email);
+					var newRef = id.push();
+					
+					newRef.set({
+						firstname: firstName ,
+						lastname : lastName 
+					})
+					
+				  } else {
+					// User is signed out.
+					app.locals.LoggedIn = false;
+				  }
+				});
+
+				//store first and last name in FIrebase DB 		
+				res.redirect('/');	
+				
+			}
+			
 		}
 	});
 	

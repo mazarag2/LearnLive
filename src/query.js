@@ -5,6 +5,18 @@ var query = function() {
 	var firstName = "";
 	const NodeCache = require("node-cache");
     const userCache = new NodeCache();
+	this.doesUserExist = function(email,ref){
+		
+		ref.once('value', function(snapshot) {
+		  if (snapshot.hasChild(email)) {
+			return true;
+		  }
+		  else{
+			 return false;
+		  }
+		});
+		
+	}
 	this.toArrayObject = function(arr1,arr2){
 	
 		var newArr = Array();
@@ -28,6 +40,24 @@ var query = function() {
 	}
 	this.getFirstNamebyEmail = function(email,ref){
 
+	
+		if (!email) return false
+		// Replace '.' (not allowed in a Firebase key) with ',' (not allowed in an email address)
+		email = email.toLowerCase();
+		email = email.replace(/\./g, ',');
+		
+		return ref.child(email).once('value').then(function(snapshot){
+			
+			
+			var obj = snapshot.exportVal();
+			var key = Object.keys(snapshot.exportVal());
+			console.log(obj[key].firstname);
+			
+			//console.log("FirstName " + JSON.stringify(snapshot) + " " + snapshot.exportVal());
+			return obj[key].firstname;
+			
+		});
+		/*
 		return new Promise(function(resolve) {
 			console.log(email + ' getting the userName');
 			setTimeout(function() { 
@@ -44,6 +74,7 @@ var query = function() {
 				});
 			},1000);//3000
 		});
+		*/
 	};
 	this.getCourses = function(ref){
 		
@@ -139,9 +170,11 @@ var query = function() {
 
 		console.log("Query By Itself " + ref.orderByChild("email"));
 		
-		ref.orderByKey().equalTo(email).on("child_added",function(snapshot){
+		return new Promise(function(resolve){
+			ref.orderByKey().equalTo(email).on("child_added",function(snapshot){
 			
 			console.log("Brand new Query by On " + JSON.stringify(snapshot));
+			
 			snapshot.forEach(function(snapshot) {
 				var childKey = console.log("key " + snapshot.val().CourseName);
 				courseName[index] =  snapshot.val().CourseName;
@@ -150,60 +183,17 @@ var query = function() {
 				++index;
 				
 			});
+			
+			
 			courseInfo = self.toArrayObject(courses,courseName);
-				//console.log("Boi our obj " + courseInfo);
+			console.log("Boi our obj " + courseInfo);
+			resolve(courseInfo);
 			return courseInfo;
 			
-			
-			
+			});
 		});
-		ref.orderByKey().equalTo(email).once("value").then(function(snapshot){
-			
-			console.log("Brand new Query by Once then " + JSON.stringify(snapshot));
-			//snapshot.val();
-		});
-		/*
-		return ref.orderByKey().equalTo(email).once("value").then(function(snapshot){
-			
-			console.log("Brand new Query by Once then " + JSON.stringify(snapshot));
-			return snapshot.val();
-		});
-		*/
 		
-		ref.once('value').then(function(dataSnapshot) {
-			console.log("raw " + JSON.stringify(dataSnapshot));
-		});
-		ref.equalTo(email).once('value').then(function(dataSnapshot) {
-			console.log("ay " + JSON.stringify(dataSnapshot));
-		});
-		return ref.orderByChild("email").equalTo(email).once('value').then(function(snapshot) {
-			var tempInfo = JSON.parse(JSON.stringify(snapshot));
-				console.log("tempInfo parse " + tempInfo);
-				
-				snapshot.forEach(function(snapshot) {
-					var childKey = console.log("key " + snapshot.key);
-					var childData = console.log("Data " + snapshot.val());
-				});
-			
-			
-			for (var key in tempInfo) {
-				if (tempInfo.hasOwnProperty(key)) {
-					
-					courses[index] = tempInfo[key].Course;
-					courseName[index] = tempInfo[key].CourseName;
-					++index;
-				}
-			}
-		
-				courseInfo = self.toArrayObject(courses,courseName);
-				//console.log("Boi our obj " + courseInfo);
-				return courseInfo;
-			
-		},function(error){
-			
-			console.log("Error " + error);
-			
-		});
+		//return new Array();
 				
 	}
 	this.getCourseColorbyKey = function (key){
@@ -246,6 +236,7 @@ var query = function() {
 				
 				]).then(function (results){
 					
+					console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
 					var courseInfo = self.toArrayObject(results[0],results[1]);
 					console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
 					res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
@@ -265,7 +256,7 @@ var query = function() {
 					
 					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
 					
-					
+					console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
 					var data = {name : results[0]};
 					var success = ref.cacheRef.set( "usrName", data,0);
 					var value = ref.cacheRef.get( "usrName" );
