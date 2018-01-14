@@ -8,17 +8,21 @@ head
     // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
     title Login
     // Bootstrap background-color:#32CD32;
-    // link href="css/bootstrap.min.css" rel="stylesheet"
+    // link href="css/bootstrap.min.css" rel="stylesheet" '../../public/classroom.jpg'
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
     | &#x9;
     style.
-      .body {
-         background-image: url(public/classroom.jpeg);
+      .bkimg {
+         background-image: url("/public/classroom.jpeg");
          background-repeat: no-repeat;
+         background-size:cover;
+         background-position: center;
       }
+
       .jumbotron{
           background-color:#32CD32;
           color:white;
+          opacity: 0.8;
       }
       /* Adds borders for tabs */
       .tab-content {
@@ -40,15 +44,17 @@ head
       |       
       script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
 |   
-body
+body.bkimg
+    
     .container
       .pageheader
-        h1 Welcome To LearnLive!
+        
       | &#x9;
       | &#x9;
       .jumbotron
+        h1 Welcome To LearnLive!
         form.form-inline(role='form', action = '/index', method='post')
-          p Creating a new form of education and learning through collaboaration
+          p Creating a new form of education and learning through user moderated and generated content
           | &#x9;&#x9;
           p.errorMsg #{errorMsg}
           p

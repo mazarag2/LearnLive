@@ -7,7 +7,7 @@ const jade = require('pug');
 const query = require("./query");
 const NodeCache = require("node-cache");
 const userCache = new NodeCache();
-
+const path = require('path');
 const LOGIN = 'Login';
 const CREATE = 'Create';
 const router = express.Router()
@@ -16,10 +16,12 @@ var app = express();
 var session = require('express-session');
 
 
+console.log(path.join(__dirname, '../public'));
+
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
 app.listen(8080);
-app.use('/static', express.static('/public'));
+app.use('/public',express.static(path.join(__dirname, '../public')));
 
 var firebase = require("firebase");
 
