@@ -57,24 +57,7 @@ var query = function() {
 			return obj[key].firstname;
 			
 		});
-		/*
-		return new Promise(function(resolve) {
-			console.log(email + ' getting the userName');
-			setTimeout(function() { 
-				ref.orderByChild("email").equalTo(email).on("child_added", function(data) {
-					var name = data.val().firstname;
-					console.log("im in" + name);
-					if(name != undefined){
-						resolve(name);
-					}
-					else{
-						reject(false);
-					}
-					
-				});
-			},1000);//3000
-		});
-		*/
+
 	};
 	this.getCourses = function(ref){
 		
@@ -113,7 +96,7 @@ var query = function() {
 	
 		return new Promise(function (resolve,reject){
 			
-			setTimeout(function(){
+			//setTimeout(function(){
 				console.log("inside");
 				firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
 					resolve(false);
@@ -124,7 +107,7 @@ var query = function() {
 				resolve(true);
 				this.LoggedIn = true;
 				console.log('resolved');
-			},1000);
+			//},1000);
 
 			
 		});
@@ -155,9 +138,7 @@ var query = function() {
 		var courseName = [];
 		var courseInfo = {};
 		var index = 0;
-		
 
-		
 		console.log("email and ref" + email + " " + ref);
 		
 		
@@ -188,7 +169,7 @@ var query = function() {
 			courseInfo = self.toArrayObject(courses,courseName);
 			console.log("Boi our obj " + courseInfo);
 			resolve(courseInfo);
-			return courseInfo;
+			//return courseInfo;
 			
 			});
 		});

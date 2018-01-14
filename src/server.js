@@ -166,8 +166,9 @@ app.post('/', function (req,res){
 	
 	firebase.auth().signOut().then(function() {
 		// Sign-out successful.
-			res.render('login');
-			app.locals.LoggedIn = false;
+		res.render('login');
+		app.locals.LoggedIn = false;
+		userCache.del("usrName");
 			
 	}).catch(function(error) {
 		// An error happened.
@@ -244,19 +245,28 @@ app.post('/index', function (req,res) {
 			enrollRef : enrollmentRef,
 			cacheRef : userCache
 		}
-	
-		//email = email.toLowerCase();
-		//email = email.replace(/\./g, ',');
+		
 		newQuery.signInUser(email,password,res,firebase,app).then(function(resolve){
-			console.log("mh");
-			app.set("userEmail",email);
-			newQuery.renderIndex(resolve,email,res,ref);
-			app.locals.LoggedIn = true;
 			
+			firebase.auth().onAuthStateChanged(function(user) {
+				  if (user) {
+					// User is signed in.
+					console.log("mh");
+					app.set("userEmail",email);
+					newQuery.renderIndex(resolve,email,res,ref);
+					app.locals.LoggedIn = true;
+
+				  } else {
+					// User is signed out.
+					// ...
+				  }
+			});
+
 		}).catch(function(error){
 				
 			console.log(error + " in server");
 		})
+		
 
 	});
 

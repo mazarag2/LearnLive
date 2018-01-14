@@ -32,7 +32,7 @@ router.get('/Enroll', function (req,res) {
 		console.log("CourseName " + coursename);
 		const server = require('./server');
 		var email = req.app.get("userEmail");
-		console.log("Email " + email)
+		console.log("Email " + email);
 		var ref = req.app.get("enrollRef");
 		var id = ref.child(escapeEmailAddress(email));
 		var newRef = id.push();
