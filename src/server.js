@@ -11,10 +11,17 @@ const path = require('path');
 const LOGIN = 'Login';
 const CREATE = 'Create';
 const router = express.Router()
-
+const envs = require('envs');
 var app = express();
 var session = require('express-session');
-
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var admin = require('firebase-admin');
+var serviceAccount = require(path.join(__dirname,'../service-account-app-eng.json'));
+	
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://learnlive-f6376.firebaseio.com.firebaseio.com'
+});
 
 console.log(path.join(__dirname, '../public'));
 
@@ -34,8 +41,49 @@ var config = {
     projectId: "learnlive-f6376",
     storageBucket: "learnlive-f6376.appspot.com",
     messagingSenderId: "749566368306"
-  };
+
+};
+
 firebase.initializeApp(config);
+
+
+var xhttp = new XMLHttpRequest();
+
+
+var clientId = 'firebase-storage@learnlive-f6376.iam.gserviceaccount.com';
+var apiKey   = '9d6c69b149d2f07d7cdd1fdbb4c996dfa738c320';
+var scopes   = 'https://www.googleapis.com/auth/devstorage.read_write';
+ 
+ 
+
+/*
+var GoogleOAuth2 = require('google-oauth2-token');
+ 
+var params = {
+  email: 'mazarag2@gmail.com',
+  password: process.env.password,
+  clientId: '749566368306-e4j38e5t1d9hd8j0ifh4jipipvdbktru.apps.googleusercontent.com', // Google API Client ID 
+  clientSecret: 'djz29rtpNku-GGjgo6aLI_oE', // Google API Client Secret 
+  scope: 'https://www.googleapis.com/auth/devstorage.read_write'
+};
+ 
+GoogleOAuth2(params, function (err, tokens) {
+  if (err) return console.error(err)
+ 
+  console.log('OAuth2 access token:', tokens.access_token)
+  console.log('OAuth2 refresh token:', tokens.refresh_token)
+  console.log('OAuth2 token expiry date:', new Date(tokens.expiry_date))
+});
+*/
+//console.log(path.join(__dirname,'../LearnLive-9d6c69b149d2.json'));
+const gcs = require('@google-cloud/storage')({
+	
+	projectId: process.env.GCLOUD_PROJECT
+	//keyFileName : '../service-account-app-eng.json'
+
+});
+
+//var gcs = gcloud(cloudStorageConfig);
 
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
@@ -48,8 +96,7 @@ function createCourse(postData){
 	
 	var user = firebase.auth().currentUser;
 
-	var ref = database.ref('Courses');
-	var id = ref.push();
+	var id = courseRef.push();
 	id.set({
 		
 		CourseName : postData['CourseName'],
@@ -68,6 +115,8 @@ function createCourse(postData){
 }
 
 function createCourseView(name){
+	
+	//uploadFileToFB(name);
 	
 	var readFile = new Promise(function(resolve,reject) {
 		fs.readFile('views/CourseTemplate.jade', function (err, data) {
@@ -91,6 +140,182 @@ function createCourseView(name){
 			});
 		}
 	});
+	
+}
+//Experimental work to upload files to Firebase
+/*
+function uploadFileToFB(CourseKey){
+	
+	//read courseTemplate in the Storage
+	
+	//var pathReference = gcs.ref('CourseTemplate.jade');
+	
+	const Storage = require('@google-cloud/storage');
+
+		// Creates a client
+	const storage = new Storage();
+
+	/**
+	 * TODO(developer): Uncomment the following lines before running the sample.
+	 
+	const srcBucketName = 'Name of the source bucket, e.g. my-bucket';
+	const srcFilename = 'Name of the source file, e.g. file.txt';
+	const destBucketName = 'Name of the destination bucket, e.g. my-other-bucket';
+	 const destFilename = 'Destination name of file, e.g. file.txt';
+
+	// Copies the file to the other bucket
+	/*
+	var PostaggingURL = 'https://www.googleapis.com/storage/v1/b/learnlive-f6376.appspot.com/o/CourseTemplate.jade/copyTo/b/learnlive-f6376.appspot.com/Courses/o/' + CourseKey + '.jade?';
+	
+	//var input = document.getElementById('input').value;
+	
+	xhttp.onreadystatechange = function(){
+		
+		//stuff we need to do when the request come backs
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//document.getElementById("demo").innerHTML =
+				console.log('xmlhttpresponse ' + this.responseText);
+			}
+		};
+	}
+	//sending request 
+	xhttp.open("POST",PostaggingURL,true);
+	//xhttp.setRequestHeader('Authorization','bearer 749566368306-e4j38e5t1d9hd8j0ifh4jipipvdbktru.apps.googleusercontent.com');
+	xhttp.setRequestHeader('Content-Type", "text/plain');
+	
+	xhttp.send('key=AIzaSyBwkhpMW3rp-zqyjv66D71hWl0TGOpfSjg');
+	
+	
+	gcs
+	  .bucket('learnlive-f6376.appspot.com')
+	  .file('learnlive-f6376.appspot.com/CourseTemplate.jade')
+	  .copy(storage.bucket('learnlive-f6376.appspot.com').file('learnlive-f6376.appspot.com/Courses/' + CourseKey + '.jade'))
+	  .then(() => {
+		console.log(
+		  `gs://${srcBucketName}/${srcFilename} copied to gs://${destBucketName}/${destFilename}.`
+		);
+	  })
+	  .catch(err => {
+		console.error('ERROR:', err);
+	  });
+	  
+	
+	//memcached-10583.c10.us-east-1-4.ec2.cloud.redislabs.com:10583
+	
+
+	
+	/*
+	firebase.auth().onAuthStateChanged(function(user) {
+	  if (user) {
+		
+		
+		var bucket = gcs.bucket('learnlive-f6376.appspot.com');
+		
+		//var gsReference = storage.refFromURL('gs://learnlive-f6376.appspot.com/');
+		
+		
+		//var file = bucket.file('https://storage.googleapis.com/learnlive-f6376.appspot.com/CourseTemplate.jade');
+		
+		var file = bucket.file('CourseTemplate.jade');
+		
+		//const Storage = require('@google-cloud/storage');
+		
+				// Creates a client
+		//const storage = new Storage();
+
+		/**
+		 * TODO(developer): Uncomment the following lines before running the sample.
+		 
+		 const srcBucketName = 'learnlive-f6376.appspot.com';
+		 const srcFilename =   'CourseTemplate.jade';
+		 const destBucketName = 'learnlive-f6376.appspot.com/Courses';
+		 const destFilename = CourseKey + '.jade';
+				
+		/*
+		gcs
+		  .bucket(srcBucketName)
+		  .file(srcFilename)
+		  .copy(storage.bucket(destBucketName).file(destFilename))
+		  .then(() => {
+			console.log(
+			  `gs://${srcBucketName}/${srcFilename} copied to gs://${destBucketName}/${destFilename}.`
+			);
+		  })
+		  .catch(err => {
+			console.error('ERROR:', err);
+		  });
+		
+		file.get(function(err, file, apiResponse) {
+			console.log(err + JSON.stringify(apiResponse));
+			//console.dir(file);
+		});
+		//var path = 'https://storage.googleapis.com/learnlive-f6376.appspot.com/Courses/' + CourseKey + '.jade';
+		var path = 'Courses/' + CourseKey + '.jade';
+		file.copy(path,function(err, copiedFile, apiResponse) {
+		  // `my-bucket` now contains:
+		  // - "my-image.png"
+		  // - "my-image-copy.png"
+			console.log("Copy " + err + JSON.stringify(apiResponse));
+		  // `copiedFile` is an instance of a File object that refers to your new
+		  // file.
+		});
+			
+							
+			
+		
+	  } else {
+		// User is signed out.
+		app.locals.LoggedIn = false;
+	  }
+	});
+	
+	var bucket = gcs.bucket('learnlive-f6376.appspot.com');
+	
+	//var gsReference = storage.refFromURL('gs://learnlive-f6376.appspot.com/');
+	
+	
+	//var file = bucket.file('https://storage.googleapis.com/learnlive-f6376.appspot.com/CourseTemplate.jade');
+	
+	var file = bucket.file('CourseTemplate.jade');
+	
+	/*
+	file.download(function(err, contents) {
+		
+		
+		console.log(err + contents);
+		
+		
+	});
+	*/
+	//var path = 'https://storage.googleapis.com/learnlive-f6376.appspot.com/Courses/' + CourseKey + '.jade';
+	/*
+	gsReference.child('CourseTemplate.jade').getDownloadURL().then(function(url){
+		
+		  var xhr = new XMLHttpRequest();
+		  xhr.responseType = 'file';
+		  xhr.onload = function(event) {
+			console.log("File Boi" + file);
+			var file = xhr.response;
+			
+			var newCourseRef = storageRef.child('Courses/' + CourseKey + '.jade');
+			newCourseRef.put(file).then(function(snapshot){
+				
+				console.log("File Uploaded Succesfully");
+				
+			});
+			
+		  };
+		  xhr.open('GET', url);
+		  xhr.send();
+
+	}).catch(function(error) {
+		console.log("Error in File Fb " + error)
+	});;
+	*/
+	
+	//grab that and write file to storage using name with Course key
+	
 }
 
 function removeWhiteSpaces(courseName){

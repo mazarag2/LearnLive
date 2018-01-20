@@ -4,10 +4,12 @@
   "description": "package.json for dependencies",
   "main": "server.js",
   "dependencies": {
+    "@google-cloud/storage": "^1.5.2",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
     "firebase": "^4.1.0",
     "firebase-admin": "^5.0.0",
+    "google-client-api": "^1.0.4",
     "node-cache": "^4.1.1",
     "pug": "^2.0.0-rc.1"
   },
