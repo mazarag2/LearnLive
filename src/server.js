@@ -16,7 +16,6 @@ var app = express();
 var session = require('express-session');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var admin = require('firebase-admin');
-var serviceAccount = require(path.join(__dirname,'../service-account-app-eng.json'));
 	
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
