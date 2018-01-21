@@ -76,12 +76,7 @@ GoogleOAuth2(params, function (err, tokens) {
 });
 */
 //console.log(path.join(__dirname,'../LearnLive-9d6c69b149d2.json'));
-const gcs = require('@google-cloud/storage')({
-	
-	projectId: process.env.GCLOUD_PROJECT
-	//keyFileName : '../service-account-app-eng.json'
 
-});
 
 //var gcs = gcloud(cloudStorageConfig);
 
