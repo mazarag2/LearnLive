@@ -88,6 +88,7 @@ const gcs = require('@google-cloud/storage')({
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
 var enrollmentRef = firebase.database().ref("Enrollment");
+var instructorRef = firebase.database().ref("Instructors");
 var user = firebase.auth().currentUser;
 
 function createCourse(postData){
@@ -97,6 +98,19 @@ function createCourse(postData){
 	var user = firebase.auth().currentUser;
 
 	var id = courseRef.push();
+	
+	var email = user.email.toLowerCase();
+	email = user.email.replace(/\./g, ',');
+	
+	var ref = instructorRef.child(email);
+	var newRef = ref.push();
+	newRef.set({
+		
+		CourseKey : id.key,
+		CourseName : postData['CourseName']
+		
+	});
+
 	id.set({
 		
 		CourseName : postData['CourseName'],
@@ -110,6 +124,9 @@ function createCourse(postData){
 		CreatedBy : user.email
 		
 	})
+	
+
+
 	
 	return id;
 }
@@ -316,7 +333,7 @@ function uploadFileToFB(CourseKey){
 	
 	//grab that and write file to storage using name with Course key
 	
-}
+//}
 
 function removeWhiteSpaces(courseName){
 	
@@ -425,10 +442,13 @@ app.get('/index',function (req,res){
 		if(CourseKey != null){
 			
 			//need to get Color for Course 
+			var newQuery = new query();
 			
-			getCourseColorbyKey(CourseKey,courseRef).then(function(resolve){
+			newQuery.getCourseInfo(CourseKey,courseRef).then(function(resolve){
 				
-				res.render("Courses/" + CourseKey,{Color : resolve});
+				console.log("CourseInfo" + resolve);
+
+				res.render("CourseTemplate.jade",{Color : resolve.Color,CourseName : resolve.CourseName});
 				
 			});
 			

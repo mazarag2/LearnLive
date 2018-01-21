@@ -177,6 +177,20 @@ var query = function() {
 		//return new Array();
 				
 	}
+	this.getCourseInfo = function(CourseKey,courseRef){
+	
+		return new Promise(function(resolve,reject){
+			
+			var courseInfo = {};
+			var index = 0;
+			courseRef.child(CourseKey).on("child_added", function(snapshot) {
+			
+				 courseInfo[snapshot.key] = snapshot.val();	
+			});
+			resolve(courseInfo);
+
+		});
+	}
 	this.getCourseColorbyKey = function (key){
 	
 		return new Promise(function (resolve,reject){
