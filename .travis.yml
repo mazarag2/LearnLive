@@ -6,4 +6,4 @@ install :
 script: 
   - npm start
 after_success:
-  - echo dotnet test and npm test succeeded
+  - echo npm start succeeded
