@@ -15,12 +15,7 @@ const envs = require('envs');
 var app = express();
 var session = require('express-session');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var admin = require('firebase-admin');
-	
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://learnlive-f6376.firebaseio.com.firebaseio.com'
-});
+
 
 console.log(path.join(__dirname, '../public'));
 
