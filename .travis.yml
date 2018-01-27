@@ -17,4 +17,5 @@ install :
 script: 
   - phantomjs test/testrunner.js
 after_success:
+  - process.exit()
   - echo Build Succeded

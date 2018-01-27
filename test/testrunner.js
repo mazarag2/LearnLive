@@ -5,6 +5,10 @@ var system = require('system');
 var host, port;
 var port = "8080";
 
+
+
+
+
 var listening = server.listen(port, function (request, response) {
 	console.log("GOT HTTP REQUEST");
 	console.log(JSON.stringify(request, null, 4));
@@ -27,12 +31,26 @@ if (!listening) {
 var url = "http://localhost:" + "8080";
 console.log("SENDING REQUEST TO:");
 console.log(url);
+page.open(url, function(status) {
+  if (status !== 'success') {
+    console.log('Unable to access network');
+  } else {
+    var ua = page.evaluate(function() {
+      return document.getElementByClassName('pageheader').innerHTML;
+    });
+    console.log(ua);
+  }
+  //phantom.exit();
+});
+
 page.open(url, function (status) {
 	if (status !== 'success') {
 		console.log('FAIL to load the address');
 	} else {
 		console.log("GOT REPLY FROM SERVER:");
 		console.log(page.content);
+		
+		
 	}
 	phantom.exit();
 });
