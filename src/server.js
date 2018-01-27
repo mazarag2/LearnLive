@@ -14,7 +14,6 @@ const router = express.Router()
 const envs = require('envs');
 var app = express();
 var session = require('express-session');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 
 console.log(path.join(__dirname, '../public'));
@@ -40,8 +39,6 @@ var config = {
 
 firebase.initializeApp(config);
 
-
-var xhttp = new XMLHttpRequest();
 
 
 var clientId = 'firebase-storage@learnlive-f6376.iam.gserviceaccount.com';
