@@ -36,16 +36,23 @@ page.open(url, function(status) {
     console.log('Unable to access network');
   } else {
     var ua = page.evaluate(function() {
+	  console.log(document.getElementByClassName('pageheader').innerHTML);
       return document.getElementByClassName('pageheader').innerHTML;
     });
     console.log(ua);
   }
   //phantom.exit();
 });
+page.open('http://localhost:8080',function(status){
+   page.render('home.png');
+   phantom.exit();
+});
 
+/*
 page.open(url, function (status) {
 	if (status !== 'success') {
 		console.log('FAIL to load the address');
+		phantom.exit(1);
 	} else {
 		console.log("GOT REPLY FROM SERVER:");
 		console.log(page.content);
@@ -54,3 +61,4 @@ page.open(url, function (status) {
 	}
 	phantom.exit();
 });
+*/
