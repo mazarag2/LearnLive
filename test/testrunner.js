@@ -6,6 +6,45 @@ var host, port;
 var port = "8080";
 
 
+
+
+// We need the Service 
+var service = server.listen(8080, {keepAlive:true}, function() {
+	
+});
+if (service) {
+	//var page = new WebPage();
+	var url = "http://localhost:" + "8080/";
+	console.log("SENDING REQUEST TO:");
+	console.log(url);
+	page.open(url, function(status) {
+	  if (status !== 'success') {
+		console.log('Unable to access network');
+	  } else {
+		var ua = page.evaluate(function() {
+			console.log(document);
+		  console.log(document.getElementByClassName('pageheader').innerHTML);
+		  return document.getElementByClassName('pageheader').innerHTML;
+		});
+		if(!ua){
+			
+			console.log('Home page not found');
+			phantom.exit(1);
+		}
+	  }
+	  //phantom.exit();
+	});
+	page.open('http://localhost:8080/',function(status){
+	   console.log(status);
+	   page.render('home.png');
+	   phantom.exit();
+	});
+}
+else{
+	
+	console.log("Unable to create server");
+	phantom.exit(1);
+}
 page.open("http://localhost:8080/" ,function(status) {
 	console.log(status);
 	page.onResourceError = function(resourceError) {
@@ -25,7 +64,6 @@ page.open("http://localhost:8080/" ,function(status) {
 			  return document.getElementsByTagName('h1')[0].innerHTML;
 			});
 			
-
 			if(!ua){
 				
 				console.log('Home page not found');
