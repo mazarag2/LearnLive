@@ -16,7 +16,7 @@ install :
   - npm install
 script:
   - node src/server.js &
-  - phantomjs test/testrunner.js
+  - phantomjs test/testrunner.js --ssl-protocol=any
 after_success:
   - process.exit()
   - echo Build Succeded
