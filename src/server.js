@@ -20,6 +20,7 @@ console.log(path.join(__dirname, '../public'));
 
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
+app.set('views', path.join(__dirname, '../src/views'));
 app.listen(8080);
 app.use('/public',express.static(path.join(__dirname, '../public')));
 
