@@ -57,7 +57,6 @@ page.open(url ,function(status) {
 		phantom.exit(1);
 	}
 	*/
-	/
 	var ua = page.evaluate(function() {
 	  console.log("DOC" + document);
 	  //console.log(document.querySelectorAll('.pageheader')[0]);
