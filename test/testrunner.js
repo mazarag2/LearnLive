@@ -48,8 +48,16 @@ var service = server.listen(8081, {keepAlive:true}, function() {
 	phantom.exit(1);
 //}
 */
-page.open("http://localhost:8080/" ,function(status) {
+var url = 'http://localhost:8080/';
+page.open(url ,function(status) {
 	console.log(status);
+	/*
+	if(status !== 'success'){
+		console.log('Could not open page' + url);
+		phantom.exit(1);
+	}
+	*/
+	/
 	var ua = page.evaluate(function() {
 	  console.log("DOC" + document);
 	  //console.log(document.querySelectorAll('.pageheader')[0]);
@@ -59,13 +67,13 @@ page.open("http://localhost:8080/" ,function(status) {
 	if(!ua){
 		
 		console.log('Home page not found');
-		phantom.exit(1);
+		//phantom.exit(1);
 	}
 	else{
 		console.log("Success retreiving Title " + ua);
 		phantom.exit()
 	}
-	/*
+	
 	page.onResourceError = function(resourceError) {
 		 console.log('Unable to load resource (#' + resourceError.id + 'URL:' + resourceError.url + ')');
 		  console.log('Error code: ' + resourceError.errorCode + '. Description: ' + resourceError.errorString);
@@ -98,6 +106,6 @@ page.open("http://localhost:8080/" ,function(status) {
 		
 	
 	};
-	*/
+	
 });
 
