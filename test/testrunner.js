@@ -48,7 +48,7 @@ var service = server.listen(8081, {keepAlive:true}, function() {
 	phantom.exit(1);
 //}
 */
-var url = 'http://localhost:8080/';
+var url = 'http://127.0.0.1:8080/';
 page.open(url ,function(status) {
 	console.log(status);
 	page.onResourceRequested = function (request) {
@@ -99,7 +99,7 @@ page.open(url ,function(status) {
 		}
 		system.stderr.writeLine(msgStack.join('\n'));
 	};
-	if(status !== 'success'){
+	if(status != 'success'){
 		console.log('Could not open page' + url);
 		phantom.exit(1);
 	}
