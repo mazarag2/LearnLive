@@ -4,7 +4,7 @@
   "description": "package.json for dependencies",
   "main": "server.js",
   "dependencies": {
-    "@google-cloud/storage": "^1.5.2",
+    "envs": "^0.1.6",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
     "firebase": "^4.1.0",
@@ -15,8 +15,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "echo \"Test Started\"",
+    "start": "npm start"
   },
   "repository": {
     "type": "git",

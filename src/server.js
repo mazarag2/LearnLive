@@ -14,19 +14,13 @@ const router = express.Router()
 const envs = require('envs');
 var app = express();
 var session = require('express-session');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var admin = require('firebase-admin');
-var serviceAccount = require(path.join(__dirname,'../service-account-app-eng.json'));
-	
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://learnlive-f6376.firebaseio.com.firebaseio.com'
-});
+
 
 console.log(path.join(__dirname, '../public'));
 
 app.set('view engine', 'jade');
 app.engine('jade', jade.__express);
+app.set('views', path.join(__dirname, '../src/views'));
 app.listen(8080);
 app.use('/public',express.static(path.join(__dirname, '../public')));
 
@@ -46,8 +40,6 @@ var config = {
 
 firebase.initializeApp(config);
 
-
-var xhttp = new XMLHttpRequest();
 
 
 var clientId = 'firebase-storage@learnlive-f6376.iam.gserviceaccount.com';
@@ -76,18 +68,14 @@ GoogleOAuth2(params, function (err, tokens) {
 });
 */
 //console.log(path.join(__dirname,'../LearnLive-9d6c69b149d2.json'));
-const gcs = require('@google-cloud/storage')({
-	
-	projectId: process.env.GCLOUD_PROJECT
-	//keyFileName : '../service-account-app-eng.json'
 
-});
 
 //var gcs = gcloud(cloudStorageConfig);
 
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
 var enrollmentRef = firebase.database().ref("Enrollment");
+var instructorRef = firebase.database().ref("Instructors");
 var user = firebase.auth().currentUser;
 
 function createCourse(postData){
@@ -97,6 +85,19 @@ function createCourse(postData){
 	var user = firebase.auth().currentUser;
 
 	var id = courseRef.push();
+	
+	var email = user.email.toLowerCase();
+	email = user.email.replace(/\./g, ',');
+	
+	var ref = instructorRef.child(email);
+	var newRef = ref.push();
+	newRef.set({
+		
+		CourseKey : id.key,
+		CourseName : postData['CourseName']
+		
+	});
+
 	id.set({
 		
 		CourseName : postData['CourseName'],
@@ -110,6 +111,9 @@ function createCourse(postData){
 		CreatedBy : user.email
 		
 	})
+	
+
+
 	
 	return id;
 }
@@ -316,7 +320,7 @@ function uploadFileToFB(CourseKey){
 	
 	//grab that and write file to storage using name with Course key
 	
-}
+//}
 
 function removeWhiteSpaces(courseName){
 	
@@ -425,10 +429,13 @@ app.get('/index',function (req,res){
 		if(CourseKey != null){
 			
 			//need to get Color for Course 
+			var newQuery = new query();
 			
-			getCourseColorbyKey(CourseKey,courseRef).then(function(resolve){
+			newQuery.getCourseInfo(CourseKey,courseRef).then(function(resolve){
 				
-				res.render("Courses/" + CourseKey,{Color : resolve});
+				console.log("CourseInfo" + resolve);
+
+				res.render("CourseTemplate.jade",{Color : resolve.Color,CourseName : resolve.CourseName});
 				
 			});
 			
