@@ -5,7 +5,6 @@ var system = require('system');
 var fs = require('fs');
 var host;
 var port = "8080";
-var dotenv = require('../src/env');
 
 //LOCALLY USE ENV VAR THEN RESEARCH TRAVIS 
 
