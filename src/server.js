@@ -10,8 +10,10 @@ const userCache = new NodeCache();
 const path = require('path');
 const LOGIN = 'Login';
 const CREATE = 'Create';
-const router = express.Router()
-const envs = require('envs');
+const router = express.Router();
+const dotev = require('dotenv').config();
+
+//const envs = require('envs');
 var app = express();
 var session = require('express-session');
 
@@ -27,10 +29,9 @@ app.use('/public',express.static(path.join(__dirname, '../public')));
 var firebase = require("firebase");
 
 
-
 var config = {
-    apiKey: "AIzaSyCTMUtfwd3jr4BCPQLeajXCpqfdd-lX7Eo",
-    authDomain: "learnlive-f6376.firebaseapp.com",
+    apiKey : process.env.API_KEY,
+    authDomain: "learnlive-f6376.appspot.com",
     databaseURL: "https://learnlive-f6376.firebaseio.com",
     projectId: "learnlive-f6376",
     storageBucket: "learnlive-f6376.appspot.com",
@@ -42,35 +43,6 @@ firebase.initializeApp(config);
 
 
 
-var clientId = 'firebase-storage@learnlive-f6376.iam.gserviceaccount.com';
-var apiKey   = '9d6c69b149d2f07d7cdd1fdbb4c996dfa738c320';
-var scopes   = 'https://www.googleapis.com/auth/devstorage.read_write';
- 
- 
-
-/*
-var GoogleOAuth2 = require('google-oauth2-token');
- 
-var params = {
-  email: 'mazarag2@gmail.com',
-  password: process.env.password,
-  clientId: '749566368306-e4j38e5t1d9hd8j0ifh4jipipvdbktru.apps.googleusercontent.com', // Google API Client ID 
-  clientSecret: 'djz29rtpNku-GGjgo6aLI_oE', // Google API Client Secret 
-  scope: 'https://www.googleapis.com/auth/devstorage.read_write'
-};
- 
-GoogleOAuth2(params, function (err, tokens) {
-  if (err) return console.error(err)
- 
-  console.log('OAuth2 access token:', tokens.access_token)
-  console.log('OAuth2 refresh token:', tokens.refresh_token)
-  console.log('OAuth2 token expiry date:', new Date(tokens.expiry_date))
-});
-*/
-//console.log(path.join(__dirname,'../LearnLive-9d6c69b149d2.json'));
-
-
-//var gcs = gcloud(cloudStorageConfig);
 
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
@@ -118,34 +90,6 @@ function createCourse(postData){
 	return id;
 }
 
-function createCourseView(name){
-	
-	//uploadFileToFB(name);
-	
-	var readFile = new Promise(function(resolve,reject) {
-		fs.readFile('views/CourseTemplate.jade', function (err, data) {
-			if (err) {
-				reject(true);
-			}
-		   resolve(data.toString());
-		});
-	});
-	
-	readFile.then(function(resolve,reject){
-		
-		if(resolve){
-			
-			fs.writeFile("views/Courses/" + name + ".jade", resolve , function(err) {
-				   if (err) {
-					  return console.error(err);
-				   }
-				   
-				   console.log("Data written successfully!");
-			});
-		}
-	});
-	
-}
 //Experimental work to upload files to Firebase
 /*
 function uploadFileToFB(CourseKey){
