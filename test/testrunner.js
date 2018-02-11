@@ -21,7 +21,7 @@ if(args.length == 1){
 }
 
 
-page.open('http://localhost:8080/' ,function(status) {
+page.open(url ,function(status) {
 	console.log(status);
 	
 	if(status != 'success'){
