@@ -53,7 +53,7 @@ var indexPage = require('webpage').create();
 
 indexPage.open(url, args, function (status) {
    
-    indexPage.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', function () {
+   // indexPage.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', function () {
    
        
         indexPage.onLoadFinished = function () {
@@ -72,9 +72,15 @@ indexPage.open(url, args, function (status) {
 
         indexPage.evaluate(function (args){
            
+		   
+		    document.getElementsByName('email')[0].value = args[1];
+			document.getElementsByName('password')[0].value = args[2];
+			document.getElementsByTagName('button')[0].click();
+		    /*
             $('[name="email"]').val(args[1]);
 			$('[name="password"]').val(args[2]);
 			$("button").click();
+			*/
         },args);
        
        
@@ -82,7 +88,7 @@ indexPage.open(url, args, function (status) {
        
        
    
-    });
+  //  });
 });
 
 
