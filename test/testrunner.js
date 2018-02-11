@@ -20,7 +20,11 @@ if(args.length == 1){
 	phantom.exit(1);			
 }
 
+/*
 
+ Test Case 1 : Opening Login Page
+
+*/
 page.open(url ,function(status) {
 	console.log(status);
 	
@@ -47,7 +51,11 @@ page.open(url ,function(status) {
 	
 });
 
-//setTimeout(function(){console.log(" On to Test Case 2 ")},3000);
+/*
+
+ Test Case 2 : Loging In existing user 
+
+*/
 
 var indexPage = require('webpage').create();
 
@@ -72,15 +80,16 @@ indexPage.open(url, args, function (status) {
 
         indexPage.evaluate(function (args){
            
-		   
-		    document.getElementsByName("email")[0].value = args[1];
-			document.getElementsByName("password")[0].value = args[2];
-			document.getElementsByTagName("button")[0].click();
-		    /*
-            $('[name="email"]').val(args[1]);
-			$('[name="password"]').val(args[2]);
-			$("button").click();
-			*/
+		   if(!self.loading){
+				document.getElementsByName("email")[0].value = args[1];
+				document.getElementsByName("password")[0].value = args[2];
+				document.getElementsByTagName("button")[0].click();
+				/*
+				$('[name="email"]').val(args[1]);
+				$('[name="password"]').val(args[2]);
+				$("button").click();
+				*/
+		   }
         },args);
        
        
@@ -91,29 +100,33 @@ indexPage.open(url, args, function (status) {
   //  });
 });
 
-
-//console.log(" All testCases Passed");
-//phantom.exit();
 /*
-var createUser = 'http://127.0.0.1:8080/CreateUser';
-page.open(createUser,function(status){
-	
-	console.log(status);
-	
-	if(status != 'success'){
-		console.log('Could not open page ' + createUser);
-		phantom.exit(1);
-	}
-	var ua = page.evaluate(function() {
-	  console.log("DOC" + document);
-	  //console.log(document.querySelectorAll('.pageheader')[0]);
-	   var form =  document.getElementsByTagName('form')[0];
-	  
-	  
-	  
-	});
-	
-	
-}); 
+
+ Test Case 3 : Create a User and se thos credentials to log in 
+
 */
+
+
+
+/*
+
+ Test Case 4 : Create a Course
+
+*/
+
+
+
+/*
+
+ Test Case 5 : View a Course 
+
+*/
+
+/*
+
+ Test Case 3 : Enroll in a Course
+
+*/
+
+
 
