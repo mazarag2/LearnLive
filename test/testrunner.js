@@ -9,9 +9,16 @@ var port = "8080";
 //LOCALLY USE ENV VAR THEN RESEARCH TRAVIS 
 
 
-console.log(process.env.API_KEY);
 
 var url = 'http://127.0.0.1:8080/';
+var args = system.args;
+
+if(args.length == 1){
+	
+	console.log("In order to run the test script please pass your credetials(email,password)\n" + 
+				"For example phantomjs test/testrunner.js email password");
+	phantom.exit(1);			
+}
 
 
 page.open('http://localhost:8080/' ,function(status) {
@@ -44,7 +51,7 @@ page.open('http://localhost:8080/' ,function(status) {
 
 var indexPage = require('webpage').create();
 
-indexPage.open(url, function (status) {
+indexPage.open(url, args, function (status) {
    
     indexPage.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', function () {
    
@@ -63,12 +70,12 @@ indexPage.open(url, function (status) {
         };
        
 
-        indexPage.evaluate(function () {
+        indexPage.evaluate(function (args){
            
-            $('[name="email"]').val("mikez@email.com");
-			$('[name="password"]').val("test123");
+            $('[name="email"]').val(args[1]);
+			$('[name="password"]').val(args[2]);
 			$("button").click();
-        });
+        },args);
        
        
         indexPage.render("before_submit.png");
