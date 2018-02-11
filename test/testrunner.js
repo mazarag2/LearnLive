@@ -58,7 +58,7 @@ indexPage.open(url, args, function (status) {
        
         indexPage.onLoadFinished = function () {
            
-            indexPage.render("after_submit.png");
+            indexPage.render("test/screenshots/after_login.png");
             console.log("Succesfull Login");
 			var ua = indexPage.evaluate(function() {
 				console.log("DOC" + document);
@@ -84,7 +84,7 @@ indexPage.open(url, args, function (status) {
         },args);
        
        
-        indexPage.render("before_submit.png");
+        indexPage.render("test/screenshots/before_login.png");
        
        
    
