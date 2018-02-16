@@ -544,7 +544,7 @@ app.post('/CreateUser',function (req,res){
 	
 	
 	});
-}
+});
 
 app.get('/CreateCourse',function(req,res){
 	
