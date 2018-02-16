@@ -11,10 +11,13 @@
     "firebase": "^4.1.0",
     "firebase-admin": "^5.0.0",
     "google-client-api": "^1.0.4",
+    "mocha": "^5.0.1",
     "node-cache": "^4.1.1",
     "pug": "^2.0.0-rc.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^5.0.1"
+  },
   "scripts": {
     "test": "echo \"Test Started\"",
     "start": "npm start"

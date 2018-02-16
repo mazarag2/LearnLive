@@ -5,17 +5,80 @@ var query = function() {
 	var firstName = "";
 	const NodeCache = require("node-cache");
     const userCache = new NodeCache();
-	this.doesUserExist = function(email,ref){
+	this.CreateUser = function(postData,firebase,userRef){
 		
-		ref.once('value', function(snapshot) {
-		  if (snapshot.hasChild(email)) {
-			return true;
-		  }
-		  else{
-			 return false;
-		  }
-		});
+		var origEmail = postData['email'];
+		console.log(email);
+		var password = postData['password'];
+		var password2 = postData['password2'];
+		var firstName = postData['firstname'];
+		var lastName = postData['lastname'];
+		console.log(password);
+		if(password != password2){
+			
+			return "Passwords do not match please try again";
+			
+		}
+		else{
 		
+			var email = origEmail.toLowerCase();
+			email = email.replace(/\./g, ',');
+			
+			
+			var newQuery = new query();
+			
+				
+			// New User lets sign them up 
+
+			var promise = new Promise(function(resolve){
+				firebase.auth().createUserWithEmailAndPassword(origEmail, password).catch(function(error) {
+				
+					var errorMessage = error.message;
+					console.log(errorMessage)
+					resolve(errorMessage);
+
+				})
+		
+			});
+			
+			return promise.then(function(resolve){
+				
+				
+				console.log("Resolve after callback " + resolve);
+				
+				if(resolve){
+					
+					return resolve;
+				}
+				else{
+					
+					firebase.auth().onAuthStateChanged(function(user) {
+						  if (user) {
+							console.log(user);
+							//var ref = database.ref('Users');
+							
+							var id = userRef.child(email);
+							var newRef = id.push();
+							
+							newRef.set({
+								firstname: firstName ,
+								lastname : lastName 
+							})
+							
+						  } else {
+							// User is signed out.
+							app.locals.LoggedIn = false;
+						  }
+					});
+					return "Account Created Succesfully!";
+					
+				}
+				
+				
+			});
+			
+		
+		}
 	}
 	this.toArrayObject = function(arr1,arr2){
 	

@@ -106,6 +106,66 @@ indexPage.open(url, args, function (status) {
 
 */
 
+var createUserURL = 'http://127.0.0.1:8080/CreateUser';
+var createUserPage = require('webpage').create();
+
+var testData = {
+	
+	email : 'test2@email.com',
+	firstname : 'test2',
+	lastname : 'test3',
+	password : 'test',
+	password2 : 'test'
+	
+};
+
+page.open(url ,function(status) {
+	console.log(status);
+	
+	 
+        indexPage.onLoadFinished = function () {
+           
+            indexPage.render("test/screenshots/after_login.png");
+            console.log("Succesfull Login");
+			var ua = indexPage.evaluate(function() {
+				console.log("DOC" + document);
+				return document.getElementsByTagName('h1')[0].innerHTML;
+			});
+			console.log("Title after login " + ua);
+            phantom.exit();
+           
+        };
+       
+
+        indexPage.evaluate(function (args){
+           
+		   if(!self.loading){
+				document.getElementsByName("email")[0].value = testData.email;
+				document.getElementsByName("firstname")[0].value = testData.firstname;
+				document.getElementsByName("lastname")[0].value = testData.lastname;
+				document.getElementsByName("password")[0].value = testData.password;
+				document.getElementsByName("password2")[0].value = testData.password2;
+				document.getElementsByTagName("button")[0].click();
+				
+				
+				/*
+				$('[name="email"]').val(args[1]);
+				$('[name="password"]').val(args[2]);
+				$("button").click();
+				*/
+		   }
+        },testData);
+       
+       
+        indexPage.render("test/screenshots/before_login.png");
+       
+       
+	
+	
+});
+
+
+
 
 
 /*

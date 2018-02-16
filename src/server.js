@@ -471,7 +471,19 @@ app.post('/CreateUser',function (req,res){
 	});
 	req.on('end', function () {
 		
+		
+		
+		
+		
+		
 		var postData = qstring.parse(bodyData);
+		
+		var newQuery = new query();
+		
+		var msg = newQuery.CreateUser(postData,firebase,userRef);
+		
+		res.render('Create',{errorMsg : msg});
+		/*
 		console.log(postData);
 		var origEmail = postData['email'];
 		console.log(email);
@@ -483,62 +495,51 @@ app.post('/CreateUser',function (req,res){
 		if(password != password2){
 			
 			var errorMsg = "Passwords do not match please try again";
-			res.render('Create',{errorMsg : errorMsg});
+			
 			
 		}
 		else{
 		
 			var email = origEmail.toLowerCase();
 			email = email.replace(/\./g, ',');
-			//console.log(userRef.child(email));
 			
 			
 			var newQuery = new query();
 			
-			if(newQuery.doesUserExist(email,userRef)){
 				
-				//User with that email is already in the DB
-				var errorMsg = "A User with that email is already in use If you forgot your password click here ";
-				res.render('Create',{errorMsg : errorMsg});
-				
-				
-			}
-			else{
-				
-				// New User lets sign them up 
+			// New User lets sign them up 
+
+			var promise = new Promise(function(resolve){
 				firebase.auth().createUserWithEmailAndPassword(origEmail, password).catch(function(error) {
-					
-					var errorCode = error.code;
-					var errorMessage = error.message;
-					console.log(errorMessage + errorCode);
-
-				});
-				firebase.auth().onAuthStateChanged(function(user) {
-				  if (user) {
-					console.log(user);
-					//var ref = database.ref('Users');
-					
-					var id = userRef.child(email);
-					var newRef = id.push();
-					
-					newRef.set({
-						firstname: firstName ,
-						lastname : lastName 
-					})
-					
-				  } else {
-					// User is signed out.
-					app.locals.LoggedIn = false;
-				  }
-				});
-
-				//store first and last name in FIrebase DB 		
-				res.redirect('/');	
 				
-			}
-			
+				var errorMessage = error.message;
+				resolve(errorM);
+
+			})});
+			firebase.auth().onAuthStateChanged(function(user) {
+			  if (user) {
+				console.log(user);
+				//var ref = database.ref('Users');
+				
+				var id = userRef.child(email);
+				var newRef = id.push();
+				
+				newRef.set({
+					firstname: firstName ,
+					lastname : lastName 
+				})
+				
+			  } else {
+				// User is signed out.
+				app.locals.LoggedIn = false;
+			  }
+			});
+		
+			res.render('Create',{errorMsg : errorMessage});
+		
 		}
 	});
+	*/
 	
 	
 	
