@@ -57,7 +57,10 @@ describe('Create', function() {
 		})
 		
     });
+	
+	after(function(done) {
+		process.exit();
+    });
+	
   });
 });
-
-process.exit();
