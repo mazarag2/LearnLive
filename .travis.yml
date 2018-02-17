@@ -17,7 +17,7 @@ install :
 script:
   - node src/server.js & sleep 4 &
   - phantomjs test/testrunner.js $TEST_EMAIL $TEST_PASSWORD --ssl-protocol=any
-  - mocha test/mochaTest.js
+  - env TEST_EMAIL=$TEST_EMAIL mocha test/mochaTest.js
 after_success:
   - process.exit()
   - echo Build Succeded

@@ -59,3 +59,5 @@ describe('Create', function() {
     });
   });
 });
+
+process.exit();
