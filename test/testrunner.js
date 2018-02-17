@@ -104,7 +104,7 @@ indexPage.open(url, args, function (status) {
 
  Test Case 3 : Create a User and se thos credentials to log in 
 
-*/
+
 
 var createUserURL = 'http://127.0.0.1:8080/CreateUser';
 var createUserPage = require('webpage').create();
@@ -152,7 +152,7 @@ page.open(url ,function(status) {
 				$('[name="email"]').val(args[1]);
 				$('[name="password"]').val(args[2]);
 				$("button").click();
-				*/
+				
 		   }
         },testData);
        
@@ -164,7 +164,7 @@ page.open(url ,function(status) {
 	
 });
 
-
+*/
 
 
 
