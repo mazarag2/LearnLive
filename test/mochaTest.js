@@ -2,7 +2,6 @@ var assert = require('assert');
 const query = require("../src/query");
 var firebase = require("firebase");
 const dotev = require('dotenv').config();
-console.log(process.env.API_KEY);
 var config = {
     apiKey : process.env.API_KEY,
     authDomain: "learnlive-f6376.appspot.com",
@@ -30,7 +29,6 @@ describe('Create', function() {
 		var newQuery = new query();
 		var existingEmail = process.env.TEST_EMAIL;
 		var password1 = process.env.TEST_PASSWORD;
-		console.log("Email" + existingEmail);
 
 		var postData = {
 			
@@ -50,17 +48,16 @@ describe('Create', function() {
 		});
 		return resolvingPromise.then(function(resolve){
 			
-			console.log("Outside " + resolve);
-			
 			assert.equal(errorMsg,resolve);
 			
 		})
 		
     });
-	
+	/*
 	after(function(done) {
 		process.exit();
     });
+	*/
 	
   });
 });
