@@ -16,7 +16,7 @@ install :
   - npm install
 script:
   - node src/server.js & sleep 4 &
-  - env TEST_EMAIL=$TEST_EMAIL TEST_PASSWORD=$TEST_PASSWORD API_KEY=$API_KEY mocha test/mochaTest.js --exit
+  - env TEST_EMAIL=$TEST_EMAIL TEST_PASSWORD=$TEST_PASSWORD API_KEY=$API_KEY TEST_PASSWORD2=$TEST_PASSWORD2 mocha test/mochaTest.js --exit
 after_success:
   - process.exit()
   - echo Build Succeded
