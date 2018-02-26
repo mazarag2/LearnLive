@@ -51,6 +51,9 @@ var enrollmentRef = firebase.database().ref("Enrollment");
 var instructorRef = firebase.database().ref("Instructors");
 var user = firebase.auth().currentUser;
 
+
+app.set("enrollmentRef",enrollmentRef);
+
 function createCourse(postData){
 	
 	console.log(postData);
@@ -364,7 +367,6 @@ app.get('/index',function (req,res){
 		console.log(CourseKey);
 		var email = firebase.auth().currentUser.email;
 		var newQuery = new query();
-		var auth = new auth();
 		var ref = {
 			
 			courseRef : courseRef,
@@ -388,9 +390,15 @@ app.get('/index',function (req,res){
 		}
 		else{
 			
-			var list = newQuery.renderIndex(resolve,email,res,ref);
-			res.render('index',{name : list.name,courseInfo: list.courseInfo,coursesEnrolled : list.coursesEnrolled});
-		
+			var indexData = newQuery.renderIndex(true,email,res,ref);
+				
+			indexData.then(function(resolve){
+				
+				console.dir('listresponse' + resolve);
+				res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled});
+				
+			});
+	
 		}
 	}
 	else{
@@ -433,7 +441,7 @@ app.post('/index', function (req,res) {
 		result.then(function(resolve,reject){
 			console.log(resolve);
 			if(resolve === true){
-			
+				app.set("userEmail",email);
 				var indexData = newQuery.renderIndex(resolve,email,res,ref);
 				
 				indexData.then(function(resolve){
