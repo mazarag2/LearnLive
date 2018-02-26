@@ -5,6 +5,7 @@ const qstring = require('querystring');
 const express = require('express');
 const jade = require('pug');
 const query = require("./query");
+const auth = require("./auth");
 const NodeCache = require("node-cache");
 const userCache = new NodeCache();
 const path = require('path');
@@ -355,7 +356,7 @@ app.post('/', function (req,res){
 
 app.get('/index',function (req,res){
 	
-	if(app.locals.LoggedIn){
+	if(firebase.auth().currentUser){
 	
 		var header = url.parse(req.url, true);
 		console.log(header);
@@ -363,6 +364,7 @@ app.get('/index',function (req,res){
 		console.log(CourseKey);
 		var email = firebase.auth().currentUser.email;
 		var newQuery = new query();
+		var auth = new auth();
 		var ref = {
 			
 			courseRef : courseRef,
@@ -386,8 +388,9 @@ app.get('/index',function (req,res){
 		}
 		else{
 			
-			newQuery.renderIndex(true,email,res,ref);
-			
+			var list = newQuery.renderIndex(resolve,email,res,ref);
+			res.render('index',{name : list.name,courseInfo: list.courseInfo,coursesEnrolled : list.coursesEnrolled});
+		
 		}
 	}
 	else{
@@ -423,8 +426,38 @@ app.post('/index', function (req,res) {
 			enrollRef : enrollmentRef,
 			cacheRef : userCache
 		}
+		var newAuth = new auth();
 		
-		newQuery.signInUser(email,password,res,firebase,app).then(function(resolve){
+		var result = newAuth.signInUser(email,password,firebase);
+		console.log('res' + result)
+		result.then(function(resolve,reject){
+			console.log(resolve);
+			if(resolve === true){
+			
+				var indexData = newQuery.renderIndex(resolve,email,res,ref);
+				
+				indexData.then(function(resolve){
+					
+					console.dir('listresponse' + resolve);
+					res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled});
+					
+				});
+			}
+	
+		}).catch(function(e) {
+			res.render('login',{errorMsg : e});
+		});
+		
+		
+		/*
+		our unit test work now lets use auth test it manually then phantomize it
+		newQuery.signInUser(email,password,firebase).then(function(resolve,reject){
+			
+			if(reject){
+				
+				res.render('login',{errorMsg : errorMsg});
+				
+			}
 			
 			firebase.auth().onAuthStateChanged(function(user) {
 				  if (user) {
@@ -444,12 +477,12 @@ app.post('/index', function (req,res) {
 				
 			console.log(error + " in server");
 		})
+		*/
 		
-
+		
+	
 	});
-
 });
-
 
 app.set("enrollRef",enrollmentRef);
 const index = require("./index");

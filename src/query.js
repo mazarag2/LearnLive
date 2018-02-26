@@ -136,7 +136,7 @@ var query = function() {
 					resolve(courses);
 				})
 			},2000);
-			});
+		});
 	}
 	this.getCourseKeys = function(ref){
 		var courses = [];
@@ -154,7 +154,7 @@ var query = function() {
 			},2000);
 		});
 	}
-	this.signInUser = function(email,password,res,firebase,app){
+	this.signInUser = function(email,password,firebase){
 	
 	
 		return new Promise(function (resolve,reject){
@@ -162,10 +162,10 @@ var query = function() {
 			//setTimeout(function(){
 				console.log("inside");
 				firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-					resolve(false);
+					reject(error.message);
 					console.log(error.code);
 					var errorMsg = "Email and Password Incorrect please try again";
-					res.render('login',{errorMsg : errorMsg});
+					//res.render('login',{errorMsg : errorMsg});
 				});
 				resolve(true);
 				this.LoggedIn = true;
@@ -272,6 +272,7 @@ var query = function() {
 		
 		});
 	}
+	//the function will return the list for the index view 
 	this.renderIndex = function(resolve,email,res,ref){
 	
 		if(resolve){
@@ -286,7 +287,7 @@ var query = function() {
 			if(Usrname != undefined){
 				
 				//Display back to login once in
-				Promise.all([
+				return Promise.all([
 					
 					self.getCourseKeys(ref.courseRef),
 					self.getCourses(ref.courseRef),
@@ -294,16 +295,16 @@ var query = function() {
 				
 				]).then(function (results){
 					
-					console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
 					var courseInfo = self.toArrayObject(results[0],results[1]);
 					console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
-					res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
+					//res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
+					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]};
 
 				})
 			}
 			else{
 				//Displaying Login Page
-				Promise.all([
+				return Promise.all([
 
 					self.getFirstNamebyEmail(email,ref.userRef),
 					self.getCourseKeys(ref.courseRef),
@@ -312,9 +313,9 @@ var query = function() {
 			
 				]).then(function (results){
 					
-					console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
+					//console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
 					
-					console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
+					//console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
 					var data = {name : results[0]};
 					var success = ref.cacheRef.set( "usrName", data,0);
 					var value = ref.cacheRef.get( "usrName" );
@@ -322,7 +323,9 @@ var query = function() {
 					
 					self.firstName = results[0];
 					var courseInfo = self.toArrayObject(results[1],results[2]);
-					res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
+					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
+					console.log(results[0] + courseInfo + results[3]);
+					return {name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]};
 				}).catch(function(error){
 				
 					console.log(error + "in query");
