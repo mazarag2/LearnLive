@@ -5,81 +5,6 @@ var query = function() {
 	var firstName = "";
 	const NodeCache = require("node-cache");
     const userCache = new NodeCache();
-	this.CreateUser = function(postData,firebase,userRef){
-		
-		var origEmail = postData['email'];
-		console.log(email);
-		var password = postData['password'];
-		var password2 = postData['password2'];
-		var firstName = postData['firstname'];
-		var lastName = postData['lastname'];
-		console.log(password);
-		if(password != password2){
-			
-			return "Passwords do not match please try again";
-			
-		}
-		else{
-		
-			var email = origEmail.toLowerCase();
-			email = email.replace(/\./g, ',');
-			
-			
-			var newQuery = new query();
-			
-				
-			// New User lets sign them up 
-
-			var promise = new Promise(function(resolve){
-				firebase.auth().createUserWithEmailAndPassword(origEmail, password).catch(function(error) {
-				
-					var errorMessage = error.message;
-					console.log(errorMessage)
-					resolve(errorMessage);
-
-				})
-		
-			});
-			
-			return promise.then(function(resolve){
-				
-				
-				console.log("Resolve after callback " + resolve);
-				
-				if(resolve){
-					
-					return resolve;
-				}
-				else{
-					
-					firebase.auth().onAuthStateChanged(function(user) {
-						  if (user) {
-							console.log(user);
-							//var ref = database.ref('Users');
-							
-							var id = userRef.child(email);
-							var newRef = id.push();
-							
-							newRef.set({
-								firstname: firstName ,
-								lastname : lastName 
-							})
-							
-						  } else {
-							// User is signed out.
-							app.locals.LoggedIn = false;
-						  }
-					});
-					return "Account Created Succesfully!";
-					
-				}
-				
-				
-			});
-			
-		
-		}
-	}
 	this.toArrayObject = function(arr1,arr2){
 	
 		var newArr = Array();
@@ -97,11 +22,10 @@ var query = function() {
 			}
 			
 		}
-		console.log(newArr);
 		return newArr;
 	
 	}
-	this.getFirstNamebyEmail = function(email,ref){
+	this.getFirstNamebyEmail = function(email,userRef){
 
 	
 		if (!email) return false
@@ -109,12 +33,11 @@ var query = function() {
 		email = email.toLowerCase();
 		email = email.replace(/\./g, ',');
 		
-		return ref.child(email).once('value').then(function(snapshot){
+		return userRef.child(email).once('value').then(function(snapshot){
 			
 			
 			var obj = snapshot.exportVal();
 			var key = Object.keys(snapshot.exportVal());
-			console.log(obj[key].firstname);
 			
 			//console.log("FirstName " + JSON.stringify(snapshot) + " " + snapshot.exportVal());
 			return obj[key].firstname;
@@ -122,14 +45,14 @@ var query = function() {
 		});
 
 	};
-	this.getCourses = function(ref){
+	this.getCourses = function(courseRef){
 		
 		var courses = [];
 		var index = 0;
 		return new Promise(function(resolve) {
 			setTimeout( function() {
 				//order by Child ('CourseName')
-				ref.orderByKey().on("child_added", function(snapshot) {
+				courseRef.orderByKey().on("child_added", function(snapshot) {
 					//console.log(snapshot.val().CourseName);
 					courses[index] = snapshot.val().CourseName;
 					++index;
@@ -138,14 +61,33 @@ var query = function() {
 			},2000);
 		});
 	}
-	this.getCourseKeys = function(ref){
+	this.getCoursesRF = function(courseRef){
+		
+		var courses = [];
+		var keys = [];
+		var courses = {};
+		var index = 0;
+		return new Promise(function(resolve) {
+			//setTimeout( function() {
+				//order by Child ('CourseName')
+				courseRef.orderByKey().on("child_added", function(snapshot) {
+					
+					courses[snapshot.key] = snapshot.val().CourseName;
+					//console.log(snapshot.val().CourseName + ' ' + snapshot.key);				
+					resolve((courses));
+				})
+				//resolve(courses);
+			//},2000);
+		});
+	}
+	this.getCourseKeys = function(courseRef){
 		var courses = [];
 		var index = 0;
 		return new Promise(function(resolve) {
 			setTimeout( function() {
 				
 				//order by Child ('CourseName')
-				ref.orderByKey().on("child_added", function(snapshot) {
+				courseRef.orderByKey().on("child_added", function(snapshot) {
 					//console.log(snapshot.val().CourseName);
 					courses[index] = snapshot.key;
 					++index;
@@ -154,55 +96,54 @@ var query = function() {
 			},2000);
 		});
 	}
-	this.signInUser = function(email,password,firebase){
+	this.createCourse = function(postData,firebase,courseRef){
+		
 	
-	
-		return new Promise(function (resolve,reject){
-			
-			//setTimeout(function(){
-				console.log("inside");
-				firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-					reject(error.message);
-					console.log(error.code);
-					var errorMsg = "Email and Password Incorrect please try again";
-					//res.render('login',{errorMsg : errorMsg});
-				});
-				resolve(true);
-				this.LoggedIn = true;
-				console.log('resolved');
-			//},1000);
+		
+		
+		var user = firebase.auth().currentUser;
 
+		var id = courseRef.push();
+		
+		var email = user.email.toLowerCase();
+		email = user.email.replace(/\./g, ',');
+		
+		var ref = instructorRef.child(email);
+		var newRef = ref.push();
+		newRef.set({
+			
+			CourseKey : id.key,
+			CourseName : postData['CourseName']
 			
 		});
-	}
-	this.getCourseNameForKeys = function(ref,keys){
-		
-		return new Promise(function(resolve){
-			setTimeout( function() {	
-				ref.orderByChild("email").equalTo(email).on("child_added", function(snapshot) {
-					console.log("Inside CourseEnrolled " + snapshot.val());
-					if(snapshot.exists()) {					
-						courses[index] = snapshot.val().Course;
-						++index;
-						resolve(courses);
-						
-					}
-					else{
-						resolve(0);
-					}
-				})
-			},2000);
+
+		id.set({
 			
-		});
+			CourseName : postData['CourseName'],
+			Subject : postData['subject'],
+			Maxmembers : postData['members'],
+			CurentMembers : 0,
+			StartDate : postData['startDate'],
+			EndDate : postData['endDate'],
+			Rating : 0.0,
+			Color : postData['favcolor'],
+			CreatedBy : user.email
+			
+		})
+		
+
+
+		
+		return id;
 		
 	}
-	this.getCoursesEnrolled = function(email,ref){
+	this.getCoursesEnrolled = function(email,enrollRef){
 		var courses = [];
 		var courseName = [];
 		var courseInfo = {};
 		var index = 0;
 
-		console.log("email and ref" + email + " " + ref);
+		console.log("email and ref" + email + " " + enrollRef);
 		
 		
 		if (!email) return false
@@ -210,30 +151,27 @@ var query = function() {
 		email = email.toLowerCase();
 		email = email.replace(/\./g, ',');
 		
-		console.log("email and ref" + email + " " + ref);
 
-		console.log("Query By Itself " + ref.orderByChild("email"));
 		
 		return new Promise(function(resolve){
-			ref.orderByKey().equalTo(email).on("child_added",function(snapshot){
+			enrollRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
 			
-			console.log("Brand new Query by On " + JSON.stringify(snapshot));
-			
-			snapshot.forEach(function(snapshot) {
-				var childKey = console.log("key " + snapshot.val().CourseName);
-				courseName[index] =  snapshot.val().CourseName;
-				var childData = console.log("Data " + snapshot.val().Course);
-				courses[index] = snapshot.val().Course;
-				++index;
+				//console.log("Brand new Query by On " + JSON.stringify(snapshot));
 				
-			});
-			
-			
-			courseInfo = self.toArrayObject(courses,courseName);
-			console.log("Boi our obj " + courseInfo);
-			resolve(courseInfo);
-			//return courseInfo;
-			
+				snapshot.forEach(function(snapshot) {
+					var childKey = console.log("key " + snapshot.val().CourseName);
+					courseName[index] =  snapshot.val().CourseName;
+					var childData = console.log("Data " + snapshot.val().Course);
+					courses[index] = snapshot.val().Course;
+					++index;
+					
+				});
+				
+				
+				courseInfo = self.toArrayObject(courses,courseName);
+				resolve(courseInfo);
+				//return courseInfo;
+				
 			});
 		});
 		
@@ -264,7 +202,7 @@ var query = function() {
 					//console.log(snapshot.val().CourseName);
 					var val = snapshot.val();
 					//console.log(snapshot.val()["Color"]);
-					console.log(val);
+					//console.log(val);
 					//var Color = val["Color"];
 					resolve(val);
 				})
@@ -272,8 +210,69 @@ var query = function() {
 		
 		});
 	}
+	this.renderIndex2 = function(resolve,email,ref){
+	
+		if(resolve){
+			//User is LOgged In usrName
+			
+			var Usrname = ref.cacheRef.get( "usrName" );
+
+			if ( Usrname == undefined ){
+			  console.log("Sorry Name is missing");
+			}
+			
+			if(Usrname != undefined){
+				
+				//Display back to login once in
+				return Promise.all([
+					
+					self.getCoursesRF(ref.courseRef),
+					self.getCoursesEnrolled(email,ref.enrollRef)
+				
+				]).then(function (results){
+					
+					var courseInfo = results[0];
+					//console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
+					//res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
+					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]};
+
+				})
+			}
+			else{
+				//Displaying Login Page
+				return Promise.all([
+
+					self.getFirstNamebyEmail(email,ref.userRef),
+					self.getCoursesRF(ref.courseRef),
+					self.getCoursesEnrolled(email,ref.enrollRef)
+			
+				]).then(function (results){
+					
+					//console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
+					
+					//console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
+					var data = {name : results[0]};
+					var success = ref.cacheRef.set( "usrName", data,0);
+					var value = ref.cacheRef.get( "usrName" );
+					//console.log("name " + value.name);
+					
+					self.firstName = results[0];
+					var courseInfo = results[1];
+					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
+					//console.log(results[0] + courseInfo + results[3]);
+					return {name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]};
+				}).catch(function(error){
+				
+					console.log(error + "in query");
+				})
+				
+			}
+			
+		}
+
+	}
 	//the function will return the list for the index view 
-	this.renderIndex = function(resolve,email,res,ref){
+	this.renderIndex = function(resolve,email,ref){
 	
 		if(resolve){
 			//User is LOgged In usrName
@@ -296,7 +295,7 @@ var query = function() {
 				]).then(function (results){
 					
 					var courseInfo = self.toArrayObject(results[0],results[1]);
-					console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
+					//console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
 					//res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
 					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]};
 
@@ -319,12 +318,12 @@ var query = function() {
 					var data = {name : results[0]};
 					var success = ref.cacheRef.set( "usrName", data,0);
 					var value = ref.cacheRef.get( "usrName" );
-					console.log("name " + value.name);
+					//console.log("name " + value.name);
 					
 					self.firstName = results[0];
 					var courseInfo = self.toArrayObject(results[1],results[2]);
 					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
-					console.log(results[0] + courseInfo + results[3]);
+					//console.log(results[0] + courseInfo + results[3]);
 					return {name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]};
 				}).catch(function(error){
 				

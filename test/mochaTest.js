@@ -16,13 +16,23 @@ var config = {
 
 firebase.initializeApp(config);
 
-
+const NodeCache = require("node-cache");
+const userCache = new NodeCache();
 var courseRef = firebase.database().ref("Courses");
 var userRef = firebase.database().ref("Users");
 var enrollmentRef = firebase.database().ref("Enrollment");
 var instructorRef = firebase.database().ref("Instructors");
+var fbRef = {
+	
+	courseRef : courseRef,
+	userRef : userRef,
+	enrollRef : enrollmentRef,
+	cacheRef : userCache
+}
 var existingEmail = process.env.TEST_EMAIL;
 var password1 = process.env.TEST_PASSWORD;
+
+
 
 describe('Create', function() {
   describe('#CheckUserFunctions()', function() {
@@ -31,6 +41,7 @@ describe('Create', function() {
 		
 		const errorMsg = "The email address is already in use by another account.";
 		var newQuery = new query();
+		var newAuth = new auth();
 		var existingEmail = process.env.TEST_EMAIL;
 		var password1 = process.env.TEST_PASSWORD;
 
@@ -45,7 +56,7 @@ describe('Create', function() {
 		}
 		const resolvingPromise = new Promise(function(resolve){
 			
-			resolve(newQuery.CreateUser(postData,firebase,userRef));
+			resolve(newAuth.CreateUser(postData,firebase,userRef));
 			
 		});
 		return resolvingPromise.then(function(resolve){
@@ -70,7 +81,7 @@ describe('Create', function() {
 		});
 		return resolvingPromise.then(function(resolve){
 			
-			console.log(resolve);
+
 			assert.equal(result,resolve);
 			
 		})
@@ -98,4 +109,121 @@ describe('Create', function() {
 	
 	
   });
+  /* Under Construction
+  describe('#CourseCreate',function(){
+		we give it a testREf and create one FB testCreadeDummy
+		it('should ')
+		
+		
+		
+  })
+  */
+  
+  
 });
+
+describe('CourseIndex',function(){
+	
+	describe('#CourseIndex',function(){
+		
+		before(function() {
+			// runs before all tests in this block(need to log in a test user to authenticate Fb Calls)
+			var newAuth = new auth();
+	
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newAuth.signInUser(existingEmail,password1,firebase));
+				done();
+				
+			});
+			return resolvingPromise.then(function(resolve){
+				
+				return resolve;
+				
+			})
+			
+		 });
+		it('should return a list of Available Courses',function(done){
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+	
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.renderIndex2(resolve,existingEmail,fbRef));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+
+				assert.notEqual(undefined,resolve);
+				assert.notEqual(null,resolve);
+			})
+					
+		})
+		it('should return a list of Courses a User is enrolled In',function(){
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+	
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.getCoursesEnrolled(existingEmail,enrollmentRef));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+			
+				assert.notEqual(undefined,resolve);
+				assert.notEqual(null,resolve);
+				
+			})
+
+		});
+		it('should return a name for a valid user',function(){
+			
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+	
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.getFirstNamebyEmail(existingEmail,userRef));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+			
+				assert.notEqual(undefined,resolve);
+				assert.notEqual(null,resolve);
+				
+			})
+			
+		});
+		it('should return Courses with keys and names',function(done){
+			
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+	
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.getCoursesRF(courseRef));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+				
+				//console.dir('outidde ' + JSON.stringify(resolve));
+				expect(resolve).to.be.an('object');
+				assert.notEqual(undefined,resolve);
+				assert.notEqual(null,resolve);
+				
+			})
+
+		});
+		
+	})
+	
+	
+})

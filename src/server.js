@@ -390,7 +390,7 @@ app.get('/index',function (req,res){
 		}
 		else{
 			
-			var indexData = newQuery.renderIndex(true,email,res,ref);
+			var indexData = newQuery.renderIndex(true,email,ref);
 				
 			indexData.then(function(resolve){
 				
@@ -442,7 +442,7 @@ app.post('/index', function (req,res) {
 			console.log(resolve);
 			if(resolve === true){
 				app.set("userEmail",email);
-				var indexData = newQuery.renderIndex(resolve,email,res,ref);
+				var indexData = newQuery.renderIndex(resolve,email,ref);
 				
 				indexData.then(function(resolve){
 					
@@ -621,11 +621,10 @@ app.post('/CreateCourse',function(req,res){
 		var email = user.email;
 		console.log(email);
 		console.log("Key " + key);
-		var indx = key.lastIndexOf("/");
-		console.log(indx);
-		key = key.substring(indx);
-		console.log("new key " + key);
-		createCourseView(key);
+		//var indx = key.lastIndexOf("/");
+		//console.log(indx);
+		//key = key.substring(indx);
+		//console.log("new key " + key);
 		res.render('Confirmation');
 		//renderIndex(key,email,res);
 		

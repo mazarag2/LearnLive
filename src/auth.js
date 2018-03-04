@@ -23,10 +23,6 @@ var auth = function() {
 		
 			var email = origEmail.toLowerCase();
 			email = email.replace(/\./g, ',');
-			
-			
-			var newQuery = new query();
-			
 				
 			// New User lets sign them up 
 
