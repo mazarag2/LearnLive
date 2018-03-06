@@ -63,21 +63,18 @@ var query = function() {
 	}
 	this.getCoursesRF = function(courseRef){
 		
-		var courses = [];
-		var keys = [];
-		var courses = {};
-		var index = 0;
+		var res = []
+		var tempArr = []
+
 		return new Promise(function(resolve) {
-			//setTimeout( function() {
-				//order by Child ('CourseName')
-				courseRef.orderByKey().on("child_added", function(snapshot) {
-					
-					courses[snapshot.key] = snapshot.val().CourseName;
-					//console.log(snapshot.val().CourseName + ' ' + snapshot.key);				
-					resolve((courses));
-				})
-				//resolve(courses);
-			//},2000);
+			
+			courseRef.orderByKey().on("child_added", function(snapshot) {
+				var tempArrray = [snapshot.key,snapshot.val().CourseName];
+				res.push(tempArrray);
+			})
+				
+			resolve(res);
+			
 		});
 	}
 	this.getCourseKeys = function(courseRef){
@@ -210,7 +207,7 @@ var query = function() {
 		
 		});
 	}
-	this.renderIndex2 = function(resolve,email,ref){
+	this.renderIndex = function(resolve,email,ref){
 	
 		if(resolve){
 			//User is LOgged In usrName
@@ -234,7 +231,7 @@ var query = function() {
 					var courseInfo = results[0];
 					//console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
 					//res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
-					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]};
+					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[1]};
 
 				})
 			}
@@ -258,9 +255,10 @@ var query = function() {
 					
 					self.firstName = results[0];
 					var courseInfo = results[1];
+					console.log('render' + JSON.stringify(results[1]));
 					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
 					//console.log(results[0] + courseInfo + results[3]);
-					return {name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]};
+					return {name : results[0],courseInfo: results[1],coursesEnrolled : results[2]};
 				}).catch(function(error){
 				
 					console.log(error + "in query");
@@ -272,6 +270,7 @@ var query = function() {
 
 	}
 	//the function will return the list for the index view 
+	/*
 	this.renderIndex = function(resolve,email,ref){
 	
 		if(resolve){
@@ -335,5 +334,6 @@ var query = function() {
 		}
 
 	}
+	*/
 };
 module.exports = query;

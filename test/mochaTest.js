@@ -151,13 +151,17 @@ describe('CourseIndex',function(){
 	
 			const resolvingPromise = new Promise(function(resolve){
 				
-				resolve(newQuery.renderIndex2(resolve,existingEmail,fbRef));
+				resolve(newQuery.renderIndex(resolve,existingEmail,fbRef));
 				done();
 			});
 			return resolvingPromise.then(function(resolve){
 
-				assert.notEqual(undefined,resolve);
-				assert.notEqual(null,resolve);
+				console.log('renderIndex ' + JSON.stringify(resolve));
+				expect(JSON.parse(JSON.stringify(resolve))).to.have.property('courseInfo').to.be.an('array').to.have.lengthOf.above(2);
+
+			}).catch(function(er){
+				
+				done(new Error(er));
 			})
 					
 		})
@@ -194,8 +198,8 @@ describe('CourseIndex',function(){
 			});
 			return resolvingPromise.then(function(resolve){
 			
-				assert.notEqual(undefined,resolve);
-				assert.notEqual(null,resolve);
+				expect(resolve).to.be.an('string');
+				
 				
 			})
 			
@@ -214,10 +218,12 @@ describe('CourseIndex',function(){
 			});
 			return resolvingPromise.then(function(resolve){
 				
-				//console.dir('outidde ' + JSON.stringify(resolve));
-				expect(resolve).to.be.an('object');
-				assert.notEqual(undefined,resolve);
-				assert.notEqual(null,resolve);
+				expect(resolve).to.be.an('array').to.have.length.above(1);
+				
+				
+			}).catch(function(er){
+				
+				done(new Error(er));
 				
 			})
 

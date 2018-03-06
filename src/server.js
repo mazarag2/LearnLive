@@ -446,7 +446,7 @@ app.post('/index', function (req,res) {
 				
 				indexData.then(function(resolve){
 					
-					console.dir('listresponse' + resolve);
+					console.dir('listresponse' + JSON.stringify(resolve));
 					res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled});
 					
 				});
