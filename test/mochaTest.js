@@ -27,7 +27,8 @@ var fbRef = {
 	courseRef : courseRef,
 	userRef : userRef,
 	enrollRef : enrollmentRef,
-	cacheRef : userCache
+	cacheRef : userCache,
+	instructorRef : instructorRef
 }
 var existingEmail = process.env.TEST_EMAIL;
 var password1 = process.env.TEST_PASSWORD;
@@ -227,6 +228,32 @@ describe('CourseIndex',function(){
 				
 			})
 
+		});
+		it('should return Instructor info',function(done){
+			
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+	
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.getCoursesForInstructor(existingEmail,instructorRef));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+				
+
+				expect(resolve).to.be.an('array').to.have.length.above(1);
+				
+				
+			}).catch(function(er){
+				
+				done(new Error(er));
+				
+			})
+			
+			
 		});
 		
 	})

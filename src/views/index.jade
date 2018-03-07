@@ -112,6 +112,20 @@ body
           .pull-right   
           a.btn.btn-default.btn-sm.pull-right(href = "http://localhost:8080/index/Enroll?course=" + val[0] + "&name=" + val[1]) Enroll
           |
+    .panel.panel-default.pull-down.clearfix
+      // Default panel contents
+      .panel-heading Courses
+      |   
+      .panel-body
+        p Course for which you are the Instructor !
+      // List group -- Will need to use Angular here in luee of DOM manipulation
+      ul#courses.list-group
+        each val,index in InstructorCourse
+          li.list-group-item 
+          span.sr-only (current)
+          a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
+          .pull-right   
+          a.btn.btn-default.btn-sm.pull-right(href = "http://localhost:8080/index/Edit?course=" + val[0] + "&name=" + val[1]) Edit
     //
       div class = "jumbotron" >
       <form class = "form-inline"role = "form" method = "post">

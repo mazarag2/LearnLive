@@ -94,182 +94,6 @@ function createCourse(postData){
 	return id;
 }
 
-//Experimental work to upload files to Firebase
-/*
-function uploadFileToFB(CourseKey){
-	
-	//read courseTemplate in the Storage
-	
-	//var pathReference = gcs.ref('CourseTemplate.jade');
-	
-	const Storage = require('@google-cloud/storage');
-
-		// Creates a client
-	const storage = new Storage();
-
-	/**
-	 * TODO(developer): Uncomment the following lines before running the sample.
-	 
-	const srcBucketName = 'Name of the source bucket, e.g. my-bucket';
-	const srcFilename = 'Name of the source file, e.g. file.txt';
-	const destBucketName = 'Name of the destination bucket, e.g. my-other-bucket';
-	 const destFilename = 'Destination name of file, e.g. file.txt';
-
-	// Copies the file to the other bucket
-	/*
-	var PostaggingURL = 'https://www.googleapis.com/storage/v1/b/learnlive-f6376.appspot.com/o/CourseTemplate.jade/copyTo/b/learnlive-f6376.appspot.com/Courses/o/' + CourseKey + '.jade?';
-	
-	//var input = document.getElementById('input').value;
-	
-	xhttp.onreadystatechange = function(){
-		
-		//stuff we need to do when the request come backs
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				//document.getElementById("demo").innerHTML =
-				console.log('xmlhttpresponse ' + this.responseText);
-			}
-		};
-	}
-	//sending request 
-	xhttp.open("POST",PostaggingURL,true);
-	//xhttp.setRequestHeader('Authorization','bearer 749566368306-e4j38e5t1d9hd8j0ifh4jipipvdbktru.apps.googleusercontent.com');
-	xhttp.setRequestHeader('Content-Type", "text/plain');
-	
-	xhttp.send('key=AIzaSyBwkhpMW3rp-zqyjv66D71hWl0TGOpfSjg');
-	
-	
-	gcs
-	  .bucket('learnlive-f6376.appspot.com')
-	  .file('learnlive-f6376.appspot.com/CourseTemplate.jade')
-	  .copy(storage.bucket('learnlive-f6376.appspot.com').file('learnlive-f6376.appspot.com/Courses/' + CourseKey + '.jade'))
-	  .then(() => {
-		console.log(
-		  `gs://${srcBucketName}/${srcFilename} copied to gs://${destBucketName}/${destFilename}.`
-		);
-	  })
-	  .catch(err => {
-		console.error('ERROR:', err);
-	  });
-	  
-	
-	//memcached-10583.c10.us-east-1-4.ec2.cloud.redislabs.com:10583
-	
-
-	
-	/*
-	firebase.auth().onAuthStateChanged(function(user) {
-	  if (user) {
-		
-		
-		var bucket = gcs.bucket('learnlive-f6376.appspot.com');
-		
-		//var gsReference = storage.refFromURL('gs://learnlive-f6376.appspot.com/');
-		
-		
-		//var file = bucket.file('https://storage.googleapis.com/learnlive-f6376.appspot.com/CourseTemplate.jade');
-		
-		var file = bucket.file('CourseTemplate.jade');
-		
-		//const Storage = require('@google-cloud/storage');
-		
-				// Creates a client
-		//const storage = new Storage();
-
-		/**
-		 * TODO(developer): Uncomment the following lines before running the sample.
-		 
-		 const srcBucketName = 'learnlive-f6376.appspot.com';
-		 const srcFilename =   'CourseTemplate.jade';
-		 const destBucketName = 'learnlive-f6376.appspot.com/Courses';
-		 const destFilename = CourseKey + '.jade';
-				
-		/*
-		gcs
-		  .bucket(srcBucketName)
-		  .file(srcFilename)
-		  .copy(storage.bucket(destBucketName).file(destFilename))
-		  .then(() => {
-			console.log(
-			  `gs://${srcBucketName}/${srcFilename} copied to gs://${destBucketName}/${destFilename}.`
-			);
-		  })
-		  .catch(err => {
-			console.error('ERROR:', err);
-		  });
-		
-		file.get(function(err, file, apiResponse) {
-			console.log(err + JSON.stringify(apiResponse));
-			//console.dir(file);
-		});
-		//var path = 'https://storage.googleapis.com/learnlive-f6376.appspot.com/Courses/' + CourseKey + '.jade';
-		var path = 'Courses/' + CourseKey + '.jade';
-		file.copy(path,function(err, copiedFile, apiResponse) {
-		  // `my-bucket` now contains:
-		  // - "my-image.png"
-		  // - "my-image-copy.png"
-			console.log("Copy " + err + JSON.stringify(apiResponse));
-		  // `copiedFile` is an instance of a File object that refers to your new
-		  // file.
-		});
-			
-							
-			
-		
-	  } else {
-		// User is signed out.
-		app.locals.LoggedIn = false;
-	  }
-	});
-	
-	var bucket = gcs.bucket('learnlive-f6376.appspot.com');
-	
-	//var gsReference = storage.refFromURL('gs://learnlive-f6376.appspot.com/');
-	
-	
-	//var file = bucket.file('https://storage.googleapis.com/learnlive-f6376.appspot.com/CourseTemplate.jade');
-	
-	var file = bucket.file('CourseTemplate.jade');
-	
-	/*
-	file.download(function(err, contents) {
-		
-		
-		console.log(err + contents);
-		
-		
-	});
-	*/
-	//var path = 'https://storage.googleapis.com/learnlive-f6376.appspot.com/Courses/' + CourseKey + '.jade';
-	/*
-	gsReference.child('CourseTemplate.jade').getDownloadURL().then(function(url){
-		
-		  var xhr = new XMLHttpRequest();
-		  xhr.responseType = 'file';
-		  xhr.onload = function(event) {
-			console.log("File Boi" + file);
-			var file = xhr.response;
-			
-			var newCourseRef = storageRef.child('Courses/' + CourseKey + '.jade');
-			newCourseRef.put(file).then(function(snapshot){
-				
-				console.log("File Uploaded Succesfully");
-				
-			});
-			
-		  };
-		  xhr.open('GET', url);
-		  xhr.send();
-
-	}).catch(function(error) {
-		console.log("Error in File Fb " + error)
-	});;
-	*/
-	
-	//grab that and write file to storage using name with Course key
-	
-//}
-
 function removeWhiteSpaces(courseName){
 	
 	return courseName.replace(/\s+/g, '');
@@ -289,29 +113,6 @@ function removeWhiteSpacesCourses(courses){
 	}
 	
 	return newcourses;
-	
-}
-
-
-function toArrayObject(arr1,arr2){
-	
-	var newArr = Array();
-	
-	if(arr1.length == arr2.length){
-		
-		
-		for(var x = 0; x <= arr1.length - 1 ; x++){
-			
-			var nestArr = new Array();
-			nestArr.push(arr1[x]);
-			nestArr.push(arr2[x]);
-			newArr.push(nestArr);
-			
-		}
-		
-	}
-	console.log(newArr);
-	return newArr;
 	
 }
 
@@ -372,7 +173,8 @@ app.get('/index',function (req,res){
 			courseRef : courseRef,
 			userRef : userRef,
 			enrollRef : enrollmentRef,
-			cacheRef : userCache
+			cacheRef : userCache,
+			instructorRef : instructorRef
 		}
 		if(CourseKey != null){
 			
@@ -395,7 +197,7 @@ app.get('/index',function (req,res){
 			indexData.then(function(resolve){
 				
 				console.dir('listresponse' + resolve);
-				res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled});
+				res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled,InstructorCourse : resolve.InstructorCourse});
 				
 			});
 	
@@ -432,7 +234,8 @@ app.post('/index', function (req,res) {
 			courseRef : courseRef,
 			userRef : userRef,
 			enrollRef : enrollmentRef,
-			cacheRef : userCache
+			cacheRef : userCache,
+			instructorRef : instructorRef
 		}
 		var newAuth = new auth();
 		
@@ -447,7 +250,7 @@ app.post('/index', function (req,res) {
 				indexData.then(function(resolve){
 					
 					console.dir('listresponse' + JSON.stringify(resolve));
-					res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled});
+					res.render('index',{name : resolve.name,courseInfo: resolve.courseInfo,coursesEnrolled : resolve.coursesEnrolled,InstructorCourse : resolve.InstructorCourse});
 					
 				});
 			}
