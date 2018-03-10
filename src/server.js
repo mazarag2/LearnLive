@@ -316,10 +316,6 @@ app.post('/CreateUser',function (req,res){
 	req.on('end', function () {
 		
 		
-		
-		
-		
-		
 		var postData = qstring.parse(bodyData);
 		
 		var newQuery = new query();
@@ -327,72 +323,13 @@ app.post('/CreateUser',function (req,res){
 		var msg = newQuery.CreateUser(postData,firebase,userRef);
 		
 		res.render('Create',{errorMsg : msg});
-		/*
-		console.log(postData);
-		var origEmail = postData['email'];
-		console.log(email);
-		var password = postData['password'];
-		var password2 = postData['password2'];
-		var firstName = postData['firstname'];
-		var lastName = postData['lastname'];
-		console.log(password);
-		if(password != password2){
-			
-			var errorMsg = "Passwords do not match please try again";
-			
-			
-		}
-		else{
-		
-			var email = origEmail.toLowerCase();
-			email = email.replace(/\./g, ',');
-			
-			
-			var newQuery = new query();
-			
-				
-			// New User lets sign them up 
-
-			var promise = new Promise(function(resolve){
-				firebase.auth().createUserWithEmailAndPassword(origEmail, password).catch(function(error) {
-				
-				var errorMessage = error.message;
-				resolve(errorM);
-
-			})});
-			firebase.auth().onAuthStateChanged(function(user) {
-			  if (user) {
-				console.log(user);
-				//var ref = database.ref('Users');
-				
-				var id = userRef.child(email);
-				var newRef = id.push();
-				
-				newRef.set({
-					firstname: firstName ,
-					lastname : lastName 
-				})
-				
-			  } else {
-				// User is signed out.
-				app.locals.LoggedIn = false;
-			  }
-			});
-		
-			res.render('Create',{errorMsg : errorMessage});
-		
-		}
-	});
-	*/
-	
-	
 	
 	});
 });
 
 app.get('/CreateCourse',function(req,res){
 	
-	if(app.locals.LoggedIn){
+	if(firebase.auth().currentUser){
 	
 		res.render('CreateCourse');
 	
