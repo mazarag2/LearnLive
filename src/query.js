@@ -86,16 +86,18 @@ var query = function() {
 	}
 	this.getCoursesRF = function(courseRef){
 		
-		var res = []
-		var tempArr = []
-
+		var res = [];
+		var tempArr = [];
+		var allKeys = [];
 		return new Promise(function(resolve) {
 			
 			courseRef.orderByKey().on("child_added", function(snapshot) {
+				//allKeys.push(snapshot.key);
 				var tempArrray = [snapshot.key,snapshot.val().CourseName];
 				res.push(tempArrray);
-			})
-				
+
+			})			
+			//console.log('inside CoursesRF ' + res);
 			resolve(res);
 			
 		});
@@ -104,16 +106,17 @@ var query = function() {
 		var courses = [];
 		var index = 0;
 		return new Promise(function(resolve) {
-			setTimeout( function() {
+			//setTimeout( function() {
 				
 				//order by Child ('CourseName')
-				courseRef.orderByKey().on("child_added", function(snapshot) {
-					//console.log(snapshot.val().CourseName);
-					courses[index] = snapshot.key;
-					++index;
-					resolve(courses);
-				})
-			},2000);
+			courseRef.orderByKey().on("child_added", function(snapshot) {
+				//console.log(snapshot.val().CourseName);
+				courses.push(snapshot.key);
+				++index;
+				
+			})
+			resolve(courses);
+			//},2000);
 		});
 	}
 	this.createCourse = function(postData,firebase,courseRef){
@@ -154,6 +157,7 @@ var query = function() {
 		return id;
 		
 	}
+	
 	this.getCoursesEnrolled = function(email,enrollRef){
 		var courses = [];
 		var courseName = [];
@@ -227,6 +231,47 @@ var query = function() {
 		
 		});
 	}
+	this.renderCoursesEnrolledList = function(courseRef,CourseEnrollList){
+		
+		
+		// we're going to do an interesection and render those withdraw / checkmark
+		// courseList.has(for each in CourseEnrollList)
+		/*
+		CoursesList.filter(function(n) {
+			return CourseEnrollList.indexOf(n) !== -1;
+		});
+		*/
+		
+		var getKeys = self.getCourseKeys(courseRef);
+		
+		
+		
+		return getKeys.then(function(resolve){
+			
+
+			
+			//object to array 
+			var CourseList = new Set(resolve);
+			console.log('plainCourseList ' + CourseList);
+			console.log('CourseList length' + CourseEnrollList.length);
+			console.dir('bef' + CourseList);
+			for (var x = 0; x <= resolve.length - 1; x++){
+				
+				var Enrolledkey = CourseEnrollList[x];
+				
+				var alreadyEnrolled = CourseList.has(Enrolledkey);
+			
+				if(alreadyEnrolled){
+					CourseList.delete(Enrolledkey);
+				}
+			}
+			console.dir(CourseList);
+			return CourseList;
+			
+			
+		});
+		
+	}
 	this.renderIndex = function(resolve,email,ref){
 	
 		if(resolve){
@@ -244,7 +289,7 @@ var query = function() {
 				return Promise.all([
 					
 					self.getCoursesRF(ref.courseRef),
-					self.getCoursesEnrolled(email,ref.enrollRef),
+					self.getCoursesEnrolled(ref.enrollRef),
 					self.getCoursesForInstructor(email,ref.instructorRef)
 				
 				]).then(function (results){

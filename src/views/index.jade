@@ -36,13 +36,14 @@ script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
       border-color: #285e8e;
       }
       .panel-default{
-      color: #228B22;
-      background-color: #	#0000CD;
-      border-color: #285e8e;
-      padding: 10px 20px;
-      font-size: 20px;
-      border-radius: 10px;
-      width:40%;    //Specify your width here
+          color: #228B22;
+          background-color: #	#0000CD;
+          border-color: #285e8e;
+          padding: 10px 20px;
+          font-size: 20px;
+          border-radius: 10px;
+          width:40%;    //Specify your width here
+          margin-top: 6px;
       }
       .li {
        display: inline-block;
@@ -103,7 +104,7 @@ body
       |   
       .panel-body
         p New Courses Added To LearnLive will show up here!
-      // List group -- Will need to use Angular here in luee of DOM manipulation
+
       ul#courses.list-group
         each val,index in courseInfo
           li.list-group-item 
@@ -118,7 +119,7 @@ body
       |   
       .panel-body
         p Course for which you are the Instructor !
-      // List group -- Will need to use Angular here in luee of DOM manipulation
+
       ul#courses.list-group
         each val,index in InstructorCourse
           li.list-group-item 

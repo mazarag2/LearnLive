@@ -219,6 +219,7 @@ describe('CourseIndex',function(){
 			});
 			return resolvingPromise.then(function(resolve){
 				
+				console.log('getCoursesRF ' + resolve);
 				expect(resolve).to.be.an('array').to.have.length.above(1);
 				
 				
@@ -243,8 +244,35 @@ describe('CourseIndex',function(){
 			});
 			return resolvingPromise.then(function(resolve){
 				
-
 				expect(resolve).to.be.an('array').to.have.length.above(1);
+				
+				
+			}).catch(function(er){
+				
+				done(new Error(er));
+				
+			})
+		});
+		it('should return a list of courses with course enrolled removed',function(done){
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+			
+			var enrolledKeys = ["-KqssNUfcExQs8Q-OeKX"];
+	
+			//courseRef,CourseEnrollList
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.renderCoursesEnrolledList(courseRef,enrolledKeys));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+				
+				console.log('length' + resolve.length);
+				
+				console.dir(resolve);
+				expect(resolve).to.be.an('Set').that.does.not.include("-KqssNUfcExQs8Q-OeKX");
 				
 				
 			}).catch(function(er){
