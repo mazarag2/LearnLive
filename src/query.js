@@ -235,43 +235,123 @@ var query = function() {
 		
 		
 		// we're going to do an interesection and render those withdraw / checkmark
-		// courseList.has(for each in CourseEnrollList)
-		/*
-		CoursesList.filter(function(n) {
-			return CourseEnrollList.indexOf(n) !== -1;
-		});
-		*/
 		
-		var getKeys = self.getCourseKeys(courseRef);
-		
-		
-		
-		return getKeys.then(function(resolve){
-			
+		return Promise.all([
 
+			self.getCoursesRF(courseRef),
+			self.getCourseKeys(courseRef)
+	
+		]).then(function (results){
+			console.log(results[0] + ' -- ' + results[1])
+			//var keys = new Set(results[1]);
+			var keys = new Set(results[1]);
+			console.dir(keys);
+			/*
+			for(var y = 0 ; y <= CourseEnrollList.length - 1 ; y++){
+				console.log(keys.has(CourseEnrollList[y]));
+				if(keys.has(CourseEnrollList[y])){
+					keys.delete(CourseEnrollList[y]);
+				}
+			}
+			*/
+			//loop over CoursesRF entries set 
+			//if it does not coontain it delete that shit 
+			console.dir(keys);
 			
-			//object to array 
-			var CourseList = new Set(resolve);
-			console.log('plainCourseList ' + CourseList);
-			console.log('CourseList length' + CourseEnrollList.length);
-			console.dir('bef' + CourseList);
-			for (var x = 0; x <= resolve.length - 1; x++){
+			var CourseRF = results[0];
+			for (var key in CourseRF) {
+				if (CourseRF.hasOwnProperty(key)) {
+					console.log(key + " -> " + CourseRF[key]);
+					var val = JSON.stringify(CourseRF[key]);
+					var courseKey = JSON.parse(val)[0];
+					for (var y = 0 ; y <= CourseEnrollList.length - 1; y++){
+						console.log(courseKey == CourseEnrollList[y]);
+						if(courseKey == CourseEnrollList[y]){
+							console.log('key' + key);
+							delete CourseRF.key;
+							delete CourseRF[key];
+							
+						}
+					}
+				}
+			}
+			console.log(CourseRF);
+			//
+			return CourseRF;
+			
+		}).catch(function(error){
+		
+			console.log(error + "in query");
+		})
+		
+		
+		/*
+		var getkeyVal = self.getCoursesRF(courseRef);
+		return getkeyVal.then(function(resolve){
+			/*
+			for (var x = 0; x <= CourseEnrollList.length - 1; x++){
 				
-				var Enrolledkey = CourseEnrollList[x];
 				
+				var Enrolledkey = CourseEnrollList[x][0];
+				console.log('Enrolledkey ' + Enrolledkey);
 				var alreadyEnrolled = CourseList.has(Enrolledkey);
-			
+				console.log(alreadyEnrolled);
 				if(alreadyEnrolled){
 					CourseList.delete(Enrolledkey);
 				}
 			}
+			
+			console.log(typeof resolve);
+			//we only need a set of keys once we 
+			//got it remove it and return the whole thing with the vals
+			console.log('resolve ' + JSON.stringify(resolve));
+			var CourseList = new Set(resolve);
+			var enrolledSet = new Set(CourseEnrollList);
 			console.dir(CourseList);
+			console.dir(enrolledSet);
+			
+			console.log('CourseList' + CourseEnrollList);
+			console.dir('bef' + CourseList);
+			console.log(CourseList.entries());
+			
+			for (var x = 0; x <= CourseEnrollList.length - 1; x++){
+				
+				
+				var Enrolledkey = CourseEnrollList[x][0];
+				console.log('Enrolledkey ' + Enrolledkey);
+				var alreadyEnrolled = CourseList.has(Enrolledkey);
+				console.log(alreadyEnrolled);
+				if(alreadyEnrolled){
+					CourseList.delete(Enrolledkey);
+				}
+			}
+			
+			console.dir(CourseList);
+	
 			return CourseList;
 			
 			
 		});
+		*/
+		
 		
 	}
+	/*
+	this.getValsForKeys(courseRef,enrollKeys){
+		
+		//fuck we have keys now we need vals....
+		//we still have other options...
+		
+		for(var y = 0; y <= enrollKeys.length - 1; y++){
+		
+			courseRef.orderByChild("CourseName").equalTo("John").on("child_added", function(data) {
+				console.log("Equal to filter: " + data.val().name);
+			});
+		
+		}
+		
+	}
+	*/
 	this.renderIndex = function(resolve,email,ref){
 	
 		if(resolve){
@@ -322,7 +402,7 @@ var query = function() {
 					console.log('name ' + results[0]);
 					self.firstName = results[0];
 					var courseInfo = results[1];
-					console.log('render' + JSON.stringify(results[1]));
+					console.log('render ' + JSON.stringify(results[1]));
 					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
 					//console.log(results[0] + courseInfo + results[3]);
 					return {name : results[0],courseInfo: results[1],coursesEnrolled : results[2],InstructorCourse : results[3]};

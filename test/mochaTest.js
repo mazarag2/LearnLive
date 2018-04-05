@@ -259,12 +259,12 @@ describe('CourseIndex',function(){
 			
 			var resolve = true;
 			
-			var enrolledKeys = ["-KqssNUfcExQs8Q-OeKX"];
+			var enrolledKeyValPair = ['-KqssNUfcExQs8Q-OeKX'];
 	
 			//courseRef,CourseEnrollList
 			const resolvingPromise = new Promise(function(resolve){
 				
-				resolve(newQuery.renderCoursesEnrolledList(courseRef,enrolledKeys));
+				resolve(newQuery.renderCoursesEnrolledList(courseRef,enrolledKeyValPair));
 				done();
 			});
 			return resolvingPromise.then(function(resolve){
@@ -272,7 +272,7 @@ describe('CourseIndex',function(){
 				console.log('length' + resolve.length);
 				
 				console.dir(resolve);
-				expect(resolve).to.be.an('Set').that.does.not.include("-KqssNUfcExQs8Q-OeKX");
+				expect(resolve).to.be.an('Array').that.does.not.include("-KqssNUfcExQs8Q-OeKX");
 				
 				
 			}).catch(function(er){
