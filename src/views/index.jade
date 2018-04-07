@@ -107,6 +107,7 @@ body
 
       ul#courses.list-group
         each val,index in courseInfo
+         if(val)
           li.list-group-item 
           span.sr-only (current)
           a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 

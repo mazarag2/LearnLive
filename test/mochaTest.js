@@ -264,7 +264,7 @@ describe('CourseIndex',function(){
 			//courseRef,CourseEnrollList
 			const resolvingPromise = new Promise(function(resolve){
 				
-				resolve(newQuery.renderCoursesEnrolledList(courseRef,enrolledKeyValPair));
+				resolve(newQuery.renderCoursesEnrolledList(courseRef,enrollmentRef,existingEmail));
 				done();
 			});
 			return resolvingPromise.then(function(resolve){

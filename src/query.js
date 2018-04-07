@@ -231,7 +231,7 @@ var query = function() {
 		
 		});
 	}
-	this.renderCoursesEnrolledList = function(courseRef,CourseEnrollList){
+	this.renderCoursesEnrolledList = function(courseRef,enrollRef,email){
 		
 		
 		// we're going to do an interesection and render those withdraw / checkmark
@@ -239,13 +239,15 @@ var query = function() {
 		return Promise.all([
 
 			self.getCoursesRF(courseRef),
-			self.getCourseKeys(courseRef)
+			self.getCourseKeys(courseRef),
+			self.getCoursesEnrolled(email,enrollRef),
+			
 	
 		]).then(function (results){
-			console.log(results[0] + ' -- ' + results[1])
+			//console.log(results[0] + ' -- ' + results[1])
 			//var keys = new Set(results[1]);
 			var keys = new Set(results[1]);
-			console.dir(keys);
+			//console.dir(keys);
 			/*
 			for(var y = 0 ; y <= CourseEnrollList.length - 1 ; y++){
 				console.log(keys.has(CourseEnrollList[y]));
@@ -256,27 +258,30 @@ var query = function() {
 			*/
 			//loop over CoursesRF entries set 
 			//if it does not coontain it delete that shit 
-			console.dir(keys);
+			var CourseEnrollList = results[2];
+			
 			
 			var CourseRF = results[0];
+			//var unEnrolledCourses = new Array();
 			for (var key in CourseRF) {
 				if (CourseRF.hasOwnProperty(key)) {
 					console.log(key + " -> " + CourseRF[key]);
 					var val = JSON.stringify(CourseRF[key]);
 					var courseKey = JSON.parse(val)[0];
-					for (var y = 0 ; y <= CourseEnrollList.length - 1; y++){
-						console.log(courseKey == CourseEnrollList[y]);
-						if(courseKey == CourseEnrollList[y]){
+					for(var enKey in CourseEnrollList){
+						console.log('enkey ' + enKey);
+						var enrollKey = JSON.parse(JSON.stringify(CourseEnrollList[enKey]))[0];
+						console.log('enrollKey ' + enrollKey)
+						console.log(courseKey == enrollKey);
+						if(courseKey == enrollKey){
 							console.log('key' + key);
 							delete CourseRF.key;
 							delete CourseRF[key];
-							
 						}
+
 					}
 				}
 			}
-			console.log(CourseRF);
-			//
 			return CourseRF;
 			
 		}).catch(function(error){
@@ -368,8 +373,8 @@ var query = function() {
 				//Display back to login once in
 				return Promise.all([
 					
-					self.getCoursesRF(ref.courseRef),
-					self.getCoursesEnrolled(ref.enrollRef),
+					self.renderCoursesEnrolledList(ref.courseRef,ref.enrollRef,email),
+					self.getCoursesEnrolled(email,ref.enrollRef),
 					self.getCoursesForInstructor(email,ref.instructorRef)
 				
 				]).then(function (results){
@@ -386,7 +391,7 @@ var query = function() {
 				return Promise.all([
 
 					self.getFirstNamebyEmail(email,ref.userRef),
-					self.getCoursesRF(ref.courseRef),
+					self.renderCoursesEnrolledList(ref.courseRef,ref.enrollRef,email),
 					self.getCoursesEnrolled(email,ref.enrollRef),
 					self.getCoursesForInstructor(email,ref.instructorRef)
 			
@@ -402,7 +407,7 @@ var query = function() {
 					console.log('name ' + results[0]);
 					self.firstName = results[0];
 					var courseInfo = results[1];
-					console.log('render ' + JSON.stringify(results[1]));
+					console.log('render ' + JSON.stringify(results[1]) + ' end');
 					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
 					//console.log(results[0] + courseInfo + results[3]);
 					return {name : results[0],courseInfo: results[1],coursesEnrolled : results[2],InstructorCourse : results[3]};
