@@ -8,12 +8,11 @@ var auth = function() {
 	this.CreateUser = function(postData,firebase,userRef){
 		
 		var origEmail = postData['email'];
-		console.log(email);
+		console.log(origEmail);
 		var password = postData['password'];
 		var password2 = postData['password2'];
 		var firstName = postData['firstname'];
 		var lastName = postData['lastname'];
-		console.log(password);
 		if(password != password2){
 			
 			return "Passwords do not match please try again";
@@ -27,27 +26,50 @@ var auth = function() {
 			// New User lets sign them up 
 
 			var promise = new Promise(function(resolve){
+				
 				firebase.auth().createUserWithEmailAndPassword(origEmail, password).catch(function(error) {
 				
 					var errorMessage = error.message;
 					console.log(errorMessage)
-					resolve(errorMessage);
+					return resolve(errorMessage);
 
 				})
+
 		
 			});
 			
 			return promise.then(function(resolve){
 				
-			
+				if(resolve === "The email address is already in use by another account."){
+					return resolve;
+				}
 				
+				firebase.auth().onAuthStateChanged(function(user) {
+					  if (user) {
+						//var ref = database.ref('Users');
+						
+						var id = userRef.child(email);
+						var newRef = id.push();
+						
+						newRef.set({
+							firstname: firstName ,
+							lastname : lastName 
+						})
+						//return resolve("Account Created Succesfully!");
+						return "Account Created Succesfully";
+					  } else {
+						// User is signed out.
+					  }
+				});
+				//return resolve;
+				/*
 				if(resolve){
 					
 					return resolve;
 				}
 				else{
 					//succesfully created
-					firebase.auth().onAuthStateChanged(function(user) {
+					return firebase.auth().onAuthStateChanged(function(user) {
 						  if (user) {
 							console.log(user);
 							//var ref = database.ref('Users');
@@ -59,14 +81,16 @@ var auth = function() {
 								firstname: firstName ,
 								lastname : lastName 
 							})
+							return "Account Created Succesfully!";
 							
 						  } else {
 							// User is signed out.
 						  }
 					});
-					return "Account Created Succesfully!";
+					
 					
 				}
+				*/
 				
 				
 			});

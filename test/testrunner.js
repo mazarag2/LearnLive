@@ -42,6 +42,7 @@ casper.waitWhileSelector('#welcomeHeader', function() {
 
 casper.run(function(){
 	
+	assertNotNull(LoginName);
 	this.echo("Title " + this.getTitle() + 
 	"Login" + LoginName);
 	this.captureSelector('Login.jpg', 'html');

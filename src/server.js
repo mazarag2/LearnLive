@@ -317,12 +317,22 @@ app.post('/CreateUser',function (req,res){
 		
 		
 		var postData = qstring.parse(bodyData);
+		console.log(postData);
+		var newQuery = new auth();
 		
-		var newQuery = new query();
+		var createUser	= newQuery.CreateUser(postData,firebase,userRef);
 		
-		var msg = newQuery.CreateUser(postData,firebase,userRef);
+		console.log(createUser);
 		
-		res.render('Create',{errorMsg : msg});
+		//res.render('Create',{errorMsg : msg});
+		
+		createUser.then(function(resolve){
+			
+			res.render('Create',{errorMsg : resolve});
+			
+		});
+		
+		
 	
 	});
 });

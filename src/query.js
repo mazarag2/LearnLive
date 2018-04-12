@@ -38,7 +38,7 @@ var query = function() {
 			
 			var obj = snapshot.exportVal();
 			var key = Object.keys(snapshot.exportVal());
-			
+			console.log("key " + key);
 			//console.log("FirstName " + JSON.stringify(snapshot) + " " + snapshot.exportVal());
 			return obj[key].firstname;
 			
@@ -171,30 +171,34 @@ var query = function() {
 			// Replace '.' (not allowed in a Firebase key) with ',' (not allowed in an email address)
 		email = email.toLowerCase();
 		email = email.replace(/\./g, ',');
+		console.log('check ' + enrollRef.child(email).key);
 		
-
-		
-		return new Promise(function(resolve){
-			enrollRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
-			
-				//console.log("Brand new Query by On " + JSON.stringify(snapshot));
+			return new Promise(function(resolve){
+				enrollRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
 				
-				snapshot.forEach(function(snapshot) {
-					var childKey = console.log("key " + snapshot.val().CourseName);
-					courseName[index] =  snapshot.val().CourseName;
-					var childData = console.log("Data " + snapshot.val().Course);
-					courses[index] = snapshot.val().Course;
-					++index;
+					//console.log("Brand new Query by On " + JSON.stringify(snapshot));
+					
+						snapshot.forEach(function(snapshot) {
+							var childKey = console.log("key " + snapshot.val().CourseName);
+							courseName[index] =  snapshot.val().CourseName;
+							var childData = console.log("Data " + snapshot.val().Course);
+							courses[index] = snapshot.val().Course;
+							++index;
+							
+						});
+						
+						courseInfo = self.toArrayObject(courses,courseName);
+						resolve(courseInfo);
+					//return courseInfo;
 					
 				});
-				
-				
-				courseInfo = self.toArrayObject(courses,courseName);
-				resolve(courseInfo);
-				//return courseInfo;
-				
+				console.log('wtf');
+				var res = new Array();
+				res.push(["",""]);
+				resolve(res);
+			
 			});
-		});
+		
 		
 		//return new Array();
 				
@@ -231,50 +235,61 @@ var query = function() {
 		
 		});
 	}
+	this.getCourseforInstructor = function(email,instructorRef){
+		
+		email = email.toLowerCase();
+		email = email.replace(/\./g, ',');
+		var instrcutorCourses = new Array();
+		
+		return new Promise(function(resolve){
+			instructorRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
+			
+				//console.log("Brand new Query by On " + JSON.stringify(snapshot));
+				
+				snapshot.forEach(function(snapshot) {
+					instrcutorCourses.push([snapshot.val().CourseName,snapshot.val().CourseKey]);
+					
+				});
+				console.log(instrcutorCourses);
+				resolve(instrcutorCourses);
+				//return courseInfo;
+				
+			});
+		});
+		
+	}
 	this.renderCoursesEnrolledList = function(courseRef,enrollRef,email){
 		
-		
-		// we're going to do an interesection and render those withdraw / checkmark
-		
+
 		return Promise.all([
 
 			self.getCoursesRF(courseRef),
 			self.getCourseKeys(courseRef),
-			self.getCoursesEnrolled(email,enrollRef),
-			
+			self.getCoursesEnrolled(email,enrollRef)
 	
 		]).then(function (results){
 			//console.log(results[0] + ' -- ' + results[1])
 			//var keys = new Set(results[1]);
 			var keys = new Set(results[1]);
-			//console.dir(keys);
-			/*
-			for(var y = 0 ; y <= CourseEnrollList.length - 1 ; y++){
-				console.log(keys.has(CourseEnrollList[y]));
-				if(keys.has(CourseEnrollList[y])){
-					keys.delete(CourseEnrollList[y]);
-				}
-			}
-			*/
-			//loop over CoursesRF entries set 
-			//if it does not coontain it delete that shit 
+			console.log(keys);
 			var CourseEnrollList = results[2];
-			
+			console.log(CourseEnrollList);
 			
 			var CourseRF = results[0];
+			console.log(CourseRF);
 			//var unEnrolledCourses = new Array();
 			for (var key in CourseRF) {
 				if (CourseRF.hasOwnProperty(key)) {
-					console.log(key + " -> " + CourseRF[key]);
+					//console.log(key + " -> " + CourseRF[key]);
 					var val = JSON.stringify(CourseRF[key]);
 					var courseKey = JSON.parse(val)[0];
 					for(var enKey in CourseEnrollList){
-						console.log('enkey ' + enKey);
+					//	console.log('enkey ' + enKey);
 						var enrollKey = JSON.parse(JSON.stringify(CourseEnrollList[enKey]))[0];
-						console.log('enrollKey ' + enrollKey)
-						console.log(courseKey == enrollKey);
+					//	console.log('enrollKey ' + enrollKey)
+						//console.log(courseKey == enrollKey);
 						if(courseKey == enrollKey){
-							console.log('key' + key);
+						//	console.log('key' + key);
 							delete CourseRF.key;
 							delete CourseRF[key];
 						}

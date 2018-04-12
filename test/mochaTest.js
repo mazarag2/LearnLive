@@ -62,6 +62,7 @@ describe('Create', function() {
 		});
 		return resolvingPromise.then(function(resolve){
 			
+			console.log("existing " + resolve);
 			assert.equal(errorMsg,resolve);
 			
 		})
@@ -273,6 +274,34 @@ describe('CourseIndex',function(){
 				
 				console.dir(resolve);
 				expect(resolve).to.be.an('Array').that.does.not.include("-KqssNUfcExQs8Q-OeKX");
+				
+				
+			}).catch(function(er){
+				
+				done(new Error(er));
+				
+			})
+			
+			
+		});
+		it('should return a list of courses with course Instructor removed',function(done){
+			
+			var newQuery = new query();
+			
+			var resolve = true;
+			
+	
+			//courseRef,CourseEnrollList
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.getCourseforInstructor(existingEmail,instructorRef));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+				
+				console.log('length' + resolve.length);
+				console.dir(resolve);
+				expect(resolve).to.be.an('Array');
 				
 				
 			}).catch(function(er){
