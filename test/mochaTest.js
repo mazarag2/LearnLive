@@ -37,7 +37,7 @@ var password1 = process.env.TEST_PASSWORD;
 
 describe('Create', function() {
   describe('#CheckUserFunctions()', function() {
-	    
+	/*    
     it('should return an error msg for Creating an Account with Existing email', function() {
 		
 		const errorMsg = "The email address is already in use by another account.";
@@ -68,6 +68,7 @@ describe('Create', function() {
 		})
 		
     });
+	*/
 	
 	it('should return true logging in Existing User',function(done){
 		
@@ -224,11 +225,7 @@ describe('CourseIndex',function(){
 				expect(resolve).to.be.an('array').to.have.length.above(1);
 				
 				
-			}).catch(function(er){
-				
-				done(new Error(er));
-				
-			})
+			});
 
 		});
 		it('should return Instructor info',function(done){

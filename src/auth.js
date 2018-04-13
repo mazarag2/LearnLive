@@ -34,6 +34,23 @@ var auth = function() {
 					return resolve(errorMessage);
 
 				})
+				firebase.auth().onAuthStateChanged(function(user) {
+						if (user) {
+					//var ref = database.ref('Users');
+					
+					var id = userRef.child(email);
+					var newRef = id.push();
+					
+					newRef.set({
+						firstname: firstName ,
+						lastname : lastName 
+					})
+					//return resolve("Account Created Succesfully!");
+					return  resolve("Account Created Succesfully");
+					} else {
+					// User is signed out.
+					}
+				});
 
 		
 			});
@@ -43,24 +60,10 @@ var auth = function() {
 				if(resolve === "The email address is already in use by another account."){
 					return resolve;
 				}
+				else{
+					return "Account Created Succesfully";
+				}
 				
-				firebase.auth().onAuthStateChanged(function(user) {
-					  if (user) {
-						//var ref = database.ref('Users');
-						
-						var id = userRef.child(email);
-						var newRef = id.push();
-						
-						newRef.set({
-							firstname: firstName ,
-							lastname : lastName 
-						})
-						//return resolve("Account Created Succesfully!");
-						return "Account Created Succesfully";
-					  } else {
-						// User is signed out.
-					  }
-				});
 				//return resolve;
 				/*
 				if(resolve){

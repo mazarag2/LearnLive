@@ -93,11 +93,14 @@ var query = function() {
 			
 			courseRef.orderByKey().on("child_added", function(snapshot) {
 				//allKeys.push(snapshot.key);
-				var tempArrray = [snapshot.key,snapshot.val().CourseName];
-				res.push(tempArrray);
+				//console.log('CoursesRF' + snapshot.key + ' ' + snapshot.val().CourseName);
+				//instrcutorCourses.push([snapshot.val().CourseName,snapshot.val().CourseKey]);
+				 //[snapshot.key,snapshot.val().CourseName];
+				res.push([snapshot.key,snapshot.val().CourseName]);
+				console.log('res ' + res);
 
 			})			
-			//console.log('inside CoursesRF ' + res);
+			console.log('inside CoursesRF ' + res);
 			resolve(res);
 			
 		});

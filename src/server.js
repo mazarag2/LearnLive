@@ -328,7 +328,15 @@ app.post('/CreateUser',function (req,res){
 		
 		createUser.then(function(resolve){
 			
-			res.render('Create',{errorMsg : resolve});
+			//res.render('Create',{errorMsg : resolve});
+			console.log(resolve);
+			//promise.then(function(resolve){
+				
+				res.render('Create',{errorMsg : resolve});
+				
+			//});
+				
+			
 			
 		});
 		
