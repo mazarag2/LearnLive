@@ -33,38 +33,102 @@ var query = function() {
 		email = email.toLowerCase();
 		email = email.replace(/\./g, ',');
 		
-		return userRef.child(email).once('value').then(function(snapshot){
+		return new Promise(function(resolve) {
 			
+			userRef.child(email).once('value').then(function(snapshot){
 			
-			var obj = snapshot.exportVal();
-			var key = Object.keys(snapshot.exportVal());
-			console.log("key " + key);
-			//console.log("FirstName " + JSON.stringify(snapshot) + " " + snapshot.exportVal());
-			return obj[key].firstname;
-			
+				var obj = snapshot.exportVal();
+				console.dir(obj);
+				var key = Object.keys(snapshot.exportVal());
+				console.log("key " + key);
+				//console.log("FirstName " + JSON.stringify(snapshot) + " " + snapshot.exportVal());
+				console.log(obj[key].firstname);
+				resolve(obj[key].firstname);
+			});
 		});
 
 	};
 	this.getCoursesForInstructor = function(email,instructorRef){
 		
-		console.log('email' + email)
+		
 		if (!email) return false
 		// Replace '.' (not allowed in a Firebase key) with ',' (not allowed in an email address)
 		email = email.toLowerCase();
 		email = email.replace(/\./g, ',');
-		
+		console.log('email' + email);
 		var res = [];
-		
-		
-		return new Promise(function(resolve) {
+		console.log("Instructor");
+		//check if node exists for this emai
+		//we figured out detection now promise callback
+		return new Promise(function(resolve){
 			
-			instructorRef.child(email).on("child_added", function(snapshot) {
-				var tempArray = [snapshot.val().CourseKey,snapshot.val().CourseName];
-				console.log(tempArray);
-				res.push(tempArray);
-				resolve(res);
-			});		
+			instructorRef.child(email).once('value', function(snapshot) {
+				console.log("snapshot " + JSON.stringify(snapshot.exportVal()));
+				if(snapshot.val() === null ) { 
+					
+					console.log("yea its not in here man instrcutorCourses");
+					var emptyList = new Array();
+					//emptyList.push(["",""]);
+					resolve(emptyList);
+
+				}
+				else{
+				
+					snapshot.forEach(function(snapshot) {
+						var tempArray = [snapshot.val().CourseKey,snapshot.val().CourseName];
+						res.push(tempArray);
+						
+					});
+					console.log('instrcutorres' + res);
+					resolve(res);
+					/*
+					var instrcutorData = snapshot.exportVal();
+					var tempArray = [snapshot.val().CourseKey,snapshot.val().CourseName];
+					console.log("instrucotr " + tempArray);
+					
+					resolve(res);
+					*/
+					
+				}
+
+			});
+		
 		});
+		
+		/*
+		var getCourses = new Promise(function(resolve) {
+		
+			
+			/*
+			instructorRef.child(email).on("child_added", function(snapshot) {
+				console.log("In");
+				if(snapshot.hasChildren()){
+					
+					console.log("We inINstrucotr");
+					var tempArray = [snapshot.val().CourseKey,snapshot.val().CourseName];
+					console.log(tempArray);
+					res.push(tempArray);
+					resolve(res);
+					//we do the query to retrieve the 
+				
+				}
+				else{
+					console.log("boi we outta here instrucotr");
+					var emptyList = new Array();
+					//emptyList.push(["",""]);
+					resolve(emptyList);
+				}
+	
+			});	
+				
+		});
+		
+		return getCourses.then(function(resolve){
+			console.log(resolve);
+			return resolve;
+			
+		});
+		*/
 		
 		
 	}
@@ -97,9 +161,8 @@ var query = function() {
 				//instrcutorCourses.push([snapshot.val().CourseName,snapshot.val().CourseKey]);
 				 //[snapshot.key,snapshot.val().CourseName];
 				res.push([snapshot.key,snapshot.val().CourseName]);
-				console.log('res ' + res);
-
-			})			
+				
+			});			
 			console.log('inside CoursesRF ' + res);
 			resolve(res);
 			
@@ -154,9 +217,6 @@ var query = function() {
 			
 		})
 		
-
-
-		
 		return id;
 		
 	}
@@ -174,35 +234,78 @@ var query = function() {
 			// Replace '.' (not allowed in a Firebase key) with ',' (not allowed in an email address)
 		email = email.toLowerCase();
 		email = email.replace(/\./g, ',');
-		console.log('check ' + enrollRef.child(email).key);
+		console.log('check ' + enrollRef.child(email).toString());
+		console.log('check JSON' + enrollRef.child(email).toJSON());
 		
-			return new Promise(function(resolve){
-				enrollRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
-				
-					//console.log("Brand new Query by On " + JSON.stringify(snapshot));
-					
-						snapshot.forEach(function(snapshot) {
-							var childKey = console.log("key " + snapshot.val().CourseName);
-							courseName[index] =  snapshot.val().CourseName;
-							var childData = console.log("Data " + snapshot.val().Course);
-							courses[index] = snapshot.val().Course;
-							++index;
-							
-						});
-						
-						courseInfo = self.toArrayObject(courses,courseName);
-						resolve(courseInfo);
-					//return courseInfo;
-					
-				});
-				console.log('wtf');
-				var res = new Array();
-				res.push(["",""]);
-				resolve(res);
+		
+		return new Promise(function(resolve){
 			
+			
+			enrollRef.child(email).once('value', function(snapshot) {
+				console.log("snapshot" + snapshot.exportVal());
+				if(snapshot.val() === null ) { 
+					
+					console.log("yea its not in here man");
+					var emptyList = new Array();
+					//emptyList.push(["",""]);
+					resolve(emptyList);
+
+				}
+				else{
+					
+					snapshot.forEach(function(snapshot) {
+						var childKey = console.log("key " + snapshot.val().CourseName);
+						courseName[index] =  snapshot.val().CourseName;
+						var childData = console.log("Data " + snapshot.val().Course);
+						courses[index] = snapshot.val().Course;
+						++index;
+						
+					});
+					
+					courseInfo = self.toArrayObject(courses,courseName);
+					resolve(courseInfo);
+					
+				}
+
 			});
 		
-		
+		});
+		//check if email exists
+		return new Promise(function(resolve){
+			enrollRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
+				console.log("We in");
+				console.log(snapshot.hasChildren());
+				//console.log("Brand new Query by On " + JSON.stringify(snapshot));
+				
+				if(snapshot.hasChildren()){
+					snapshot.forEach(function(snapshot) {
+						var childKey = console.log("key " + snapshot.val().CourseName);
+						courseName[index] =  snapshot.val().CourseName;
+						var childData = console.log("Data " + snapshot.val().Course);
+						courses[index] = snapshot.val().Course;
+						++index;
+						
+					});
+					
+					courseInfo = self.toArrayObject(courses,courseName);
+					resolve(courseInfo);
+				}
+				else{
+					
+					var emptyList = new Array();
+					//emptyList.push(["",""]);
+					resolve(emptyList);
+					
+				}
+				//return courseInfo;
+				
+			});
+				//console.log('wtf');
+				//var res = new Array();
+				//res.push(["",""]);
+				//resolve(res);
+			
+		});
 		//return new Array();
 				
 	}
@@ -248,14 +351,22 @@ var query = function() {
 			instructorRef.orderByKey().equalTo(email).on("child_added",function(snapshot){
 			
 				//console.log("Brand new Query by On " + JSON.stringify(snapshot));
-				
-				snapshot.forEach(function(snapshot) {
-					instrcutorCourses.push([snapshot.val().CourseName,snapshot.val().CourseKey]);
+				if(snapshot.hasChildren()){
 					
-				});
-				console.log(instrcutorCourses);
-				resolve(instrcutorCourses);
-				//return courseInfo;
+					snapshot.forEach(function(snapshot) {
+						instrcutorCourses.push([snapshot.val().CourseName,snapshot.val().CourseKey]);
+					
+					});
+					console.log(instrcutorCourses);
+					resolve(instrcutorCourses);
+					
+				}
+				else{
+					console.log("boi we outta here instrucotr");
+					var emptyList = new Array();
+					//emptyList.push(["",""]);
+					resolve(emptyList);
+				}
 				
 			});
 		});
@@ -273,26 +384,35 @@ var query = function() {
 		]).then(function (results){
 			//console.log(results[0] + ' -- ' + results[1])
 			//var keys = new Set(results[1]);
+			console.log("renderCoursesEnrolledList");
 			var keys = new Set(results[1]);
 			console.log(keys);
 			var CourseEnrollList = results[2];
-			console.log(CourseEnrollList);
+			console.dir(CourseEnrollList);
 			
 			var CourseRF = results[0];
-			console.log(CourseRF);
-			//var unEnrolledCourses = new Array();
+			console.log("CourseRef" + CourseRF);
+			//var unEnrolledCourses = new Array();4
+			if(CourseEnrollList.length == 0){
+				console.log('boi we out');
+				var emptyList = new Array();
+				return emptyList;
+				
+			}
+			
 			for (var key in CourseRF) {
 				if (CourseRF.hasOwnProperty(key)) {
 					//console.log(key + " -> " + CourseRF[key]);
 					var val = JSON.stringify(CourseRF[key]);
 					var courseKey = JSON.parse(val)[0];
+					
 					for(var enKey in CourseEnrollList){
-					//	console.log('enkey ' + enKey);
+						console.log('enkey ' + enKey);
 						var enrollKey = JSON.parse(JSON.stringify(CourseEnrollList[enKey]))[0];
-					//	console.log('enrollKey ' + enrollKey)
-						//console.log(courseKey == enrollKey);
+						console.log('enrollKey ' + enrollKey)
+						console.log(courseKey == enrollKey);
 						if(courseKey == enrollKey){
-						//	console.log('key' + key);
+							console.log('key' + key);
 							delete CourseRF.key;
 							delete CourseRF[key];
 						}
@@ -393,7 +513,7 @@ var query = function() {
 					
 					self.renderCoursesEnrolledList(ref.courseRef,ref.enrollRef,email),
 					self.getCoursesEnrolled(email,ref.enrollRef),
-					self.getCoursesForInstructor(email,ref.instructorRef)
+					self.getCourseforInstructor(email,ref.instructorRef)
 				
 				]).then(function (results){
 					
@@ -410,13 +530,14 @@ var query = function() {
 
 					self.getFirstNamebyEmail(email,ref.userRef),
 					self.renderCoursesEnrolledList(ref.courseRef,ref.enrollRef,email),
+					//self.getCoursesRF(ref.courseRef),
 					self.getCoursesEnrolled(email,ref.enrollRef),
 					self.getCoursesForInstructor(email,ref.instructorRef)
 			
 				]).then(function (results){
 					
-					//console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
-					console.log('results' + results);
+					console.log(results[0]+ ' -- ' + results[1] + ' -- ' + results[2]+ 'coursesenrolled ' + results[3]);
+					//console.log('results' + results);
 					//console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
 					var data = {name : results[0]};
 					var success = ref.cacheRef.set( "usrName", data,0);
