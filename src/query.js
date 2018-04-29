@@ -513,16 +513,16 @@ var query = function() {
 					
 					self.renderCoursesEnrolledList(ref.courseRef,ref.enrollRef,email),
 					self.getCoursesEnrolled(email,ref.enrollRef),
-					self.getCourseforInstructor(email,ref.instructorRef)
+					self.getCoursesForInstructor(email,ref.instructorRef)
 				
 				]).then(function (results){
 					
 					var courseInfo = results[0];
-					//console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
+					console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
 					//res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
 					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[1],InstructorCourse : results[2]};
 
-				})
+				});
 			}
 			else{
 				//Displaying Login Page
