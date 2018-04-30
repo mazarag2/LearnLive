@@ -87,6 +87,7 @@ body
     |  
     .panel.panel-default.pull-right.clearfix
       // Default panel contents
+      form(action='/Withdraw', method='post')
       .panel-heading Courses
       |   
       .panel-body
@@ -97,8 +98,11 @@ body
             li.list-group-item 
             span.sr-only (current)
             a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
-            .pull-right 
-    |  
+            .pull-right
+            input(type='checkbox', name='withDrawBox', value='withDrawBox')
+      input(type='submit', name='withdraw', value='Withdraw')       
+    |
+    	
     .panel.panel-default.pull-left.clearfix
       // Default panel contents
       .panel-heading Courses
