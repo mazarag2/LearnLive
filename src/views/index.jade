@@ -84,27 +84,29 @@ body
         | &#x9;&#x9;
         form.navbar-form.navbar-right(action='/', method='POST')
           button.btn.btn-default(type='submit') Logout
-    |  
+    |
+    
     .panel.panel-default.pull-right.clearfix
       // Default panel contents
-      form(action='/Withdraw', method='post')
+      
       .panel-heading Courses
-      |   
-      .panel-body
-       p Courses You are Currently Enrolled will show up here!
-        ul#courses.list-group
-         each val,index in coursesEnrolled
-           if(val)
-            li.list-group-item 
-            span.sr-only (current)
-            a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
-            .pull-right
-            input(type='checkbox', name='withDrawBox', value='withDrawBox')
-      input(type='submit', name='withdraw', value='Withdraw')       
+        |
+      form(action='/Withdraw', method='post')
+        .form-group  
+          .panel-body
+            p Courses You are Currently Enrolled will show up here!
+             ul#courses.list-group
+              each val,index in coursesEnrolled
+               if(val)
+                li.list-group-item 
+                span.sr-only (current)
+                a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
+                .pull-right
+                input(type='checkbox', name='withDrawBox', value='withDrawBox')
+          input(type='submit', name='withdraw', value='Withdraw')       
     |
     	
     .panel.panel-default.pull-left.clearfix
-      // Default panel contents
       .panel-heading Courses
       |   
       .panel-body
