@@ -17,11 +17,18 @@
     "pug": "^2.0.0-rc.1"
   },
   "devDependencies": {
-    "mocha": "^5.0.1"
+    "mocha": "^5.0.1",
+    "nyc": "^11.7.1"
   },
   "scripts": {
-    "test": "echo \"Test Started\"",
+    "test": "nyc --reporter=text mocha",
     "start": "npm start"
+  },
+  "nyc": {
+    "exclude": [
+      "**/*.testrunner.js**/*",
+      "/test/testrunner.js"
+    ]
   },
   "repository": {
     "type": "git",

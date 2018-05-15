@@ -93,44 +93,7 @@ var query = function() {
 
 			});
 		
-		});
-		
-		/*
-		var getCourses = new Promise(function(resolve) {
-		
-			
-			/*
-			instructorRef.child(email).on("child_added", function(snapshot) {
-				console.log("In");
-				if(snapshot.hasChildren()){
-					
-					console.log("We inINstrucotr");
-					var tempArray = [snapshot.val().CourseKey,snapshot.val().CourseName];
-					console.log(tempArray);
-					res.push(tempArray);
-					resolve(res);
-					//we do the query to retrieve the 
-				
-				}
-				else{
-					console.log("boi we outta here instrucotr");
-					var emptyList = new Array();
-					//emptyList.push(["",""]);
-					resolve(emptyList);
-				}
-	
-			});	
-				
-		});
-		
-		return getCourses.then(function(resolve){
-			console.log(resolve);
-			return resolve;
-			
-		});
-		*/
-		
-		
+		});		
 	}
 	this.getCourses = function(courseRef){
 		
@@ -156,12 +119,7 @@ var query = function() {
 		return new Promise(function(resolve) {
 			
 			courseRef.orderByKey().on("child_added", function(snapshot) {
-				//allKeys.push(snapshot.key);
-				//console.log('CoursesRF' + snapshot.key + ' ' + snapshot.val().CourseName);
-				//instrcutorCourses.push([snapshot.val().CourseName,snapshot.val().CourseKey]);
-				 //[snapshot.key,snapshot.val().CourseName];
 				res.push([snapshot.key,snapshot.val().CourseName]);
-				
 			});			
 			console.log('inside CoursesRF ' + res);
 			resolve(res);
@@ -407,10 +365,7 @@ var query = function() {
 					var courseKey = JSON.parse(val)[0];
 					
 					for(var enKey in CourseEnrollList){
-						console.log('enkey ' + enKey);
 						var enrollKey = JSON.parse(JSON.stringify(CourseEnrollList[enKey]))[0];
-						console.log('enrollKey ' + enrollKey)
-						console.log(courseKey == enrollKey);
 						if(courseKey == enrollKey){
 							console.log('key' + key);
 							delete CourseRF.key;
@@ -427,74 +382,7 @@ var query = function() {
 			console.log(error + "in query");
 		})
 		
-		
-		/*
-		var getkeyVal = self.getCoursesRF(courseRef);
-		return getkeyVal.then(function(resolve){
-			/*
-			for (var x = 0; x <= CourseEnrollList.length - 1; x++){
-				
-				
-				var Enrolledkey = CourseEnrollList[x][0];
-				console.log('Enrolledkey ' + Enrolledkey);
-				var alreadyEnrolled = CourseList.has(Enrolledkey);
-				console.log(alreadyEnrolled);
-				if(alreadyEnrolled){
-					CourseList.delete(Enrolledkey);
-				}
-			}
-			
-			console.log(typeof resolve);
-			//we only need a set of keys once we 
-			//got it remove it and return the whole thing with the vals
-			console.log('resolve ' + JSON.stringify(resolve));
-			var CourseList = new Set(resolve);
-			var enrolledSet = new Set(CourseEnrollList);
-			console.dir(CourseList);
-			console.dir(enrolledSet);
-			
-			console.log('CourseList' + CourseEnrollList);
-			console.dir('bef' + CourseList);
-			console.log(CourseList.entries());
-			
-			for (var x = 0; x <= CourseEnrollList.length - 1; x++){
-				
-				
-				var Enrolledkey = CourseEnrollList[x][0];
-				console.log('Enrolledkey ' + Enrolledkey);
-				var alreadyEnrolled = CourseList.has(Enrolledkey);
-				console.log(alreadyEnrolled);
-				if(alreadyEnrolled){
-					CourseList.delete(Enrolledkey);
-				}
-			}
-			
-			console.dir(CourseList);
-	
-			return CourseList;
-			
-			
-		});
-		*/
-		
-		
 	}
-	/*
-	this.getValsForKeys(courseRef,enrollKeys){
-		
-		//fuck we have keys now we need vals....
-		//we still have other options...
-		
-		for(var y = 0; y <= enrollKeys.length - 1; y++){
-		
-			courseRef.orderByChild("CourseName").equalTo("John").on("child_added", function(data) {
-				console.log("Equal to filter: " + data.val().name);
-			});
-		
-		}
-		
-	}
-	*/
 	this.renderIndex = function(resolve,email,ref){
 	
 		if(resolve){
@@ -560,71 +448,6 @@ var query = function() {
 		}
 
 	}
-	//the function will return the list for the index view 
-	/*
-	this.renderIndex = function(resolve,email,ref){
 	
-		if(resolve){
-			//User is LOgged In usrName
-			
-			var Usrname = ref.cacheRef.get( "usrName" );
-
-			if ( Usrname == undefined ){
-			  console.log("Sorry Name is missing");
-			}
-			
-			if(Usrname != undefined){
-				
-				//Display back to login once in
-				return Promise.all([
-					
-					self.getCourseKeys(ref.courseRef),
-					self.getCourses(ref.courseRef),
-					self.getCoursesEnrolled(email,ref.enrollRef)
-				
-				]).then(function (results){
-					
-					var courseInfo = self.toArrayObject(results[0],results[1]);
-					//console.log(results[0]+ ' --- ' + results[1] + ' --- Results[2] ->' + results[2]);
-					//res.render('index',{name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]});
-					return {name : Usrname.name,courseInfo: courseInfo,coursesEnrolled : results[2]};
-
-				})
-			}
-			else{
-				//Displaying Login Page
-				return Promise.all([
-
-					self.getFirstNamebyEmail(email,ref.userRef),
-					self.getCourseKeys(ref.courseRef),
-					self.getCourses(ref.courseRef),
-					self.getCoursesEnrolled(email,ref.enrollRef)
-			
-				]).then(function (results){
-					
-					//console.log(results[0]+ ' ' + results[1] + ' ' + results[2]+ 'coursesenrolled ' + results[3]);
-					
-					//console.log("Call by Itself " + self.getCoursesEnrolled(email,ref.enrollRef));
-					var data = {name : results[0]};
-					var success = ref.cacheRef.set( "usrName", data,0);
-					var value = ref.cacheRef.get( "usrName" );
-					//console.log("name " + value.name);
-					
-					self.firstName = results[0];
-					var courseInfo = self.toArrayObject(results[1],results[2]);
-					//res.render('index',{name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]});
-					//console.log(results[0] + courseInfo + results[3]);
-					return {name : results[0],courseInfo: courseInfo,coursesEnrolled : results[3]};
-				}).catch(function(error){
-				
-					console.log(error + "in query");
-				})
-				
-			}
-			
-		}
-
-	}
-	*/
 };
 module.exports = query;

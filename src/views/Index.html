@@ -88,19 +88,21 @@
     </nav>
  <div class="panel panel-default pull-right clearfix">
   <!-- Default panel contents -->
-  <div class="panel-heading">Courses</div>
-  <div class="panel-body">
-    <p>Courses Enrolled will show up here!</p>
-  </div>
-
-  <!-- List group -- Will need to use Angular here in luee of DOM manipulation-->
-  <ul class="list-group" class = "list-inline" id = "courses">
-    <li class="list-group-item ">Cras justo odio</li>
-    <li class="list-group-item ">Dapibus ac facilisis in</li>
-    <li class="list-group-item ">Morbi leo risus</li>
-    <li class="list-group-item ">Porta ac consectetur ac</li>
-    <li class="list-group-item ">Vestibulum at eros</li>
-  </ul>
+  <form class="navbar-form navbar-right" action = '/Withdraw' method = "POST">
+	  <div class="panel-heading">Courses</div>
+	  <div class="panel-body">
+		<p>Courses Enrolled will show up here!</p>
+	  </div>
+	  <!-- List group -- Will need to use Angular here in luee of DOM manipulation-->
+	  <ul class="list-group" class = "list-inline" id = "courses">
+		<li class="list-group-item ">Cras justo odio</li>
+		<li class="list-group-item ">Dapibus ac facilisis in</li>
+		<li class="list-group-item ">Morbi leo risus</li>
+		<li class="list-group-item ">Porta ac consectetur ac</li>
+		<li class="list-group-item ">Vestibulum at eros</li>
+	  </ul>
+	  <button type="submit" class="btn btn-default">Withdraw</button>
+  </form>
 </div>
 
  <div class="panel panel-default pull-left clearfix">

@@ -1,5 +1,6 @@
 var assert = require('assert');
-const query = require("../src/Course");
+const Course = require("../src/Course");
+const CourseModify = require("../src/CourseModify");
 const auth = require("../src/auth");
 var firebase = require("firebase");
 const dotev = require('dotenv').config();
@@ -32,119 +33,49 @@ var fbRef = {
 }
 var existingEmail = process.env.TEST_EMAIL;
 var password1 = process.env.TEST_PASSWORD;
-
-
-
-describe('Create', function() {
-  describe('#CheckUserFunctions()', function() {
-	/*    
-    it('should return an error msg for Creating an Account with Existing email', function() {
-		
-		const errorMsg = "The email address is already in use by another account.";
-		var newQuery = new query();
-		var newAuth = new auth();
-		var existingEmail = process.env.TEST_EMAIL;
-		var password1 = process.env.TEST_PASSWORD;
-
-		var postData = {
-			
-			email : existingEmail,
-			password : password1,
-			password2 : password1,
-			firstname : "Mike",
-			lastname : "Z"
-			
-		}
-		const resolvingPromise = new Promise(function(resolve){
-			
-			resolve(newAuth.CreateUser(postData,firebase,userRef));
-			
-		});
-		return resolvingPromise.then(function(resolve){
-			
-			console.log("existing " + resolve);
-			assert.equal(errorMsg,resolve);
-			
-		})
-		
-    });
-	*/
-	
-	it('should return true logging in Existing User',function(done){
-		
-		const result = true;
-		
-		var newAuth = new auth();
-		
-		const resolvingPromise = new Promise(function(resolve){
-			
-			resolve(newAuth.signInUser(existingEmail,password1,firebase));
-			done();
-			
-		});
-		return resolvingPromise.then(function(resolve){
-			
-
-			assert.equal(result,resolve);
-			
-		})
-	});
-	
-	it('should fail logging in non-existant user',function(){
-		
-		const result = "The password is invalid or the user does not have a password.";
-		
-		var newAuth = new auth();
-		
-		var password2 = process.env.TEST_PASSWORD2;
-		
-		const resolvingPromise = new Promise(function(resolve,reject){
-			
-			resolve(newAuth.signInUser(existingEmail,password2,firebase));
-			done();
-			
-		});
-		return resolvingPromise.catch(function(e) {
-			expect(e).to.equal(result);
-		})
-		
-	});
-	
-	
-  });
-
-  
-  
-});
-
 describe('CourseIndex',function(){
-	
-	describe('#CourseIndex',function(){
-		
-		before(function() {
+	describe('#CourseIndexFunctions',function(){
+
+		before(function(){
 			// runs before all tests in this block(need to log in a test user to authenticate Fb Calls)
 			var newAuth = new auth();
-	
+
+
+				
 			const resolvingPromise = new Promise(function(resolve){
 				
 				resolve(newAuth.signInUser(existingEmail,password1,firebase));
-				done();
+				//done();
 				
 			});
 			return resolvingPromise.then(function(resolve){
-				
-				return resolve;
-				
-			})
+				console.log(resolve);
+				var id = enrollmentRef.child(("testemail@email,com"));
+				var newRef = id.push();
+				newRef.set({
 			
-		 });
+					CourseName : "test1",
+					CourseKey : "-L77QkLgw4IzGwqHzHds"
+				});
+				expect(resolve).to.be.true;
+				
+			});
+			
+			
+			
+			
+		});
 		it('should return a list of Available Courses',function(done){
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 	
 			const resolvingPromise = new Promise(function(resolve){
+				
+				
+				existingEmail = existingEmail.toLowerCase();
+				existingEmail = existingEmail.replace(/\./g, ',');
 				
 				resolve(newQuery.renderIndex(resolve,existingEmail,fbRef));
 				done();
@@ -162,7 +93,7 @@ describe('CourseIndex',function(){
 		})
 		it('should return a list of Courses a User is enrolled In',function(){
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 	
@@ -182,7 +113,7 @@ describe('CourseIndex',function(){
 		it('should return a name for a valid user',function(){
 			
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 	
@@ -202,7 +133,7 @@ describe('CourseIndex',function(){
 		it('should return Courses with keys and names',function(done){
 			
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 	
@@ -223,7 +154,7 @@ describe('CourseIndex',function(){
 		it('should return Instructor info',function(done){
 			
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 	
@@ -245,7 +176,7 @@ describe('CourseIndex',function(){
 		});
 		it('should return a list of courses with course enrolled removed',function(done){
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 			
@@ -275,7 +206,7 @@ describe('CourseIndex',function(){
 		});
 		it('should return a list of courses with course Instructor removed',function(done){
 			
-			var newQuery = new query();
+			var newQuery = new Course();
 			
 			var resolve = true;
 			
@@ -301,8 +232,37 @@ describe('CourseIndex',function(){
 			
 			
 		});
+		it('should return true when withdrawing a user from a Course',function(done){
+			
+			
+			var newQuery = new CourseModify();
+			var resolve = true;
+			
+			existingEmail = existingEmail.toLowerCase();
+			existingEmail = existingEmail.replace(/\./g, ',');
+			
+			var courseData = ["-L77QkLgw4IzGwqHzHds"];
+			//courseRef,CourseEnrollList
+			const resolvingPromise = new Promise(function(resolve){
+				
+				resolve(newQuery.withdrawCourse("testemail@email,com",enrollmentRef,courseData));
+				done();
+			});
+			return resolvingPromise.then(function(resolve){
+				
+				console.log('length' + resolve.length);
+				console.log('resolve yo ' + resolve);
+				expect(resolve).to.be.true;
+				
+				
+			}).catch(function(er){
+				
+				done(new Error(er));
+				
+			})
+			
+		});
 		
 	})
-	
-	
+
 })

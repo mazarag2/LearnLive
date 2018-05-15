@@ -4,7 +4,8 @@ const url = require('url');
 const qstring = require('querystring');
 const express = require('express');
 const jade = require('pug');
-const query = require("./query");
+const query = require("./Course");
+const CourseModify = require("./CourseModify");
 const auth = require("./auth");
 const NodeCache = require("node-cache");
 const userCache = new NodeCache();
@@ -53,6 +54,7 @@ var user = firebase.auth().currentUser;
 
 
 app.set("enrollmentRef",enrollmentRef);
+app.set("CourseModfiyRef",CourseModify);
 
 function createCourse(postData){
 	
@@ -379,6 +381,8 @@ app.post('/CreateCourse',function(req,res){
 		var email = user.email;
 		console.log(email);
 		console.log("Key " + key);
+		
+		
 		//var indx = key.lastIndexOf("/");
 		//console.log(indx);
 		//key = key.substring(indx);
