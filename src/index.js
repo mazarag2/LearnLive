@@ -14,7 +14,7 @@ function escapeEmailAddress(email){
 }
 
 // define the enroll route
-router.get('/Enroll', function (req,res) {
+router.post('/Enroll', function (req,res) {
 	
 	var bodyData = '';
 	req.on('data', function (chunk) {
@@ -27,6 +27,13 @@ router.get('/Enroll', function (req,res) {
 		var header = url.parse(req.url, true);
 		console.log(header.query);
 		var postData = qstring.parse(bodyData);
+		var courseData = postData.enrollBox;
+		
+		if (typeof courseData == 'string'){
+			var tempArr = new Array();
+			tempArr.push(courseData);
+			courseData = tempArr;
+		}
 		var CourseKey = header.query.course;
 		var coursename = header.query.name;
 		console.log("CourseName " + coursename);
@@ -34,6 +41,19 @@ router.get('/Enroll', function (req,res) {
 		var email = req.app.get("userEmail");
 		console.log("Email " + email);
 		var ref = req.app.get("enrollmentRef");
+		var query = new CourseModify();
+		//var withdrawEnrollment = 
+		query.EnrollCourse(escapeEmailAddress(email),ref,courseData);
+		
+		res.render('EnrollConfirm');
+		//withdrawEnrollment.then(function(resolve){
+			
+			//res.render('EnrollConfirm');
+			
+			
+		//});
+		
+		/*
 		var id = ref.child(escapeEmailAddress(email));
 		var newRef = id.push();
 		newRef.set({
@@ -42,7 +62,7 @@ router.get('/Enroll', function (req,res) {
 			CourseName : coursename
 		})
 		res.render('EnrollConfirm');
-
+		*/
 	});
 })
 

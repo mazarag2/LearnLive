@@ -104,22 +104,23 @@ body
                 .pull-right
                 input(type='checkbox', name='withDrawBox', value=val[0])
           input(type='submit', name='withdraw', value='Withdraw')       
-    |
-    	
+    |	
     .panel.panel-default.pull-left.clearfix
       .panel-heading Courses
-      |   
-      .panel-body
-        p New Courses Added To LearnLive will show up here!
-
-      ul#courses.list-group
-        each val,index in courseInfo
-         if(val)
-          li.list-group-item 
-          span.sr-only (current)
-          a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
-          .pull-right   
-          a.btn.btn-default.btn-sm.pull-right(href = "http://localhost:8080/index/Enroll?course=" + val[0] + "&name=" + val[1]) Enroll
+        |
+      form(action='index/Enroll', method='post')
+        .form-group
+          .panel-body
+            p Courses New Courses will show up here!
+             ul#courses.list-group
+              each val,index in courseInfo
+               if(val)
+                li.list-group-item 
+                span.sr-only (current)
+                a(href = "http://localhost:8080/index?course=" + val[0]) #{val[1]} 
+                .pull-right
+                input(type='checkbox', name='enrollBox', value=val[0] + ',' + val[1])
+          input(type='submit', name='Enroll', value='Enroll')
           |
     .panel.panel-default.pull-down.clearfix
       // Default panel contents

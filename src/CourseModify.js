@@ -1,5 +1,26 @@
 var CourseModify = function(){
 
+	this.EnrollCourse = function(email,enrollmentRef,Courses){
+	
+		for(var x = 0; x <= Courses.length - 1 ; x++){
+			console.log('indx' + Courses[x]);
+			var CourseInfo = Courses[x].split(',');
+			console.log(CourseInfo);
+			var courseKey = CourseInfo[0];
+			console.log(courseKey)
+			var courseName = CourseInfo[1];
+			console.log(courseName);
+			var id = enrollmentRef.child(email);
+			var newRef = id.push();
+			newRef.set({
+				
+				Course : courseKey,
+				CourseName : courseName
+			})
+		}
+
+		
+	}
 	this.withdrawCourse = function(email,enrollmentRef,CourseKeys){
 		
 		return new Promise(function(resolve,reject){

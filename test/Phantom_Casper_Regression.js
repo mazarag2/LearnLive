@@ -21,7 +21,7 @@ var testEmail = casper.cli.get(0);
 var testPassword = casper.cli.get(1);
 var LoginName = '';
 
-casper.start('http://localhost:8080');
+casper.start(url);
 
 casper.waitForSelector('form[action="/index"]', function() {
     this.fillSelectors('form#loginForm', {
@@ -48,8 +48,6 @@ casper.run(function(){
 	this.captureSelector('Login.jpg', 'html');
     this.echo('Screenshot was made.');
 	phantom.exit();
-    //casper.exit();
-	//casper.bypass(1);
 
 });
 
