@@ -302,6 +302,7 @@ describe('CourseIndex',function(){
 			
 		});
 		
+		
 	})
 	
 	
