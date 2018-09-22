@@ -115,4 +115,15 @@ router.post('/Withdraw', function (req,res) {
 	});
 })
 
+
+router.get('/Edit',function(req,res){
+	
+	
+	
+	
+	
+	
+	
+});
+
 module.exports = router
