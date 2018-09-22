@@ -37,6 +37,7 @@ var query = function() {
 			
 			userRef.child(email).once('value').then(function(snapshot){
 			
+				
 				var obj = snapshot.exportVal();
 				console.dir(obj);
 				var key = Object.keys(snapshot.exportVal());
@@ -203,7 +204,7 @@ var query = function() {
 				console.log("snapshot" + snapshot.exportVal());
 				if(snapshot.val() === null ) { 
 					
-					console.log("yea its not in here man");
+					
 					var emptyList = new Array();
 					//emptyList.push(["",""]);
 					resolve(emptyList);

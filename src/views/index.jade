@@ -69,10 +69,13 @@ body
             a.nav-link(href='#')
               | Home
               span.sr-only (current)
-          |         
+          |
+          li.nav-item
+            a.nav-link(href='/Profile') My Profile
+          |   
           li.nav-item
             a.nav-link(href='/CreateCourse') Create Course
-          |        
+          |     		  
           li.nav-item
             a.nav-link(href='#') My Docs
         | &#x9;&#x9;
@@ -95,7 +98,7 @@ body
         .form-group  
           .panel-body
             p Courses You are Currently Enrolled will show up here!
-             ul#courses.list-group
+             ul#coursesEnrolled.list-group
               each val,index in coursesEnrolled
                if(val)
                 li.list-group-item 
@@ -112,7 +115,7 @@ body
         .form-group
           .panel-body
             p Courses New Courses will show up here!
-             ul#courses.list-group
+             ul#newCourses.list-group
               each val,index in courseInfo
                if(val)
                 li.list-group-item 
@@ -129,7 +132,7 @@ body
       .panel-body
         p Course for which you are the Instructor !
 
-      ul#courses.list-group
+      ul#instructorCourses.list-group
         each val,index in InstructorCourse
           li.list-group-item 
           span.sr-only (current)
