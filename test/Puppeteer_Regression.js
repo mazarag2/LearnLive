@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 const dotev = require('dotenv').config();
 var assert = require('assert');
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({args : ['-no--sandbox']});
  
   console.log('1');
   const page = await browser.newPage();
