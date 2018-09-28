@@ -282,24 +282,6 @@ var query = function() {
 
 		});
 	}
-	this.getCourseColorbyKey = function (key){
-	
-		return new Promise(function (resolve,reject){
-		
-			setTimeout(function(){
-				console.log("inside");
-				ref.child(key).on("child_added", function(snapshot) {
-					//console.log(snapshot.val().CourseName);
-					var val = snapshot.val();
-					//console.log(snapshot.val()["Color"]);
-					//console.log(val);
-					//var Color = val["Color"];
-					resolve(val);
-				})
-			},1000);
-		
-		});
-	}
 	this.getCourseforInstructor = function(email,instructorRef){
 		
 		email = email.toLowerCase();

@@ -31,6 +31,7 @@
   },
   "nyc": {
     "exclude": [
+	  "src/auth.js",
       "/test/Phantom_Casper_Regression.js",
       "/test/Puppeteer_Regression.js"
     ]
