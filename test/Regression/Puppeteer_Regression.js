@@ -9,7 +9,7 @@ var assert = require('assert');
   const page = await browser.newPage();
   console.log("2");
   await page.goto('http://localhost:8080');
-  page.waitFor(3000);
+  await page.waitFor(3000);
   console.log("3");
   await page.screenshot({path: 'test/screenshots/home.png'});
   console.log("4");
@@ -39,9 +39,10 @@ async function createCourse(page){
 
 async function logIntoLearn(page,browser){
 	var email = process.env.TEST_EMAIL;
-	var password = process.env.TEST_PASSWORD;	
-	page.$eval('#exampleInputEmail1',el => el.value = 'mikez@email.com');
-	page.$eval('#exampleInputPassword1',(el,password) => el.value = password,password);
+	var password = process.env.TEST_PASSWORD;
+		
+	await page.$eval('#exampleInputEmail1',el => el.value = 'mikez@email.com');
+	await page.$eval('#exampleInputPassword1',(el,password) => el.value = password,password);
 	try{
 		const navPromise = page.waitForNavigation();
 		await page.$eval('#loginForm',form => form.submit());
