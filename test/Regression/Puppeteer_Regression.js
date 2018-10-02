@@ -9,6 +9,7 @@ var assert = require('assert');
   const page = await browser.newPage();
   console.log("2");
   await page.goto('http://localhost:8080');
+  page.waitFor(3000);
   console.log("3");
   await page.screenshot({path: 'test/screenshots/home.png'});
   console.log("4");
