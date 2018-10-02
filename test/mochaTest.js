@@ -14,7 +14,12 @@ var config = {
 
 };
 
-firebase.initializeApp(config);
+if(!firebase.apps.length){
+	firebase.initializeApp(config)
+}
+else{
+	firebase.app();
+}
 
 const NodeCache = require("node-cache");
 const userCache = new NodeCache();

@@ -15,7 +15,13 @@ var config = {
 
 };
 
-firebase.initializeApp(config);
+if(!firebase.apps.length){
+	firebase.initializeApp(config)
+}
+else{
+	firebase.app();
+}
+
 
 const NodeCache = require("node-cache");
 const userCache = new NodeCache();
@@ -32,7 +38,9 @@ var fbRef = {
 	instructorRef : instructorRef
 }
 var existingEmail = process.env.TEST_EMAIL;
+console.log(existingEmail);
 var password1 = process.env.TEST_PASSWORD;
+console.log(password1);
 describe('CourseIndex',function(){
 	describe('#CourseIndexFunctions',function(){
 
@@ -232,6 +240,40 @@ describe('CourseIndex',function(){
 			
 			
 		});
+		
+		it('should return true when enrolling in a course',function(){
+			
+			
+	
+			existingEmail = existingEmail.toLowerCase();
+			existingEmail = existingEmail.replace(/\./g, ',');
+			var newEnroll = new CourseModify();
+			var Courses = [["test1,testCourse"]];
+			//email,enrollmentRef,C"ourses
+			var result = newEnroll.EnrollCourse(existingEmail,enrollmentRef,Courses);
+			
+			expect(result).to.be.true;
+			
+			
+		});
+		
+		
+		it('should return false when enrolling when no Courses are passed',function(){
+			
+			
+	
+			existingEmail = existingEmail.toLowerCase();
+			existingEmail = existingEmail.replace(/\./g, ',');
+			var newEnroll = new CourseModify();
+			var Courses = [];
+			//email,enrollmentRef,C"ourses
+			var result = newEnroll.EnrollCourse(existingEmail,enrollmentRef,Courses);
+			
+			expect(result).to.be.false;
+			
+			
+		});
+		
 		it('should return true when withdrawing a user from a Course',function(done){
 			
 			
@@ -241,17 +283,15 @@ describe('CourseIndex',function(){
 			existingEmail = existingEmail.toLowerCase();
 			existingEmail = existingEmail.replace(/\./g, ',');
 			
-			var courseData = ["-L77QkLgw4IzGwqHzHds"];
+			var courseData = ["test1"];
 			//courseRef,CourseEnrollList
 			const resolvingPromise = new Promise(function(resolve){
 				
-				resolve(newQuery.withdrawCourse("testemail@email,com",enrollmentRef,courseData));
+				resolve(newQuery.withdrawCourse(existingEmail,enrollmentRef,courseData));
 				done();
 			});
 			return resolvingPromise.then(function(resolve){
-				
-				console.log('length' + resolve.length);
-				console.log('resolve yo ' + resolve);
+
 				expect(resolve).to.be.true;
 				
 				
@@ -262,6 +302,7 @@ describe('CourseIndex',function(){
 			})
 			
 		});
+		
 		
 	})
 
