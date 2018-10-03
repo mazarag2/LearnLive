@@ -302,6 +302,31 @@ describe('CourseIndex',function(){
 			})
 			
 		});
+		it('should retrieve a list of Course Info',function(done){
+			
+			var courseKey = '-L3OsatPzQr7hvzgzSoC';
+			
+			var courseInfo = new Course();
+			var getCourseInfo = courseInfo.getCourseInfo(courseKey,courseRef);
+			
+			var expectedResult =   {"Color" : "#0080ff",
+					  "CourseName" : "Thrash Metal 101",
+					  "CreatedBy" : "mikez@email.com",
+					  "CurentMembers" : 0,
+					  "EndDate" : "2018-05-21",
+					  "Maxmembers" : "50",
+					  "Rating" : 0,
+					  "StartDate" : "2018-01-22",
+					 "Subject" : "Music"};
+			
+			getCourseInfo.then(function(results){
+				//deep equals
+				expect(results).to.eql(expectedResult);
+				done();
+			});
+			
+			
+		});
 		
 		
 	})

@@ -96,22 +96,6 @@ var query = function() {
 		
 		});		
 	}
-	this.getCourses = function(courseRef){
-		
-		var courses = [];
-		var index = 0;
-		return new Promise(function(resolve) {
-			setTimeout( function() {
-				//order by Child ('CourseName')
-				courseRef.orderByKey().on("child_added", function(snapshot) {
-					//console.log(snapshot.val().CourseName);
-					courses[index] = snapshot.val().CourseName;
-					++index;
-					resolve(courses);
-				})
-			},2000);
-		});
-	}
 	this.getCoursesRF = function(courseRef){
 		
 		var res = [];
