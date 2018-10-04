@@ -41,7 +41,7 @@ async function logIntoLearn(page,browser){
 	var email = process.env.TEST_EMAIL;
 	var password = process.env.TEST_PASSWORD;
 		
-	await page.waitFor("//html");	
+	await page.waitFor(4000);	
 		
 	await page.$eval('#exampleInputEmail1',el => el.value = 'mikez@email.com');
 	await page.$eval('#exampleInputPassword1',(el,password) => el.value = password,password);
