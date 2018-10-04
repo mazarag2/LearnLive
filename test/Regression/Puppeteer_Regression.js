@@ -8,7 +8,7 @@ var assert = require('assert');
   console.log('1');
   const page = await browser.newPage();
   console.log("2");
-  await page.goto('http://localhost:8080');
+  await page.goto('http://localhost:8081');
   await page.waitFor(3000);
   console.log("3");
   await page.screenshot({path: 'test/screenshots/home.png'});
